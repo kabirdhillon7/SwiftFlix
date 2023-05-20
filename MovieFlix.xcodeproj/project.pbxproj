@@ -8,12 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */; };
-		483CA4E72A16D5BA00127430 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E62A16D5BA00127430 /* ContentView.swift */; };
+		483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E62A16D5BA00127430 /* MovieView.swift */; };
 		483CA4E92A16D5BB00127430 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483CA4E82A16D5BB00127430 /* Assets.xcassets */; };
 		483CA4EC2A16D5BB00127430 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483CA4EB2A16D5BB00127430 /* Preview Assets.xcassets */; };
 		483CA4F62A16D5BB00127430 /* MovieFlixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4F52A16D5BB00127430 /* MovieFlixTests.swift */; };
 		483CA5002A16D5BB00127430 /* MovieFlixUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4FF2A16D5BB00127430 /* MovieFlixUITests.swift */; };
 		483CA5022A16D5BB00127430 /* MovieFlixUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA5012A16D5BB00127430 /* MovieFlixUITestsLaunchTests.swift */; };
+		483CA50F2A174A2000127430 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA50E2A174A2000127430 /* MainView.swift */; };
+		483CA5132A1750B600127430 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA5122A1750B600127430 /* APICaller.swift */; };
+		483CA5162A1750E200127430 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA5152A1750E200127430 /* Movie.swift */; };
+		483CA5192A1752DE00127430 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA5182A1752DE00127430 /* MovieViewModel.swift */; };
+		483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA51A2A188D3900127430 /* MovieDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +41,7 @@
 /* Begin PBXFileReference section */
 		483CA4E12A16D5BA00127430 /* MovieFlix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieFlix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFlixApp.swift; sourceTree = "<group>"; };
-		483CA4E62A16D5BA00127430 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		483CA4E62A16D5BA00127430 /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
 		483CA4E82A16D5BB00127430 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		483CA4EB2A16D5BB00127430 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		483CA4F12A16D5BB00127430 /* MovieFlixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieFlixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +49,11 @@
 		483CA4FB2A16D5BB00127430 /* MovieFlixUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieFlixUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		483CA4FF2A16D5BB00127430 /* MovieFlixUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFlixUITests.swift; sourceTree = "<group>"; };
 		483CA5012A16D5BB00127430 /* MovieFlixUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFlixUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		483CA50E2A174A2000127430 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		483CA5122A1750B600127430 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		483CA5152A1750E200127430 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		483CA5182A1752DE00127430 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
+		483CA51A2A188D3900127430 /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +105,10 @@
 			isa = PBXGroup;
 			children = (
 				483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */,
-				483CA4E62A16D5BA00127430 /* ContentView.swift */,
+				483CA5112A17509200127430 /* Networking */,
+				483CA5142A1750CC00127430 /* Models */,
+				483CA5102A17503A00127430 /* Views */,
+				483CA5172A1752A000127430 /* ViewModels */,
 				483CA4E82A16D5BB00127430 /* Assets.xcassets */,
 				483CA4EA2A16D5BB00127430 /* Preview Content */,
 			);
@@ -125,6 +138,40 @@
 				483CA5012A16D5BB00127430 /* MovieFlixUITestsLaunchTests.swift */,
 			);
 			path = MovieFlixUITests;
+			sourceTree = "<group>";
+		};
+		483CA5102A17503A00127430 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				483CA50E2A174A2000127430 /* MainView.swift */,
+				483CA4E62A16D5BA00127430 /* MovieView.swift */,
+				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		483CA5112A17509200127430 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				483CA5122A1750B600127430 /* APICaller.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		483CA5142A1750CC00127430 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				483CA5152A1750E200127430 /* Movie.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		483CA5172A1752A000127430 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				483CA5182A1752DE00127430 /* MovieViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +304,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				483CA4E72A16D5BA00127430 /* ContentView.swift in Sources */,
+				483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */,
+				483CA50F2A174A2000127430 /* MainView.swift in Sources */,
 				483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */,
+				483CA5132A1750B600127430 /* APICaller.swift in Sources */,
+				483CA5162A1750E200127430 /* Movie.swift in Sources */,
+				483CA5192A1752DE00127430 /* MovieViewModel.swift in Sources */,
+				483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +397,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -399,7 +451,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -420,11 +472,14 @@
 				DEVELOPMENT_TEAM = SBCRL8SBBK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MovieFlix;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -449,11 +504,14 @@
 				DEVELOPMENT_TEAM = SBCRL8SBBK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MovieFlix;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
