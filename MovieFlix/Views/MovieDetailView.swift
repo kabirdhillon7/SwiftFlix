@@ -14,7 +14,7 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
-                    .frame(height: 150)
+                    .frame(height: 200)
                     .scaledToFill()
                     .clipped()
                     .mask(
@@ -24,17 +24,20 @@ struct MovieDetailView: View {
                 
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
                     .frame(width: 150, height: 225)
+                    .scaledToFill()
+                    .clipped()
                                 
                 Text(movie.title)
                     .font(.title)
                     .bold()
-                    //.fixedSize(horizontal: false, vertical: true)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 Text(movie.overview)
                     .font(.body)
                     .multilineTextAlignment(.leading)
-                    //.fixedSize(horizontal: false, vertical: true)
-            }.frame(maxWidth: .infinity)
+                    .fixedSize(horizontal: false, vertical: true)
+                
+            }//.frame(maxWidth: .infinity)
         }
     }
 }
