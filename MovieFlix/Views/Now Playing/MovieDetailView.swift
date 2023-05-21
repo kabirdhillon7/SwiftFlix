@@ -15,10 +15,10 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
-                    .frame(height: 200)
+                    .frame(height: 225, alignment: .center)
                     .scaledToFill()
                     .mask(
-                        LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .top, endPoint: .bottom)
+                        LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                     )
 
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
@@ -29,6 +29,17 @@ struct MovieDetailView: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                
+                HStack {
+                    Image(systemName: "star.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundColor(.yellow)
+
+                    Text(String(format: "%.1f", movie.vote_average) + " / 10")
+                        .font(.subheadline)
+                        .foregroundColor(.yellow)
+                        .font(.subheadline)
+                }
                 
                 Text(movie.overview)
                     .font(.body)

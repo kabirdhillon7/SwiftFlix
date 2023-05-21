@@ -144,8 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				483CA50E2A174A2000127430 /* MainView.swift */,
-				483CA4E62A16D5BA00127430 /* MovieView.swift */,
-				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
+				485E200F2A19E4A600408FD0 /* Now Playing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -172,6 +171,15 @@
 				483CA5182A1752DE00127430 /* MovieViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		485E200F2A19E4A600408FD0 /* Now Playing */ = {
+			isa = PBXGroup;
+			children = (
+				483CA4E62A16D5BA00127430 /* MovieView.swift */,
+				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
+			);
+			path = "Now Playing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
