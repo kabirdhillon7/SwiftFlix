@@ -19,7 +19,6 @@ struct MovieView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(movieViewModel.movies) { movie in
-                        
                         NavigationLink(destination: MovieDetailView(movie: movie)) {
                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
                         }

@@ -12,6 +12,7 @@ struct MovieDetailView: View {
     
     var body: some View {
         ScrollView {
+            
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
                     .frame(height: 200)
@@ -23,19 +24,19 @@ struct MovieDetailView: View {
                     .scaledToFill()
                 
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                    .frame(width: 150, height: 225)
+                    .frame(width: 185, height: 277.5)
                     .scaledToFill()
                     .clipped()
                                 
                 Text(movie.title)
                     .font(.title)
                     .bold()
-                    .fixedSize(horizontal: false, vertical: true)
+                    //.fixedSize(horizontal: false, vertical: true)
                 
                 Text(movie.overview)
                     .font(.body)
-                    .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
                 
             }//.frame(maxWidth: .infinity)
         }
@@ -45,12 +46,12 @@ struct MovieDetailView: View {
 struct MovieDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleMovie = Movie(
-            id: 123456,
+            id: 502356,
             title: "The Super Mario Bros. Movie",
-            overview: "This is a placeholder overview for The Super Mario Bros. Movie.",
-            poster_path: "/super_mario_bros_poster.jpg",
-            backdrop_path: "/super_mario_bros_backdrop.jpg",
-            vote_average: 7.8
+            overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+            poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+            backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+            vote_average: 7.7
         )
         
         MovieDetailView(movie: sampleMovie)
