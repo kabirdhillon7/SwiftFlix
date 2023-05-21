@@ -11,34 +11,31 @@ struct MovieDetailView: View {
     var movie: Movie
     
     var body: some View {
+        
         ScrollView {
-            
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
                     .frame(height: 200)
                     .scaledToFill()
-                    .clipped()
                     .mask(
                         LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .top, endPoint: .bottom)
                     )
-                    .scaledToFill()
-                
+
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
                     .frame(width: 185, height: 277.5)
-                    .scaledToFill()
-                    .clipped()
-                                
+
                 Text(movie.title)
                     .font(.title)
                     .bold()
-                    //.fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Spacer()
                 
                 Text(movie.overview)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity)
-                
-            }//.frame(maxWidth: .infinity)
+            }.frame(width: UIScreen.main.bounds.width)
         }
     }
 }
