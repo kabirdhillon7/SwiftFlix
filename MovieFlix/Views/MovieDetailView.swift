@@ -29,8 +29,6 @@ struct MovieDetailView: View {
                     .bold()
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-
-                Spacer()
                 
                 Text(movie.overview)
                     .font(.body)
