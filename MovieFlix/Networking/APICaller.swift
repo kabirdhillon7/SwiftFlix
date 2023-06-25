@@ -17,6 +17,7 @@ enum APIInformation: String {
 protocol DataServicing {
     func getMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error>
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error>
+    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
 }
 
 /// Class responsible for making API calls
@@ -79,7 +80,7 @@ class APICaller: DataServicing {
         return URLSession.shared.dataTaskPublisher(for: request)
             .map(\.data)
             .decode(type: MovieResults.self, decoder: JSONDecoder())
-            .map(\.results)
+            .map({ $0.results })
             .eraseToAnyPublisher()
     }
 }

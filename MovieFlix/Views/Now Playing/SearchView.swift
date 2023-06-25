@@ -29,15 +29,19 @@ struct SearchView: View {
                 .onTapGesture {
                     hideKeyboard()
                 }
-            List(searchResults) { movie in
-                NavigationLink(destination: MovieDetailView(movie: movie)) {
-                    HStack {
-                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                        Spacer()
-                        Text(movie.title)
+            List {
+                ForEach(searchResults) { movie in
+                    NavigationLink(destination: MovieDetailView(movie: movie)) {
+                        HStack {
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                            Text(movie.title)
+                                .bold()
+                        }
                     }
-                }
+                }.listRowInsets(EdgeInsets())
+                
             }
+            .listStyle(.plain)
             .navigationTitle("Search")
         }
     }
@@ -57,7 +61,7 @@ struct SearchView: View {
             }
             .store(in: &cancellables)
     }
-
+    
 }
 
 struct SearchView_Previews: PreviewProvider {
