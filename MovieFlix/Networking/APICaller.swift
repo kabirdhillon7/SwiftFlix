@@ -66,4 +66,20 @@ class APICaller: DataServicing {
             .map { ($0?["key"] as? String)! }
             .eraseToAnyPublisher()
     }
+    
+    
+    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error> {
+        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey.rawValue)&query=\(encodedQuery)"
+        guard let url = URL(string: urlString) else {
+            return Fail(error: NSError(domain: "Invalid URL", code: 0)).eraseToAnyPublisher()
+        }
+        let request = URLRequest(url: url)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map(\.data)
+            .decode(type: MovieResults.self, decoder: JSONDecoder())
+            .map(\.results)
+            .eraseToAnyPublisher()
+    }
 }

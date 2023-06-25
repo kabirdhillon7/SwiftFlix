@@ -20,6 +20,7 @@
 		483CA5192A1752DE00127430 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA5182A1752DE00127430 /* MovieViewModel.swift */; };
 		483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA51A2A188D3900127430 /* MovieDetailView.swift */; };
 		485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */; };
+		48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C18E592A4808BE009980F3 /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		483CA5182A1752DE00127430 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		483CA51A2A188D3900127430 /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
 		485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
+		48C18E592A4808BE009980F3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 			children = (
 				483CA4E62A16D5BA00127430 /* MovieView.swift */,
 				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
+				48C18E592A4808BE009980F3 /* SearchView.swift */,
 			);
 			path = "Now Playing";
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */,
+				48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */,
 				483CA50F2A174A2000127430 /* MainView.swift in Sources */,
 				483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */,
 				483CA5132A1750B600127430 /* APICaller.swift in Sources */,

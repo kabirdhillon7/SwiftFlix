@@ -14,12 +14,13 @@ struct MainView: View {
                 .tabItem {
                     Label("Now Playing", systemImage: "film")
                 }
-            // Search, Saved
             
-//            OrderView()
-//                .tabItem {
-//                    Label("Order", systemImage: "square.and.pencil")
-//                }
+            SearchView()
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+            
+            // Saved Movies
         }
     }
 }
