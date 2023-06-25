@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MovieDetailView: View {
     var movie: Movie
+    @State var trailerKey: String?
     
+    private let apiCaller: APICaller = APICaller()
+    @State private var cancellables = Set<AnyCancellable>()
+
     var body: some View {
         
         ScrollView {
@@ -44,8 +49,31 @@ struct MovieDetailView: View {
                 Text(movie.overview)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
-            }.frame(width: UIScreen.main.bounds.width)
+                
+                if let videoID = trailerKey {
+                    YouTubePlayerView(videoID: videoID)
+                        .frame(height: 300)
+                }
+            }
+            .frame(width: UIScreen.main.bounds.width)
+            .onAppear(perform: getMovieTrailer)
         }
+    }
+    
+    func getMovieTrailer() {
+        apiCaller.getMovieTrailer(movieId: movie.id)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { videoID in
+                self.trailerKey = videoID
+            }
+            .store(in: &cancellables)
+        
     }
 }
 
@@ -60,7 +88,7 @@ struct MovieDetailView_Previews: PreviewProvider {
             vote_average: 7.7
         )
         
-        MovieDetailView(movie: sampleMovie)
+        MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
             .previewLayout(.sizeThatFits)
             .padding()
     }

@@ -15,7 +15,7 @@ class MovieViewModel: ObservableObject {
     private let apiCaller: APICaller = APICaller()
     private var cancellables: Set<AnyCancellable> = []
     
-    func fetchMovies () {
+    func fetchMovies() {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=") else { return }
         
         apiCaller.getMovies(toUrl: url)

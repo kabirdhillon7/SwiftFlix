@@ -32,29 +32,6 @@ struct MovieView: View {
                 .padding(.horizontal)
             }
         }
-        //.frame(maxHeight: .infinity)
-        
-        /*
-        NavigationStack {
-            List(movieViewModel.movies) { movie in
-                HStack (alignment: .top) {
-                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                        .frame(maxWidth: UIScreen.main.bounds.width / 3)
-                    
-                    VStack(alignment: .leading) {
-                        Text(movie.title)
-                            .font(.title2)
-                            .bold()
-                            
-                        Text(movie.overview)
-                    }
-                }
-            }
-            .navigationTitle("Now Playing")
-            .onAppear {
-                movieViewModel.fetchMovies()
-            }
-        }*/
     }
 }
 
