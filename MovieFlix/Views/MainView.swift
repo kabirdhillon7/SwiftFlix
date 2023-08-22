@@ -19,8 +19,6 @@ struct MainView: View {
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
-            
-            // Saved Movies
         }
     }
 }

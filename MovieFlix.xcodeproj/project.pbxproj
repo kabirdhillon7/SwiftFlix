@@ -116,8 +116,8 @@
 				483CA5102A17503A00127430 /* Views */,
 				483CA5172A1752A000127430 /* ViewModels */,
 				483CA4E82A16D5BB00127430 /* Assets.xcassets */,
-				483CA4EA2A16D5BB00127430 /* Preview Content */,
 				481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */,
+				483CA4EA2A16D5BB00127430 /* Preview Content */,
 			);
 			path = MovieFlix;
 			sourceTree = "<group>";
@@ -152,6 +152,7 @@
 			children = (
 				483CA50E2A174A2000127430 /* MainView.swift */,
 				485E200F2A19E4A600408FD0 /* Now Playing */,
+				48C18E592A4808BE009980F3 /* SearchView.swift */,
 				485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */,
 			);
 			path = Views;
@@ -186,7 +187,6 @@
 			children = (
 				483CA4E62A16D5BA00127430 /* MovieView.swift */,
 				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
-				48C18E592A4808BE009980F3 /* SearchView.swift */,
 			);
 			path = "Now Playing";
 			sourceTree = "<group>";

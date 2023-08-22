@@ -27,8 +27,8 @@ struct MovieDetailView: View {
                     )
 
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                    .frame(width: 185, height: 277.5)
-
+                    .frame(width: .infinity, height: 277.5)
+                
                 Text(movie.title)
                     .font(.title)
                     .bold()
@@ -46,9 +46,13 @@ struct MovieDetailView: View {
                         .font(.subheadline)
                 }
                 
+                Spacer()
+                
                 Text(movie.overview)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
+                
+                Spacer()
                 
                 if let videoID = trailerKey {
                     YouTubePlayerView(videoID: videoID)
