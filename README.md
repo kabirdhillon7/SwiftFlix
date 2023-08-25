@@ -10,7 +10,6 @@ MovieFix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) an
 - [Description](#description)
 - [Requirements](#requirements)
 - [Demo](#demo)
-- [Testing](#testing)
 - [Dependencies](#dependencies)
 - [Contact](#contact)
 
@@ -45,6 +44,7 @@ Some of the main features include:
 This app uses the following dependencies:
 
 - [Combine](https://developer.apple.com/documentation/combine)
+- [WebKit](https://developer.apple.com/documentation/webkit)
 
 ## Contact
 
