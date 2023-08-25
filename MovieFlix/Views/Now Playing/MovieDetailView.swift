@@ -15,36 +15,41 @@ struct MovieDetailView: View {
     
     private let apiCaller: APICaller = APICaller()
     @State private var cancellables = Set<AnyCancellable>()
-
+    
     var body: some View {
         
         ScrollView {
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
-                    .frame(height: 225, alignment: .center)
-                    .scaledToFill()
+                    .frame(height: 200, alignment: .center)
+                    .ignoresSafeArea()
                     .mask(
                         LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                     )
-
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                    .frame(width: .infinity, height: 277.5)
-                
-                Text(movie.title)
-                    .font(.title)
-                    .bold()
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
                 
                 HStack {
-                    Image(systemName: "star.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundColor(.yellow)
-
-                    Text(String(format: "%.1f", movie.vote_average) + " / 10")
-                        .font(.subheadline)
-                        .foregroundColor(.yellow)
-                        .font(.subheadline)
+                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                        .frame(width: .infinity, height: 277.5)
+                    
+                    VStack {
+                        Text(movie.title)
+                            .font(.title3)
+                            .bold()
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        HStack {
+                            Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.vote_average)) / 10")
+                                .font(.subheadline)
+                                .foregroundColor(.yellow)
+                                .font(.subheadline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Spacer(minLength: 10)
+                        }
+                        
+                        Spacer()
+                    }.frame(maxWidth: .infinity, alignment: .leading)
                 }
                 
                 Spacer()
