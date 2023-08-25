@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+/// A view that displays  a search interface for movies
 struct SearchView: View {
     @State var searchQuery = ""
     @State var searchResults = [Movie]()
@@ -46,6 +47,7 @@ struct SearchView: View {
         }
     }
     
+    /// Fetches search results from API
     func searchMovies() {
         apiCaller.getSearchMovieResults(searchQuery: searchQuery)
             .receive(on: DispatchQueue.main)
@@ -70,6 +72,7 @@ struct SearchView_Previews: PreviewProvider {
     }
 }
 
+// MARK: Hides the Keyboard When Not In Use
 extension View {
     func hideKeyboard() {
         let resign = #selector(UIResponder.resignFirstResponder)

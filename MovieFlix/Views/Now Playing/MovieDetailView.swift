@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+/// A view responsible for displaying movie information
 struct MovieDetailView: View {
     var movie: Movie
     @State var trailerKey: String?
@@ -64,6 +65,7 @@ struct MovieDetailView: View {
         }
     }
     
+    /// Fetches a the movie trailer for a particular movie
     func getMovieTrailer() {
         apiCaller.getMovieTrailer(movieId: movie.id)
             .sink { completion in

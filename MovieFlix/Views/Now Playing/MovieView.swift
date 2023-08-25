@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+/// A view responsible for displaying recently playing movies
 struct MovieView: View {
     @StateObject var movieViewModel = MovieViewModel()
     
@@ -23,7 +24,6 @@ struct MovieView: View {
                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
                         }
                     }
-                    
                 }
                 .navigationTitle("Now Playing")
                 .onAppear {

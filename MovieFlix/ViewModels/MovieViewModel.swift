@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 import Combine
 
-class MovieViewModel: ObservableObject {
+/// A view model responsible for managing movie data and API calls
+final class MovieViewModel: ObservableObject {
     @Published var movies = [Movie]()
     
     private let apiCaller: APICaller = APICaller()
     private var cancellables: Set<AnyCancellable> = []
     
+    /// Fetches a list of movies currently playing in theaters
     func fetchMovies() {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=") else { return }
         
