@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "61A3313B-5C4C-48BB-BD91-E18C03C707BF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MovieFlix.xcodeproj",
+      "identifier" : "483CA4E02A16D5BA00127430",
+      "name" : "MovieFlix"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MovieFlix.xcodeproj",
+        "identifier" : "483CA4F02A16D5BB00127430",
+        "name" : "MovieFlixTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MovieFlix.xcodeproj",
+        "identifier" : "483CA4FA2A16D5BB00127430",
+        "name" : "MovieFlixUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
