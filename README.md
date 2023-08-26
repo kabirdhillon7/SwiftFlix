@@ -17,7 +17,6 @@ MovieFix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) an
 
 Some of the main features include:
 
-- Implements a tab bar with a now playing and superhero tab.
 - Now Playing Tab
   - Displays a list of movies currently playing in theaters.
   - Allows users to tap on a movie to see its details.
