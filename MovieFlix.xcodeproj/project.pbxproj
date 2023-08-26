@@ -109,6 +109,14 @@
 			path = Saved;
 			sourceTree = "<group>";
 		};
+		480B6E512A99CD38008ACF3D /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
 		483CA4D82A16D5BA00127430 = {
 			isa = PBXGroup;
 			children = (
@@ -176,7 +184,7 @@
 				485E200F2A19E4A600408FD0 /* Now Playing */,
 				480B6E472A995215008ACF3D /* Saved */,
 				480B6E462A9951FE008ACF3D /* Search */,
-				485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */,
+				480B6E512A99CD38008ACF3D /* Custom */,
 			);
 			path = Views;
 			sourceTree = "<group>";
