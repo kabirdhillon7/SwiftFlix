@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		480B6E492A995229008ACF3D /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E482A995229008ACF3D /* SavedView.swift */; };
+		480B6E4E2A996C2A008ACF3D /* SavedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */; };
+		480B6E502A99A55A008ACF3D /* SavedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E4F2A99A55A008ACF3D /* SavedMovie.swift */; };
 		481FE92D2A947AC200D6E88A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */; };
 		483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */; };
 		483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E62A16D5BA00127430 /* MovieView.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		480B6E482A995229008ACF3D /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedViewModel.swift; sourceTree = "<group>"; };
+		480B6E4F2A99A55A008ACF3D /* SavedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovie.swift; sourceTree = "<group>"; };
 		481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		483CA4E12A16D5BA00127430 /* MovieFlix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieFlix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFlixApp.swift; sourceTree = "<group>"; };
@@ -189,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				483CA5152A1750E200127430 /* Movie.swift */,
+				480B6E4F2A99A55A008ACF3D /* SavedMovie.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				483CA5182A1752DE00127430 /* MovieViewModel.swift */,
+				480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -346,10 +352,12 @@
 				483CA50F2A174A2000127430 /* MainView.swift in Sources */,
 				483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */,
 				483CA5132A1750B600127430 /* APICaller.swift in Sources */,
+				480B6E4E2A996C2A008ACF3D /* SavedViewModel.swift in Sources */,
 				483CA5162A1750E200127430 /* Movie.swift in Sources */,
 				480B6E492A995229008ACF3D /* SavedView.swift in Sources */,
 				483CA5192A1752DE00127430 /* MovieViewModel.swift in Sources */,
 				483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */,
+				480B6E502A99A55A008ACF3D /* SavedMovie.swift in Sources */,
 				485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
