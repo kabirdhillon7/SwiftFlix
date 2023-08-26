@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-class SavedMovie: ObservableObject {
+/// Saved Movie
+final class SavedMovie: ObservableObject {
     @Published var movies: Set<Movie>
     private let saveKey = "SavedMovies"
     
@@ -29,12 +30,12 @@ class SavedMovie: ObservableObject {
         }
     }
     
-    // returns true if our set contains this movie
+    /// Check if the movies set contains a particular movie
     func contains(_ movie: Movie) -> Bool {
         movies.contains(movie)
     }
     
-    // adds the movie to our set, updates all views, and saves the change
+    /// Adds a movie to movie set
     func add(_ movie: Movie) {
         objectWillChange.send()
         movies.insert(movie)
@@ -43,6 +44,7 @@ class SavedMovie: ObservableObject {
     }
     
     // removes the movie from our set, updates all views, and saves the change
+    /// Removes a movie to movie set
     func remove(_ movie: Movie) {
         objectWillChange.send()
         movies.remove(movie)
@@ -50,14 +52,15 @@ class SavedMovie: ObservableObject {
         save()
     }
     
-    // updates UserDefaults for SavedMovies
+    /// Saves and updates to UserDefaults
     func save() {
         
         do {
             // Create JSON Encoder
             let encoder = JSONEncoder()
-            // Convert Set to Array. Encode Saved Movies
-            let movieArray = Array(movies) // Convert Set to Array
+            // Convert Set to Array
+            let movieArray = Array(movies)
+            // Encode Saved Movies
             let data = try encoder.encode(movieArray)
             // Save to UserDefaults
             UserDefaults.standard.set(data, forKey: saveKey)

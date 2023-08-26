@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// A view responsible for displaying bookmarked movies
+/// A view responsible for displaying saved movies
 struct SavedView: View {
     @EnvironmentObject var savedMoviesViewModel: SavedViewModel
     
@@ -33,9 +33,7 @@ struct SavedView: View {
         }
         .navigationTitle("Saved")
         .onAppear() {
-            DispatchQueue.main.async {
-                
-            }
+            DispatchQueue.main.async { }
         }
     }
 }
