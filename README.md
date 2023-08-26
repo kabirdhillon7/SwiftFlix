@@ -17,12 +17,17 @@ MovieFix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) an
 
 Some of the main features include:
 
-- Implements a tab bar with a now playing and superhero tab.
 - Now Playing Tab
-  - User can view and scroll through a list of movies now playing in theaters.
-  - User can tap a cell to see more details about a particular movie, which includes: the movie poster image, backdrop image, title, plot description, and rating
+  - Displays a list of movies currently playing in theaters.
+  - Allows users to tap on a movie to see its details.
+    - Movie details include poster image, backdrop image, title, plot description, and rating.
+    - Provides the option to bookmark a movie.
+- Saved Tab
+  - Shows a list of bookmarked movies.
+  - Allows users to view their saved movies.
 - Search Tab
-  - User can search for movies, and tap a cell to see more details
+  - Enables users to search for movies.
+  - Users can tap on a search result to view its details, similar to the Now Playing Tab.
 
 ## Requirements
 
@@ -51,6 +56,7 @@ Some of the main features include:
 This app uses the following dependencies:
 
 - [Combine](https://developer.apple.com/documentation/combine)
+- [UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults)
 - [WebKit](https://developer.apple.com/documentation/webkit)
 
 ## Contact
