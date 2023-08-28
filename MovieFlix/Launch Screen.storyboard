@@ -46,7 +46,11 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <color key="tintColor" name="AccentColor"/>
     <resources>
         <image name="movie" width="337" height="337"/>
+        <namedColor name="AccentColor">
+            <color red="0.10980392156862745" green="0.49803921568627452" blue="0.64313725490196083" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>
