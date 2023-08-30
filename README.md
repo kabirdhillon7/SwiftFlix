@@ -36,7 +36,14 @@ Some of the main features include:
 
 ## Demo
 ### Current Progress Walkthrough
-<img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
+<img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/46ff5e9b-8d78-4bb3-b1b7-3e9726c776ab" width=250><br>
+
+### Progress 3 Walkthrough
+<details>
+  <summary>Click to view</summary>
+  
+  <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
+</details>
 
 ### Progress 2 Walkthrough
 <details>
