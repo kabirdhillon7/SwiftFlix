@@ -38,4 +38,12 @@ final class MovieFlixUITests: XCTestCase {
             }
         }
     }
+    
+    // MARK: Search
+    func test_searchBar_shouldReturnTrue() {
+        let app = XCUIApplication()
+        app.launch()
+        XCUIApplication().tabBars["Tab Bar"].buttons["Search"].tap()
+    }
+    
 }
