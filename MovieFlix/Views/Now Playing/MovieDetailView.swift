@@ -84,6 +84,7 @@ struct MovieDetailView: View {
                 }
             }
             .frame(width: UIScreen.main.bounds.width)
+            .padding(.vertical)
             .onAppear(perform: getMovieTrailer)
         }
     }
