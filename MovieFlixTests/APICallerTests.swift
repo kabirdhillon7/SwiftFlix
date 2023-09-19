@@ -49,4 +49,12 @@ final class APICallerTests: XCTestCase {
         
         XCTAssertNotNil(apiCaller.getMovies(toUrl: url))
     }
+    
+    func test_getMovieTrailer_shouldNotBeNil() {
+        XCTAssertNotNil(apiCaller.getMovieTrailer(movieId: 502356))
+    }
+    
+    func test_getSearchMovieResults_shouldNotBeNil() {
+        XCTAssertNotNil(apiCaller.getSearchMovieResults(searchQuery: "Lord of the Rings"))
+    }
 }
