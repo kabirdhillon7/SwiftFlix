@@ -10,7 +10,10 @@ import SwiftUI
 
 /// Saved Movie
 final class SavedMovie: ObservableObject {
+    /// A set of saved Movie objects
     @Published var movies: Set<Movie>
+    
+    /// UserDefaults save key
     private let saveKey = "SavedMovies"
     
     init() {
@@ -22,7 +25,7 @@ final class SavedMovie: ObservableObject {
                 let movieArray = try decoder.decode([Movie].self, from: data)
                 movies = Set(movieArray)
             } catch {
-                print("Unable to Decode Saved Movies (\(error))")
+                print("Unable to Decode Saved Movies: (\(error))")
                 movies = Set<Movie>()
             }
         } else {
@@ -31,30 +34,32 @@ final class SavedMovie: ObservableObject {
     }
     
     /// Check if the movies set contains a particular movie
+    ///
+    /// - Parameters: movie: A Movie.
+    /// - Returns: A Bool if the movies set contains the specified movie.
     func contains(_ movie: Movie) -> Bool {
         movies.contains(movie)
     }
     
     /// Adds a movie to movie set
+    ///
+    /// - Parameters: movie: A movie to be added to the movies set.
     func add(_ movie: Movie) {
         objectWillChange.send()
         movies.insert(movie)
-        print("Set - Added: \(movies)")
         save()
     }
     
-    // removes the movie from our set, updates all views, and saves the change
     /// Removes a movie to movie set
+    /// - Parameters: movie: A movie.
     func remove(_ movie: Movie) {
         objectWillChange.send()
         movies.remove(movie)
-        print("Set - Removed: \(movies)")
         save()
     }
     
     /// Saves and updates to UserDefaults
     func save() {
-        
         do {
             // Create JSON Encoder
             let encoder = JSONEncoder()
