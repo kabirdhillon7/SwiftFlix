@@ -10,6 +10,7 @@
 		480B6E492A995229008ACF3D /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E482A995229008ACF3D /* SavedView.swift */; };
 		480B6E4E2A996C2A008ACF3D /* SavedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */; };
 		480B6E502A99A55A008ACF3D /* SavedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480B6E4F2A99A55A008ACF3D /* SavedMovie.swift */; };
+		480E80882AB9458B005DF869 /* MovieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E80872AB9458B005DF869 /* MovieTests.swift */; };
 		481FE92D2A947AC200D6E88A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */; };
 		4823D69C2A9F057300F7DB9D /* APICallerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4823D69B2A9F057300F7DB9D /* APICallerTests.swift */; };
 		483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E42A16D5BA00127430 /* MovieFlixApp.swift */; };
@@ -50,6 +51,7 @@
 		480B6E482A995229008ACF3D /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
 		480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedViewModel.swift; sourceTree = "<group>"; };
 		480B6E4F2A99A55A008ACF3D /* SavedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovie.swift; sourceTree = "<group>"; };
+		480E80872AB9458B005DF869 /* MovieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTests.swift; sourceTree = "<group>"; };
 		481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4823D69B2A9F057300F7DB9D /* APICallerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallerTests.swift; sourceTree = "<group>"; };
 		483CA4E12A16D5BA00127430 /* MovieFlix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieFlix.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +174,7 @@
 				483CA4F52A16D5BB00127430 /* MovieFlixTests.swift */,
 				48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */,
 				4823D69B2A9F057300F7DB9D /* APICallerTests.swift */,
+				480E80872AB9458B005DF869 /* MovieTests.swift */,
 			);
 			path = MovieFlixTests;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 			files = (
 				483CA4F62A16D5BB00127430 /* MovieFlixTests.swift in Sources */,
 				48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */,
+				480E80882AB9458B005DF869 /* MovieTests.swift in Sources */,
 				4823D69C2A9F057300F7DB9D /* APICallerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
