@@ -67,14 +67,15 @@ struct MovieDetailView: View {
                         
                         
                         Spacer()
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 
                 Spacer()
                 
                 Text(movie.overview)
                     .font(.body)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
                 
@@ -84,7 +85,6 @@ struct MovieDetailView: View {
                 }
             }
             .frame(width: UIScreen.main.bounds.width)
-            .padding(.vertical)
             .onAppear(perform: getMovieTrailer)
             .navigationBarTitleDisplayMode(.inline)
         }
