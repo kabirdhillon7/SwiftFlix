@@ -51,6 +51,7 @@ final class SavedMovie: ObservableObject {
     }
     
     /// Removes a movie to movie set
+    /// 
     /// - Parameters: movie: A movie.
     func remove(_ movie: Movie) {
         objectWillChange.send()
