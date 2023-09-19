@@ -25,13 +25,11 @@ class APICaller: DataServicing {
     
     let apiKey = APIInformation.key
     
-    /**
-     Fetches a list of movies recently playing in theaters
-     - Parameters:
-     - url: The URL to the API.
-     - Returns:
-     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
-     */
+    /// Fetches a list of movies recently playing in theaters
+    /// - Parameters:
+    ///    - url: The URL to the API.
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
     func getMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
         guard let requestUrl = URL(string: url.absoluteString + apiKey.rawValue) else {
             return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
@@ -45,13 +43,12 @@ class APICaller: DataServicing {
             .eraseToAnyPublisher()
     }
     
-    /**
-     Fetches movie trailer from The Movie Database API
-     - Parameters:
-     - movieId: The id of the specfic movie to fetch the trailer for
-     - Returns:
-     -  An `AnyPublisher` of a `String` representing the key for the trailer, and an `Error`
-     */
+    /// Fetches movie trailer from The Movie Database API
+    ///
+    /// - Parameters:
+    ///    - movieId: The id of the specfic movie to fetch the trailer for
+    /// - Returns:
+    ///    -  An `AnyPublisher` of a `String` representing the key for the trailer, and an `Error`
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error> {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieId)/videos?api_key=\(apiKey.rawValue)") else {
             return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
@@ -68,13 +65,12 @@ class APICaller: DataServicing {
             .eraseToAnyPublisher()
     }
     
-    /**
-     Fetches movie search results from The Movie Database API
-     - Parameters:
-     - searchQuery: The search input from the user
-     - Returns:
-     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
-     */
+    /// Fetches movie search results from The Movie Database API
+    ///
+    /// - Parameters:
+    ///     - searchQuery: The search input from the user
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
     func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error> {
         let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey.rawValue)&query=\(encodedQuery)"

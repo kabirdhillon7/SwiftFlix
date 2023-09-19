@@ -15,12 +15,18 @@ struct YouTubePlayerView: UIViewRepresentable {
     
     let videoID: String
     
-    // MARK: Creates the initial WKWebView
+    /// Creates the initial WKWebView
+    ///
+    /// - Parameters: context: The view context.
     func makeUIView(context: Context) -> WKWebView {
         return WKWebView()
     }
     
-    // MARK: Updates the WKWebView when the video ID changes
+    /// Updates the WKWebView when the video ID changes
+    ///
+    /// - Parameters:
+    ///     - uiView: The WKWebView to update.
+    ///     - context: The view context.
     func updateUIView(_ uiView: WKWebView, context: Context) {
         guard let youTubeURL = URL(string: "https://www.youtube.com/embed/\(videoID)") else {
             return
