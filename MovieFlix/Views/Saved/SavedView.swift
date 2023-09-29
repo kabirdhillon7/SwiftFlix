@@ -14,7 +14,14 @@ struct SavedView: View {
     var body: some View {
         NavigationStack {
             if savedMoviesViewModel.savedMovie.movies.isEmpty {
+                Image(systemName: "film.stack.fill")
+                    .font(.system(size: 75))
+                    .foregroundColor(Color(UIColor.lightGray))
+                Spacer()
+                    .frame(height: 5)
                 Text("No Saved Movies")
+                    .fontWeight(.medium)
+                    .foregroundColor(Color(UIColor.lightGray))
                     .navigationTitle("Saved")
             } else {
                 List {
