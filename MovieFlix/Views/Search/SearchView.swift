@@ -34,12 +34,33 @@ struct SearchView: View {
                 ForEach(searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
                         HStack {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                            Text(movie.title)
-                                .bold()
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path)) { image in
+                                image
+                                    .resizable()
+                                    .frame(width: 92.5, height: 138.75)
+                                    .aspectRatio(contentMode: .fill)
+                                    .cornerRadius(15)
+                                    .padding()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            
+                            VStack {
+                                Text(movie.title)
+                                    .font(.system(size: 20))
+                                    .bold()
+                                    .frame(maxWidth: .infinity,alignment: .leading)
+                                Spacer()
+                                    .frame(height: 5)
+                                Text(movie.overview)
+                                    .font(.body)
+                                    .frame(maxWidth: .infinity,alignment: .leading)
+                                    .lineLimit(4)
+                            }
                         }
                     }
-                }.listRowInsets(EdgeInsets())
+                }
+                .listRowInsets(EdgeInsets())
                 
             }
             .listStyle(.plain)
