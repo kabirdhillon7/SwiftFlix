@@ -33,7 +33,7 @@ struct SearchView: View {
             List {
                 ForEach(searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        HStack {
+                        HStack{
                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path)) { image in
                                 image
                                     .resizable()
@@ -61,7 +61,6 @@ struct SearchView: View {
                     }
                 }
                 .listRowInsets(EdgeInsets())
-                
             }
             .listStyle(.plain)
             .navigationTitle("Search")
