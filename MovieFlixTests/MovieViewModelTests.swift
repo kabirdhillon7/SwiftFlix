@@ -26,7 +26,7 @@ final class MovieViewModelTests: XCTestCase {
     }
     
     func test_movies_shouldNotBeNil() {
-        moviesVM.fetchMovies()
+        moviesVM.fetchNowPlayingMovies()
         XCTAssertNotNil(moviesVM.movies)
     }
 }

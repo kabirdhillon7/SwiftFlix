@@ -11,26 +11,50 @@ import Combine
 /// A view responsible for displaying recently playing movies
 struct MovieView: View {
     @StateObject var movieViewModel = MovieViewModel()
+    @State private var selectedTab = 0
     
     let columns = [GridItem(.flexible()),
                    GridItem(.flexible())]
     
     var body: some View {
         NavigationStack {
+            Picker("What is your favorite color?", selection: $selectedTab) {
+                Text("Now Playing").tag(0)
+                Text("Upcoming").tag(1)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(movieViewModel.movies) { movie in
-                        NavigationLink(destination: MovieDetailView(movie: movie)) {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                if selectedTab == 0 {
+                    LazyVGrid(columns: columns, spacing: 0) {
+                        ForEach(movieViewModel.movies) { movie in
+                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                            }
                         }
                     }
+                    .onAppear {
+                        movieViewModel.fetchNowPlayingMovies()
+                    }
+                } else {
+                    LazyVGrid(columns: columns, spacing: 0) {
+                        ForEach(movieViewModel.movies) { movie in
+                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                            }
+                        }
+                    }
+                    .onAppear {
+                        movieViewModel.fetchUpcomingMovies()
+                    }
                 }
-                .navigationTitle("Now Playing")
-                .onAppear {
-                    movieViewModel.fetchMovies()
-                }
-                .padding(.horizontal)
             }
+            .navigationTitle("Movies")
+            .onAppear {
+                movieViewModel.fetchNowPlayingMovies()
+            }
+            .padding(.horizontal)
         }
     }
 }

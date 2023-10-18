@@ -14,7 +14,7 @@ struct MainView: View {
         TabView {
             MovieView()
                 .tabItem {
-                    Label("Now Playing", systemImage: "film")
+                    Label("Movies", systemImage: "film")
                 }
             SavedView()
                 .tabItem {
