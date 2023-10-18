@@ -36,7 +36,7 @@ struct MovieDetailView: View {
                     
                     VStack(spacing: 5) {
                         Text(movie.title)
-                            .font(.title3)
+                            .font(.system(size: 21))
                             .bold()
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
@@ -44,7 +44,7 @@ struct MovieDetailView: View {
                         
                         HStack {
                             Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.vote_average)) / 10")
-                                .font(.subheadline)
+                                .font(.body)
                                 .foregroundColor(.yellow)
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -63,6 +63,7 @@ struct MovieDetailView: View {
                             }
                         } label: {
                             Image(systemName: savedMovie.contains(movie) ? "bookmark.fill" : "bookmark")
+                                .font(.body)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
