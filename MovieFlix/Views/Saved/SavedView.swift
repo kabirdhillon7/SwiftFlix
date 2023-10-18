@@ -28,9 +28,21 @@ struct SavedView: View {
                     ForEach(Array(savedMoviesViewModel.savedMovie.movies), id: \.self) { movie in
                         NavigationLink(destination: MovieDetailView(movie: movie)) {
                             HStack {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path)) { image in
+                                    image
+                                        .resizable()
+                                        .frame(width: 92.5, height: 138.75)
+                                        .aspectRatio(contentMode: .fill)
+                                        .cornerRadius(15)
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                Spacer()
+                                    .frame(width: 10)
                                 Text(movie.title)
+                                    .font(.system(size: 20))
                                     .bold()
+                                    .frame(maxWidth: .infinity,alignment: .leading)
                             }
                         }
                     }
