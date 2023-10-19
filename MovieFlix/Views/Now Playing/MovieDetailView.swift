@@ -10,13 +10,12 @@ import Combine
 
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
+    @EnvironmentObject var savedMoviesViewModel: SavedViewModel
     var movie: Movie
     @State var trailerKey: String?
     
     private let apiCaller: APICaller = APICaller()
     @State private var cancellables = Set<AnyCancellable>()
-    
-    @EnvironmentObject var savedMoviesViewModel: SavedViewModel
     
     var body: some View {
         
@@ -24,7 +23,6 @@ struct MovieDetailView: View {
             VStack(spacing: 5) {
                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
                     .frame(height: 200, alignment: .center)
-                    .ignoresSafeArea()
                     .mask(
                         LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                     )
@@ -87,9 +85,12 @@ struct MovieDetailView: View {
                 }
             }
             .frame(width: UIScreen.main.bounds.width)
-            .onAppear(perform: getMovieTrailer)
+            .onAppear {
+                getMovieTrailer()
+            }
             .navigationBarTitleDisplayMode(.inline)
         }
+        .edgesIgnoringSafeArea(.top)
     }
     
     /// Fetches a the movie trailer for a particular movie
@@ -100,13 +101,12 @@ struct MovieDetailView: View {
                 case .finished:
                     break
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    print("Error getting movie trailer: \(error)")
                 }
             } receiveValue: { videoID in
                 self.trailerKey = videoID
             }
             .store(in: &cancellables)
-        
     }
 }
 

@@ -51,7 +51,7 @@ class APICaller: DataServicing {
     ///    -  An `AnyPublisher` of a `String` representing the key for the trailer, and an `Error`
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error> {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieId)/videos?api_key=\(apiKey.rawValue)") else {
-            return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
+            return Fail(error: NSError(domain: "Invalid trailer URL", code: 0)).eraseToAnyPublisher()
         }
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         
@@ -75,7 +75,7 @@ class APICaller: DataServicing {
         let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey.rawValue)&query=\(encodedQuery)"
         guard let url = URL(string: urlString) else {
-            return Fail(error: NSError(domain: "Invalid URL", code: 0)).eraseToAnyPublisher()
+            return Fail(error: NSError(domain: "Invalid search URL", code: 0)).eraseToAnyPublisher()
         }
         let request = URLRequest(url: url)
         
