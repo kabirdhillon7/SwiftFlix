@@ -18,39 +18,16 @@ struct MovieView: View {
     
     var body: some View {
         NavigationStack {
-            Picker("", selection: $selectedTab) {
-                Text("Now Playing").tag(0)
-                Text("Upcoming").tag(1)
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            
             ScrollView {
-                if selectedTab == 0 {
-                    LazyVGrid(columns: columns, spacing: 0) {
-                        ForEach(movieViewModel.movies) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                            }
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(movieViewModel.movies) { movie in
+                        NavigationLink(destination: MovieDetailView(movie: movie)) {
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
                         }
-                    }
-                    .onAppear {
-                        movieViewModel.fetchNowPlayingMovies()
-                    }
-                } else {
-                    LazyVGrid(columns: columns, spacing: 0) {
-                        ForEach(movieViewModel.movies) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                            }
-                        }
-                    }
-                    .onAppear {
-                        movieViewModel.fetchUpcomingMovies()
                     }
                 }
             }
-            .navigationTitle("Movies")
+            .navigationTitle("Now Playing")
             .onAppear {
                 movieViewModel.fetchNowPlayingMovies()
             }

@@ -34,23 +34,4 @@ final class MovieViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
-    /// Fetches a list of movies upcoming in theaters
-    func fetchUpcomingMovies() {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=") else { return }
-        
-        apiCaller.getMovies(toUrl: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting upcoming movies")
-                case .failure(let error):
-                    print("Error getting upcoming movies: \(error)")
-                }
-            } receiveValue: { [weak self] movies in
-                self?.movies = movies
-            }
-            .store(in: &cancellables)
-    }
 }
