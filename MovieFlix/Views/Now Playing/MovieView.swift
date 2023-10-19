@@ -18,7 +18,7 @@ struct MovieView: View {
     
     var body: some View {
         NavigationStack {
-            Picker("What is your favorite color?", selection: $selectedTab) {
+            Picker("", selection: $selectedTab) {
                 Text("Now Playing").tag(0)
                 Text("Upcoming").tag(1)
             }
