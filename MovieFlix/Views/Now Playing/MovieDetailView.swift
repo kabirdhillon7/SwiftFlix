@@ -17,6 +17,8 @@ struct MovieDetailView: View {
     private let apiCaller: APICaller = APICaller()
     @State private var cancellables = Set<AnyCancellable>()
     
+    @State var savedButtonTapped = false
+    
     var body: some View {
         
         ScrollView {
@@ -51,6 +53,7 @@ struct MovieDetailView: View {
                         
                         let savedMovie = savedMoviesViewModel.savedMovie
                         Button(role: .none) {
+                            savedButtonTapped.toggle()
                             if savedMovie.contains(movie) {
                                 savedMovie.remove(movie)
                             } else {
@@ -62,6 +65,7 @@ struct MovieDetailView: View {
                         } label: {
                             Image(systemName: savedMovie.contains(movie) ? "bookmark.fill" : "bookmark")
                                 .font(.body)
+                                .symbolEffect(.bounce, value: savedButtonTapped)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
