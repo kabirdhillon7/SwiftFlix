@@ -114,16 +114,18 @@ struct MovieDetailView: View {
     }
 }
 
-#Preview {
-    let sampleMovie = Movie(id: 502356,
-                            title: "The Super Mario Bros. Movie",
-                            overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-                            poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                            backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-                            vote_average: 7.7
-    )
-    
-    MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
-        .previewLayout(.sizeThatFits)
-        .environmentObject(SavedViewModel())
+struct MovieDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        let sampleMovie = Movie(id: 502356,
+                                title: "The Super Mario Bros. Movie",
+                                overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+                                poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+                                backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+                                vote_average: 7.7
+        )
+
+        MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
+            .previewLayout(.sizeThatFits)
+            .environmentObject(SavedViewModel())
+    }
 }
