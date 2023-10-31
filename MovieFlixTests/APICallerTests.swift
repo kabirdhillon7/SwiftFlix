@@ -14,7 +14,7 @@ class MockAPIService: DataServicing {
     var mockTrailerKey = ""
     var cancellables = Set<AnyCancellable>()
     
-    func getMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
+    func getNowPlayingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
         Result.Publisher([]).eraseToAnyPublisher()
     }
     
@@ -47,7 +47,7 @@ final class APICallerTests: XCTestCase {
             return
         }
         
-        XCTAssertNotNil(apiCaller.getMovies(toUrl: url))
+        XCTAssertNotNil(apiCaller.getNowPlayingMovies(toUrl: url))
     }
     
     func test_getMovieTrailer_shouldNotBeNil() {

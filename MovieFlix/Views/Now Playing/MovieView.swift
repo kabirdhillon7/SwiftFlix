@@ -19,17 +19,44 @@ struct MovieView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
+                Picker("", selection: $selectedTab) {
+                    Text("Now Playing")
+                        .tag(0)
+                    Text("Popular")
+                        .tag(1)
+                }
+                .pickerStyle(.segmented)
+                
                 LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(movieViewModel.movies) { movie in
-                        NavigationLink(destination: MovieDetailView(movie: movie)) {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                    if selectedTab == 0 {
+                        ForEach(movieViewModel.nowPlayingMovies) { movie in
+                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                            }
+                        }
+                        .overlay {
+                          if movieViewModel.nowPlayingMovies.isEmpty {
+                            ProgressView()
+                          }
+                        }
+                    } else {
+                        ForEach(movieViewModel.popularMovies) { movie in
+                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                            }
+                        }
+                        .overlay {
+                          if movieViewModel.popularMovies.isEmpty {
+                            ProgressView()
+                          }
                         }
                     }
                 }
             }
-            .navigationTitle("Now Playing")
+            .navigationTitle("Movies")
             .onAppear {
                 movieViewModel.fetchNowPlayingMovies()
+                movieViewModel.fetchPopularMovies()
             }
             .padding(.horizontal)
         }

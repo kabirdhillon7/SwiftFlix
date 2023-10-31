@@ -15,7 +15,7 @@ enum APIInformation: String {
 
 /// Protocol for DataServicing
 protocol DataServicing {
-    func getMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error>
+    func getNowPlayingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error>
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error>
     func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
 }
@@ -30,7 +30,25 @@ class APICaller: DataServicing {
     ///    - url: The URL to the API.
     /// - Returns:
     ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
-    func getMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
+    func getNowPlayingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
+        guard let requestUrl = URL(string: url.absoluteString + apiKey.rawValue) else {
+            return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
+        }
+        let request = URLRequest(url: requestUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map({ $0.data })
+            .decode(type: MovieResults.self, decoder: JSONDecoder())
+            .map({ $0.results })
+            .eraseToAnyPublisher()
+    }
+    
+    /// Fetches a list of movies ordered by popularity.
+    /// - Parameters:
+    ///    - url: The URL to the API.
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
+    func getPopularMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
         guard let requestUrl = URL(string: url.absoluteString + apiKey.rawValue) else {
             return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
         }
