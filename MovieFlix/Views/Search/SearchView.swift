@@ -23,7 +23,7 @@ struct SearchView: View {
             TextField("Search movies", text: $searchQuery)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
-                .onChange(of: searchQuery, perform: { newValue in
+                .onChange(of: searchQuery, { oldValue, newValue in
                     searchMovies()
                 })
                 .focused($nameIsFocused)
