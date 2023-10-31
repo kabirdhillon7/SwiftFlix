@@ -31,7 +31,11 @@ struct MovieView: View {
                     if selectedTab == 0 {
                         ForEach(movieViewModel.nowPlayingMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                                if let posterPath = movie.poster_path {
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
+                                } else {
+                                    Image(systemName: "photo")
+                                }
                             }
                         }
                         .overlay {
@@ -42,7 +46,11 @@ struct MovieView: View {
                     } else {
                         ForEach(movieViewModel.popularMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
+                                if let posterPath = movie.poster_path {
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
+                                } else {
+                                    Image(systemName: "photo")
+                                }
                             }
                         }
                         .overlay {

@@ -33,18 +33,24 @@ struct SearchView: View {
             List {
                 ForEach(searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        HStack{
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path)) { image in
-                                
-                                image
-                                    .resizable()
+                        HStack {
+                            if let posterPath = movie.poster_path {
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                                    
+                                    image
+                                        .resizable()
+                                        .frame(width: 92.5, height: 138.75)
+                                        .aspectRatio(contentMode: .fill)
+                                        .cornerRadius(15)
+                                        .padding()
+                                    
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                            } else {
+                                Image(systemName: "photo")
                                     .frame(width: 92.5, height: 138.75)
-                                    .aspectRatio(contentMode: .fill)
                                     .cornerRadius(15)
-                                    .padding()
-                                
-                            } placeholder: {
-                                ProgressView()
                             }
                             
                             VStack {

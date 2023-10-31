@@ -30,9 +30,15 @@ struct MovieDetailView: View {
                     )
                 
                 HStack {
-                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path))
-                        .frame(width: 185, height: 277.5)
-                        .cornerRadius(15)
+                    if let posterPath = movie.poster_path{
+                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
+                            .frame(width: 185, height: 277.5)
+                            .cornerRadius(15)
+                    } else {
+                        Image(systemName: "photo")
+                            .frame(width: 185, height: 277.5)
+                            .cornerRadius(15)
+                    }
                     
                     VStack(spacing: 5) {
                         Text(movie.title)
