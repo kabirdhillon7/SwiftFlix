@@ -90,7 +90,7 @@ struct MovieDetailView: View {
             }
             .frame(width: UIScreen.main.bounds.width)
             .onAppear {
-                getMovieTrailer()
+                fetchMovieTrailer()
             }
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -98,7 +98,7 @@ struct MovieDetailView: View {
     }
     
     /// Fetches a the movie trailer for a particular movie
-    func getMovieTrailer() {
+    func fetchMovieTrailer() {
         apiCaller.getMovieTrailer(movieId: movie.id)
             .sink { completion in
                 switch completion {
