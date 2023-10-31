@@ -125,7 +125,6 @@ struct MovieDetailView_Previews: PreviewProvider {
         )
 
         MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
-            .previewLayout(.sizeThatFits)
             .environmentObject(SavedViewModel())
     }
 }
