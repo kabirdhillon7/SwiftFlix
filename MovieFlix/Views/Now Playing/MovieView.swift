@@ -24,8 +24,15 @@ struct MovieView: View {
                         .tag(0)
                     Text("Popular")
                         .tag(1)
+                    Text("Upcoming")
+                        .tag(2)
                 }
                 .pickerStyle(.segmented)
+                .onAppear(perform: {
+                    movieViewModel.fetchNowPlayingMovies()
+                    movieViewModel.fetchPopularMovies()
+                    movieViewModel.fetchUpcomingMovies()
+                })
                 
                 LazyVGrid(columns: columns, spacing: 0) {
                     if selectedTab == 0 {
@@ -38,12 +45,7 @@ struct MovieView: View {
                                 }
                             }
                         }
-                        .overlay {
-                          if movieViewModel.nowPlayingMovies.isEmpty {
-                            ProgressView()
-                          }
-                        }
-                    } else {
+                    } else if selectedTab == 1 {
                         ForEach(movieViewModel.popularMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.poster_path {
@@ -53,19 +55,20 @@ struct MovieView: View {
                                 }
                             }
                         }
-                        .overlay {
-                          if movieViewModel.popularMovies.isEmpty {
-                            ProgressView()
-                          }
+                    } else {
+                        ForEach(movieViewModel.upcomingMovies) { movie in
+                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                if let posterPath = movie.poster_path {
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
+                                } else {
+                                    Image(systemName: "photo")
+                                }
+                            }
                         }
                     }
                 }
             }
             .navigationTitle("Movies")
-            .onAppear {
-                movieViewModel.fetchNowPlayingMovies()
-                movieViewModel.fetchPopularMovies()
-            }
             .padding(.horizontal)
         }
     }

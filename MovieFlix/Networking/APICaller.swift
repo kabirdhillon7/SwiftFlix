@@ -61,6 +61,24 @@ class APICaller: DataServicing {
             .eraseToAnyPublisher()
     }
     
+    /// Fetches a list of movies that are being released soon.
+    /// - Parameters:
+    ///    - url: The URL to the API.
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
+    func getUpcomingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error> {
+        guard let requestUrl = URL(string: url.absoluteString + apiKey.rawValue) else {
+            return Fail(error: NSError(domain: "Invalid url", code: 0)).eraseToAnyPublisher()
+        }
+        let request = URLRequest(url: requestUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map({ $0.data })
+            .decode(type: MovieResults.self, decoder: JSONDecoder())
+            .map({ $0.results })
+            .eraseToAnyPublisher()
+    }
+    
     /// Fetches movie trailer from The Movie Database API
     ///
     /// - Parameters:
