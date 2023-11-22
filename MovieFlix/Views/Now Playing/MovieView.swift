@@ -13,9 +13,6 @@ struct MovieView: View {
     @StateObject var movieViewModel = MovieViewModel()
     @State private var selectedTab = 0
     
-    let columns = [GridItem(.flexible()),
-                   GridItem(.flexible())]
-    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -34,7 +31,9 @@ struct MovieView: View {
                     movieViewModel.fetchUpcomingMovies()
                 })
                 
-                LazyVGrid(columns: columns, spacing: 0) {
+                LazyVGrid(columns: Array(repeating: .init(.flexible()),
+                                         count: UIDevice.current.userInterfaceIdiom == .pad ? 4 : 2),
+                          spacing: 0) {
                     if selectedTab == 0 {
                         ForEach(movieViewModel.nowPlayingMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
