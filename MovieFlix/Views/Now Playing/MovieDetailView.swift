@@ -48,14 +48,11 @@ struct MovieDetailView: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        HStack {
-                            Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.vote_average)) / 10")
-                                .font(.body)
-                                .foregroundColor(.yellow)
-                                .font(.subheadline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Spacer(minLength: 10)
-                        }
+                        
+                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.vote_average)) / 10")
+                            .font(.system(size: 17))
+                            .foregroundColor(.orange)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         let savedMovie = savedMoviesViewModel.savedMovie
                         Button(role: .none) {
