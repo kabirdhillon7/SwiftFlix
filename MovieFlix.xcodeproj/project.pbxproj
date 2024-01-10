@@ -27,6 +27,7 @@
 		485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */; };
 		48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C18E592A4808BE009980F3 /* SearchView.swift */; };
 		48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */; };
+		48CA28D02B4E5FE300172DED /* NowPlayingWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 48CA28BC2B4E5FE100172DED /* NowPlayingWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +45,28 @@
 			remoteGlobalIDString = 483CA4E02A16D5BA00127430;
 			remoteInfo = MovieFlix;
 		};
+		48CA28CE2B4E5FE300172DED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 483CA4D92A16D5BA00127430 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48CA28BB2B4E5FE100172DED;
+			remoteInfo = NowPlayingWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		48CA28D12B4E5FE300172DED /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				48CA28D02B4E5FE300172DED /* NowPlayingWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		480B6E482A995229008ACF3D /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
@@ -71,6 +93,7 @@
 		48C18E592A4808BE009980F3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModelTests.swift; sourceTree = "<group>"; };
 		48C247262A99D8FD0089DEE0 /* MovieFlix.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MovieFlix.xctestplan; sourceTree = SOURCE_ROOT; };
+		48CA28BC2B4E5FE100172DED /* NowPlayingWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NowPlayingWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +112,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		483CA4F82A16D5BB00127430 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48CA28B92B4E5FE100172DED /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -138,6 +168,7 @@
 				483CA4E12A16D5BA00127430 /* MovieFlix.app */,
 				483CA4F12A16D5BB00127430 /* MovieFlixTests.xctest */,
 				483CA4FB2A16D5BB00127430 /* MovieFlixUITests.xctest */,
+				48CA28BC2B4E5FE100172DED /* NowPlayingWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,10 +273,12 @@
 				483CA4DD2A16D5BA00127430 /* Sources */,
 				483CA4DE2A16D5BA00127430 /* Frameworks */,
 				483CA4DF2A16D5BA00127430 /* Resources */,
+				48CA28D12B4E5FE300172DED /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				48CA28CF2B4E5FE300172DED /* PBXTargetDependency */,
 			);
 			name = MovieFlix;
 			productName = MovieFlix;
@@ -288,6 +321,23 @@
 			productReference = 483CA4FB2A16D5BB00127430 /* MovieFlixUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		48CA28BB2B4E5FE100172DED /* NowPlayingWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48CA28D42B4E5FE300172DED /* Build configuration list for PBXNativeTarget "NowPlayingWidgetExtension" */;
+			buildPhases = (
+				48CA28B82B4E5FE100172DED /* Sources */,
+				48CA28B92B4E5FE100172DED /* Frameworks */,
+				48CA28BA2B4E5FE100172DED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NowPlayingWidgetExtension;
+			productName = NowPlayingWidgetExtension;
+			productReference = 48CA28BC2B4E5FE100172DED /* NowPlayingWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -295,7 +345,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					483CA4E02A16D5BA00127430 = {
@@ -308,6 +358,9 @@
 					483CA4FA2A16D5BB00127430 = {
 						CreatedOnToolsVersion = 14.3;
 						TestTargetID = 483CA4E02A16D5BA00127430;
+					};
+					48CA28BB2B4E5FE100172DED = {
+						CreatedOnToolsVersion = 15.2;
 					};
 				};
 			};
@@ -327,6 +380,7 @@
 				483CA4E02A16D5BA00127430 /* MovieFlix */,
 				483CA4F02A16D5BB00127430 /* MovieFlixTests */,
 				483CA4FA2A16D5BB00127430 /* MovieFlixUITests */,
+				48CA28BB2B4E5FE100172DED /* NowPlayingWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -350,6 +404,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		483CA4F92A16D5BB00127430 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48CA28BA2B4E5FE100172DED /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -397,6 +458,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48CA28B82B4E5FE100172DED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -409,6 +477,11 @@
 			isa = PBXTargetDependency;
 			target = 483CA4E02A16D5BA00127430 /* MovieFlix */;
 			targetProxy = 483CA4FC2A16D5BB00127430 /* PBXContainerItemProxy */;
+		};
+		48CA28CF2B4E5FE300172DED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48CA28BB2B4E5FE100172DED /* NowPlayingWidgetExtension */;
+			targetProxy = 48CA28CE2B4E5FE300172DED /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -675,6 +748,71 @@
 			};
 			name = Release;
 		};
+		48CA28D22B4E5FE300172DED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SBCRL8SBBK;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NowPlayingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NowPlayingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kabir.MovieFlix.NowPlayingWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		48CA28D32B4E5FE300172DED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SBCRL8SBBK;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NowPlayingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NowPlayingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kabir.MovieFlix.NowPlayingWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -710,6 +848,15 @@
 			buildConfigurations = (
 				483CA50C2A16D5BB00127430 /* Debug */,
 				483CA50D2A16D5BB00127430 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48CA28D42B4E5FE300172DED /* Build configuration list for PBXNativeTarget "NowPlayingWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48CA28D22B4E5FE300172DED /* Debug */,
+				48CA28D32B4E5FE300172DED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
