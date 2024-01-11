@@ -23,14 +23,23 @@ struct MovieDetailView: View {
         
         ScrollView {
             VStack(spacing: 5) {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + movie.backdrop_path))
-                    .frame(height: 200, alignment: .center)
-                    .mask(
-                        LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
-                    )
+                if let backdropPath = movie.backdrop_path {
+                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath))
+                        .frame(height: 200, alignment: .center)
+                        .mask(
+                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
+                        )
+                } else {
+                    Image(systemName: "photo")
+                        .frame(height: 200, alignment: .center)
+                        .mask(
+                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
+                        )
+                }
+                
                 
                 HStack {
-                    if let posterPath = movie.poster_path{
+                    if let posterPath = movie.poster_path {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                             .frame(width: 185, height: 277.5)
                             .cornerRadius(15)
