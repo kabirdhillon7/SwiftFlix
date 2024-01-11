@@ -80,7 +80,8 @@ struct MovieDetailView: View {
                                 .symbolEffect(.bounce, value: savedButtonTapped)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.circle)
                         
                         Spacer()
                     }
