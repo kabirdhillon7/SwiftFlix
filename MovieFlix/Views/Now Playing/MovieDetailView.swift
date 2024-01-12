@@ -13,6 +13,7 @@ struct MovieDetailView: View {
     @EnvironmentObject var savedMoviesViewModel: SavedViewModel
     var movie: Movie
     @State var trailerKey: String?
+    @State var recommendedMovies = [Movie]()
     
     private let apiCaller: APICaller = APICaller()
     @State private var cancellables = Set<AnyCancellable>()
@@ -36,7 +37,6 @@ struct MovieDetailView: View {
                             LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                         )
                 }
-                
                 
                 HStack {
                     if let posterPath = movie.poster_path {
@@ -100,10 +100,43 @@ struct MovieDetailView: View {
                     YouTubePlayerView(videoID: videoID)
                         .frame(height: 300)
                 }
+                
+                Spacer()
+                
+                if !recommendedMovies.isEmpty {
+                    Text("Recommended")
+                        .font(.system(size: 21))
+                        .font(.subheadline)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer()
+                        .frame(height: 5)
+                    
+                    ScrollView(.horizontal) {
+                        
+                        LazyHGrid(rows: [GridItem(.flexible())], content: {
+                            ForEach($recommendedMovies.wrappedValue) { movie in
+                                NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                    if let posterPath = movie.poster_path {
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
+                                            .frame(width: 185, height: 277.5)
+                                            .cornerRadius(15)
+                                    } else {
+                                        Image(systemName: "photo")
+                                            .frame(width: 185, height: 277.5)
+                                            .cornerRadius(15)
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
             }
             .frame(width: UIScreen.main.bounds.width)
             .onAppear {
                 fetchMovieTrailer()
+                fetchMovieRecommendations()
             }
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -122,6 +155,22 @@ struct MovieDetailView: View {
                 }
             } receiveValue: { videoID in
                 self.trailerKey = videoID
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchMovieRecommendations() {
+        apiCaller.getMovieRecommendations(movieID: movie.id)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("Finished getting recommended movies")
+                case .failure(let error):
+                    print("Error getting recommended movies: \(error)")
+                }
+            } receiveValue: { movies in
+                self.recommendedMovies = movies
             }
             .store(in: &cancellables)
     }

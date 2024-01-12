@@ -121,4 +121,26 @@ class APICaller: DataServicing {
             .map({ $0.results })
             .eraseToAnyPublisher()
     }
+    
+    
+    /// Fetches movie recommendations results for a specific movie from The Movie Database API
+    ///
+    /// - Parameters:
+    ///     - movieID: The id of the specfic movie to fetch the trailer for
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
+    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error> {
+        guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/recommendations?api_key=\(apiKey.rawValue)") else {
+            return Fail(error: NSError(domain: "Invalid movie recommendations", code: 0)).eraseToAnyPublisher()
+        }
+        print(url)
+        
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map({ $0.data })
+            .decode(type: MovieResults.self, decoder: JSONDecoder())
+            .map({ $0.results })
+            .eraseToAnyPublisher()
+    }
 }
