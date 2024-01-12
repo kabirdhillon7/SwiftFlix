@@ -37,7 +37,7 @@ struct MovieDetailView: View {
                             LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                         )
                 }
-                
+                                
                 HStack {
                     if let posterPath = movie.poster_path {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
@@ -159,6 +159,7 @@ struct MovieDetailView: View {
             .store(in: &cancellables)
     }
     
+    /// Fetches a list of recommended movies for a particular movie
     func fetchMovieRecommendations() {
         apiCaller.getMovieRecommendations(movieID: movie.id)
             .receive(on: DispatchQueue.main)

@@ -133,7 +133,6 @@ class APICaller: DataServicing {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/recommendations?api_key=\(apiKey.rawValue)") else {
             return Fail(error: NSError(domain: "Invalid movie recommendations", code: 0)).eraseToAnyPublisher()
         }
-        print(url)
         
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         
