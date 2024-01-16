@@ -31,7 +31,7 @@ struct MovieDetailView: View {
                             LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                         )
                 } else {
-                    Image(systemName: "photo")
+                    Image(systemName: "film")
                         .frame(height: 200, alignment: .center)
                         .mask(
                             LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
@@ -44,7 +44,7 @@ struct MovieDetailView: View {
                             .frame(width: 185, height: 277.5)
                             .cornerRadius(15)
                     } else {
-                        Image(systemName: "photo")
+                        Image(systemName: "film")
                             .frame(width: 185, height: 277.5)
                             .cornerRadius(15)
                     }
@@ -123,7 +123,7 @@ struct MovieDetailView: View {
                                             .frame(width: 185, height: 277.5)
                                             .cornerRadius(15)
                                     } else {
-                                        Image(systemName: "photo")
+                                        Image(systemName: "film")
                                             .frame(width: 185, height: 277.5)
                                             .cornerRadius(15)
                                     }
