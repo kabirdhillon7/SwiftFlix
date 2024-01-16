@@ -40,7 +40,7 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "photo")
+                                    Image(systemName: "film")
                                 }
                             }
                         }
@@ -50,7 +50,7 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "photo")
+                                    Image(systemName: "film")
                                 }
                             }
                         }
@@ -60,7 +60,7 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "photo")
+                                    Image(systemName: "film")
                                 }
                             }
                         }
