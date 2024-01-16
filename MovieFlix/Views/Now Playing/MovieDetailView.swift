@@ -31,11 +31,9 @@ struct MovieDetailView: View {
                             LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                         )
                 } else {
-                    Image(systemName: "film")
+                    Rectangle()
                         .frame(height: 200, alignment: .center)
-                        .mask(
-                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
-                        )
+                        .foregroundStyle(.clear)
                 }
                                 
                 HStack {
