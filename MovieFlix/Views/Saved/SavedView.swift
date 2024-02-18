@@ -10,19 +10,27 @@ import SwiftUI
 /// A view responsible for displaying saved movies
 struct SavedView: View {
     @EnvironmentObject var savedMoviesViewModel: SavedViewModel
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             if savedMoviesViewModel.savedMovie.movies.isEmpty {
-                Image(systemName: "film.stack.fill")
-                    .font(.system(size: 75))
-                    .foregroundColor(Color(UIColor.lightGray))
-                Spacer()
-                    .frame(height: 5)
-                Text("No Saved Movies")
-                    .fontWeight(.medium)
-                    .foregroundColor(Color(UIColor.lightGray))
-                    .navigationTitle("Saved")
+                Group {
+                    Image(systemName: "film.stack.fill")
+                        .font(.system(size: 75))
+                        .foregroundColor(Color(UIColor.lightGray))
+                    Spacer()
+                        .frame(height: 5)
+                    Text("No Saved Movies")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                    Text("When you save movies, they'll appear here")
+                        .font(.subheadline)
+                        .fontWeight(.regular)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                }
+                .navigationTitle("Saved")
             } else {
                 List {
                     ForEach(Array(savedMoviesViewModel.savedMovie.movies), id: \.self) { movie in
