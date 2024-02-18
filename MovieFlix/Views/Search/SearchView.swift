@@ -26,10 +26,9 @@ struct SearchView: View {
                 .onChange(of: searchQuery, { oldValue, newValue in
                     searchMovies()
                 })
+                .submitLabel(.search)
                 .focused($nameIsFocused)
-                .onTapGesture {
-                    hideKeyboard()
-                }
+            
             List {
                 ForEach(searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
@@ -71,6 +70,20 @@ struct SearchView: View {
                 .listRowInsets(EdgeInsets())
             }
             .listStyle(.plain)
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    Spacer()
+                }
+                
+                ToolbarItem(placement: .keyboard) {
+                    Button {
+                        nameIsFocused = false
+                    } label: {
+                        Text("Done")
+                    }
+
+                }
+            }
             .navigationTitle("Search")
         }
     }
