@@ -29,6 +29,7 @@
 		48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */; };
 		48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033472B81B9B6004CDA77 /* SearchViewModel.swift */; };
 		48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334B2B81CE67004CDA77 /* Extensions.swift */; };
+		48D0334E2B81D264004CDA77 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		48C247262A99D8FD0089DEE0 /* MovieFlix.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MovieFlix.xctestplan; sourceTree = SOURCE_ROOT; };
 		48D033472B81B9B6004CDA77 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		48D0334B2B81CE67004CDA77 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				483CA5182A1752DE00127430 /* MovieViewModel.swift */,
+				48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */,
 				480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */,
 				48D033472B81B9B6004CDA77 /* SearchViewModel.swift */,
 			);
@@ -394,6 +397,7 @@
 				480B6E492A995229008ACF3D /* SavedView.swift in Sources */,
 				483CA5192A1752DE00127430 /* MovieViewModel.swift in Sources */,
 				483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */,
+				48D0334E2B81D264004CDA77 /* MovieDetailViewModel.swift in Sources */,
 				480B6E502A99A55A008ACF3D /* SavedMovie.swift in Sources */,
 				485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */,
 				48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */,

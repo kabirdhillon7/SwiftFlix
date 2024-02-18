@@ -12,19 +12,19 @@ import Combine
 struct MovieDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var savedMoviesViewModel: SavedViewModel
-    var movie: Movie
-    @State var trailerKey: String?
-    @State var recommendedMovies = [Movie]()
     
-    private let apiCaller: APICaller = APICaller()
-    @State private var cancellables = Set<AnyCancellable>()
+    @StateObject var viewModel: MovieDetailViewModel
     
     @State var savedButtonTapped = false
+    
+    init(movie: Movie) {
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
+    }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 5) {
-                if let backdropPath = movie.backdrop_path {
+                if let backdropPath = viewModel.movie.backdrop_path {
                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath))
                         .frame(height: 200, alignment: .center)
                         .mask(
@@ -37,7 +37,7 @@ struct MovieDetailView: View {
                 }
                 
                 HStack {
-                    if let posterPath = movie.poster_path {
+                    if let posterPath = viewModel.movie.poster_path {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                             .frame(width: 185, height: 277.5)
                             .cornerRadius(15)
@@ -48,7 +48,7 @@ struct MovieDetailView: View {
                     }
                     
                     VStack(spacing: 5) {
-                        Text(movie.title)
+                        Text(viewModel.movie.title)
                             .font(.system(size: 21))
                             .bold()
                             .multilineTextAlignment(.leading)
@@ -56,7 +56,7 @@ struct MovieDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         
-                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.vote_average)) / 10")
+                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", viewModel.movie.vote_average)) / 10")
                             .font(.system(size: 17))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -64,16 +64,16 @@ struct MovieDetailView: View {
                         let savedMovie = savedMoviesViewModel.savedMovie
                         Button(role: .none) {
                             savedButtonTapped.toggle()
-                            if savedMovie.contains(movie) {
-                                savedMovie.remove(movie)
+                            if savedMovie.contains(viewModel.movie) {
+                                savedMovie.remove(viewModel.movie)
                             } else {
-                                savedMovie.add(movie)
+                                savedMovie.add(viewModel.movie)
                             }
                             DispatchQueue.main.async {
                                 savedMoviesViewModel.objectWillChange.send()
                             }
                         } label: {
-                            Image(systemName: savedMovie.contains(movie) ? "bookmark.fill" : "bookmark")
+                            Image(systemName: savedMovie.contains(viewModel.movie) ? "bookmark.fill" : "bookmark")
                                 .font(.body)
                                 .symbolEffect(.bounce, value: savedButtonTapped)
                         }
@@ -89,20 +89,20 @@ struct MovieDetailView: View {
                 
                 Spacer()
                 
-                Text(movie.overview)
+                Text(viewModel.movie.overview)
                     .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
                 
-                if let videoID = trailerKey {
+                if let videoID = viewModel.trailerKey {
                     YouTubePlayerView(videoID: videoID)
                         .frame(height: 300)
                 }
                 
                 Spacer()
                 
-                if !recommendedMovies.isEmpty {
+                if !viewModel.recommendedMovies.isEmpty {
                     Text("Recommended")
                         .font(.system(size: 21))
                         .font(.subheadline)
@@ -114,7 +114,7 @@ struct MovieDetailView: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHGrid(rows: [GridItem(.flexible())], content: {
-                            ForEach($recommendedMovies.wrappedValue) { movie in
+                            ForEach($viewModel.recommendedMovies.wrappedValue) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                                     if let posterPath = movie.poster_path {
                                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
@@ -133,60 +133,28 @@ struct MovieDetailView: View {
             }
             .frame(width: UIScreen.main.bounds.width)
             .onAppear {
-                fetchMovieTrailer()
-                fetchMovieRecommendations()
+                viewModel.fetchMovieTrailer()
+                viewModel.fetchMovieRecommendations()
             }
             .navigationBarTitleDisplayMode(.inline)
             .accentColor(.primary)
         }
         .edgesIgnoringSafeArea(.top)
     }
-    
-    /// Fetches a the movie trailer for a particular movie
-    func fetchMovieTrailer() {
-        apiCaller.getMovieTrailer(movieId: movie.id)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Error getting movie trailer: \(error)")
-                }
-            } receiveValue: { videoID in
-                self.trailerKey = videoID
-            }
-            .store(in: &cancellables)
-    }
-    
-    /// Fetches a list of recommended movies for a particular movie
-    func fetchMovieRecommendations() {
-        apiCaller.getMovieRecommendations(movieID: movie.id)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting recommended movies")
-                case .failure(let error):
-                    print("Error getting recommended movies: \(error)")
-                }
-            } receiveValue: { movies in
-                self.recommendedMovies = movies
-            }
-            .store(in: &cancellables)
-    }
 }
 
 struct MovieDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let sampleMovie = Movie(id: 502356,
-                                title: "The Super Mario Bros. Movie",
-                                overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-                                poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                                backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-                                vote_average: 7.7
+        let sampleMovie = Movie(
+            id: 502356,
+            title: "The Super Mario Bros. Movie",
+            overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+            poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+            backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+            vote_average: 7.7
         )
         
-        MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
+        MovieDetailView(movie: sampleMovie)
             .environmentObject(SavedViewModel())
     }
 }
