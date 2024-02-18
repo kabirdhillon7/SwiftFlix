@@ -13,26 +13,15 @@ struct SearchView: View {
     @State var searchQuery = ""
     @State var searchResults = [Movie]()
     
-    @FocusState private var nameIsFocused: Bool
-    
     private let apiCaller: APICaller = APICaller()
     @State private var cancellables = Set<AnyCancellable>()
     
     var body: some View {
         NavigationStack {
-            TextField("Search movies", text: $searchQuery)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
-                .onChange(of: searchQuery, { oldValue, newValue in
-                    searchMovies()
-                })
-                .submitLabel(.search)
-                .focused($nameIsFocused)
-            
             List {
                 ForEach(searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        HStack {
+                        HStack(spacing: 5) {
                             if let posterPath = movie.poster_path {
                                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                                     
@@ -44,12 +33,13 @@ struct SearchView: View {
                                         .padding()
                                     
                                 } placeholder: {
-                                    ProgressView()
+                                    Image(systemName: "photo")
+                                        .resizable()
+                                        .frame(width: 92.5, height: 138.75)
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(15)
+                                        .padding()
                                 }
-                            } else {
-                                Image(systemName: "photo")
-                                    .frame(width: 92.5, height: 138.75)
-                                    .cornerRadius(15)
                             }
                             
                             VStack {
@@ -69,21 +59,18 @@ struct SearchView: View {
                 }
                 .listRowInsets(EdgeInsets())
             }
-            .listStyle(.plain)
-            .toolbar {
-                ToolbarItem(placement: .keyboard) {
-                    Spacer()
-                }
-                
-                ToolbarItem(placement: .keyboard) {
-                    Button {
-                        nameIsFocused = false
-                    } label: {
-                        Text("Done")
-                    }
-
+            .searchable(text: $searchQuery, prompt: "Search movies")
+            .onSubmit(of: .search) {
+                searchMovies()
+            }
+            .onChange(of: searchQuery) {
+                if searchQuery.isEmpty {
+                    searchResults.removeAll()
+                } else {
+                    searchMovies()
                 }
             }
+            .listStyle(.plain)
             .navigationTitle("Search")
         }
     }
