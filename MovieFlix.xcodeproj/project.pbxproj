@@ -27,6 +27,7 @@
 		485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */; };
 		48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C18E592A4808BE009980F3 /* SearchView.swift */; };
 		48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */; };
+		48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033472B81B9B6004CDA77 /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		48C18E592A4808BE009980F3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModelTests.swift; sourceTree = "<group>"; };
 		48C247262A99D8FD0089DEE0 /* MovieFlix.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MovieFlix.xctestplan; sourceTree = SOURCE_ROOT; };
+		48D033472B81B9B6004CDA77 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +234,7 @@
 			children = (
 				483CA5182A1752DE00127430 /* MovieViewModel.swift */,
 				480B6E4D2A996C2A008ACF3D /* SavedViewModel.swift */,
+				48D033472B81B9B6004CDA77 /* SearchViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 				483CA50F2A174A2000127430 /* MainView.swift in Sources */,
 				483CA4E52A16D5BA00127430 /* MovieFlixApp.swift in Sources */,
 				483CA5132A1750B600127430 /* APICaller.swift in Sources */,
+				48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */,
 				480B6E4E2A996C2A008ACF3D /* SavedViewModel.swift in Sources */,
 				483CA5162A1750E200127430 /* Movie.swift in Sources */,
 				480B6E492A995229008ACF3D /* SavedView.swift in Sources */,

@@ -8,18 +8,14 @@
 import SwiftUI
 import Combine
 
-/// A view that displays  a search interface for movies
+/// A view that displays search results for movies
 struct SearchView: View {
-    @State var searchQuery = ""
-    @State var searchResults = [Movie]()
-    
-    private let apiCaller: APICaller = APICaller()
-    @State private var cancellables = Set<AnyCancellable>()
+    @StateObject var viewModel = SearchViewModel()
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(searchResults) { movie in
+                ForEach(viewModel.searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
                         HStack(spacing: 5) {
                             if let posterPath = movie.poster_path {
@@ -59,39 +55,21 @@ struct SearchView: View {
                 }
                 .listRowInsets(EdgeInsets())
             }
-            .searchable(text: $searchQuery, prompt: "Search movies")
+            .searchable(text: $viewModel.searchQuery, prompt: "Search movies")
             .onSubmit(of: .search) {
-                searchMovies()
+                viewModel.searchMovies()
             }
-            .onChange(of: searchQuery) {
-                if searchQuery.isEmpty {
-                    searchResults.removeAll()
+            .onChange(of: viewModel.searchQuery) {
+                if viewModel.searchQuery.isEmpty {
+                    viewModel.searchResults.removeAll()
                 } else {
-                    searchMovies()
+                    viewModel.searchMovies()
                 }
             }
             .listStyle(.plain)
             .navigationTitle("Search")
         }
     }
-    
-    /// Fetches search results from API
-    func searchMovies() {
-        apiCaller.getSearchMovieResults(searchQuery: searchQuery)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Search error: \(error.localizedDescription)")
-                }
-            } receiveValue: { movies in
-                self.searchResults = movies
-            }
-            .store(in: &cancellables)
-    }
-    
 }
 
 #Preview {
