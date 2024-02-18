@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 /// A view model responsible for managing saved movie data
 final class SavedViewModel: ObservableObject {
