@@ -28,6 +28,7 @@
 		48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C18E592A4808BE009980F3 /* SearchView.swift */; };
 		48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */; };
 		48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033472B81B9B6004CDA77 /* SearchViewModel.swift */; };
+		48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334B2B81CE67004CDA77 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModelTests.swift; sourceTree = "<group>"; };
 		48C247262A99D8FD0089DEE0 /* MovieFlix.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MovieFlix.xctestplan; sourceTree = SOURCE_ROOT; };
 		48D033472B81B9B6004CDA77 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		48D0334B2B81CE67004CDA77 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 				483CA5172A1752A000127430 /* ViewModels */,
 				483CA4E82A16D5BB00127430 /* Assets.xcassets */,
 				483CA4EA2A16D5BB00127430 /* Preview Content */,
+				48D0334B2B81CE67004CDA77 /* Extensions.swift */,
 			);
 			path = MovieFlix;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 				483CA51B2A188D3900127430 /* MovieDetailView.swift in Sources */,
 				480B6E502A99A55A008ACF3D /* SavedMovie.swift in Sources */,
 				485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */,
+				48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

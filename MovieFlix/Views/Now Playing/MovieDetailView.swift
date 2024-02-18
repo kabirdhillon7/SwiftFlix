@@ -10,6 +10,7 @@ import Combine
 
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var savedMoviesViewModel: SavedViewModel
     var movie: Movie
     @State var trailerKey: String?
@@ -21,7 +22,6 @@ struct MovieDetailView: View {
     @State var savedButtonTapped = false
     
     var body: some View {
-        
         ScrollView {
             VStack(spacing: 5) {
                 if let backdropPath = movie.backdrop_path {
@@ -35,7 +35,7 @@ struct MovieDetailView: View {
                         .frame(height: 200, alignment: .center)
                         .foregroundStyle(.clear)
                 }
-                                
+                
                 HStack {
                     if let posterPath = movie.poster_path {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
@@ -80,6 +80,7 @@ struct MovieDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .buttonStyle(.bordered)
                         .buttonBorderShape(.circle)
+                        .sensoryFeedback(.success, trigger: savedButtonTapped)
                         
                         Spacer()
                     }
@@ -111,8 +112,7 @@ struct MovieDetailView: View {
                     Spacer()
                         .frame(height: 5)
                     
-                    ScrollView(.horizontal) {
-                        
+                    ScrollView(.horizontal, showsIndicators: false) {
                         LazyHGrid(rows: [GridItem(.flexible())], content: {
                             ForEach($recommendedMovies.wrappedValue) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
@@ -137,6 +137,7 @@ struct MovieDetailView: View {
                 fetchMovieRecommendations()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .accentColor(.primary)
         }
         .edgesIgnoringSafeArea(.top)
     }
@@ -184,7 +185,7 @@ struct MovieDetailView_Previews: PreviewProvider {
                                 backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
                                 vote_average: 7.7
         )
-
+        
         MovieDetailView(movie: sampleMovie, trailerKey: "RjNcTBXTk4I")
             .environmentObject(SavedViewModel())
     }
