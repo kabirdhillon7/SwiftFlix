@@ -19,7 +19,7 @@ struct MovieListView: View {
         List {
             ForEach(Array(viewModel.movieList), id: \.self) { movie in
                 NavigationLink(destination: MovieDetailView(movie: movie)) {
-                    HStack {
+                    HStack(spacing: 10) {
                         if let posterPath = movie.poster_path {
                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                                 image
@@ -36,9 +36,6 @@ struct MovieListView: View {
                             }
                         }
                         
-                        Spacer()
-                            .frame(width: 10)
-                        
                         Text(movie.title)
                             .font(.system(size: 20))
                             .bold()
@@ -47,6 +44,7 @@ struct MovieListView: View {
                 }
             }
         }
+        .listStyle(.plain)
     }
 }
 
