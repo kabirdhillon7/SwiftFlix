@@ -18,6 +18,7 @@ protocol DataServicing {
     func getNowPlayingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error>
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error>
     func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
+    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error>
 }
 
 /// Class responsible for making API calls

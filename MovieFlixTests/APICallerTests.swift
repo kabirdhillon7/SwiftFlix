@@ -9,7 +9,7 @@ import XCTest
 import Combine
 @testable import MovieFlix
 
-class MockAPIService: DataServicing {
+final class MockAPIService: DataServicing {
     
     var mockTrailerKey = ""
     var cancellables = Set<AnyCancellable>()
@@ -23,6 +23,10 @@ class MockAPIService: DataServicing {
     }
     
     func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[MovieFlix.Movie], Error> {
+        Result.Publisher([]).eraseToAnyPublisher()
+    }
+    
+    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[MovieFlix.Movie], Error> {
         Result.Publisher([]).eraseToAnyPublisher()
     }
 }

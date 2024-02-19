@@ -31,7 +31,7 @@ struct MovieView: View {
                     movieViewModel.fetchUpcomingMovies()
                 })
                 
-                LazyVGrid(columns: Array(repeating: .init(.flexible()),
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0),
                                          count: UIDevice.current.userInterfaceIdiom == .pad ? 4 : 2),
                           spacing: 0) {
                     if selectedTab == 0 {

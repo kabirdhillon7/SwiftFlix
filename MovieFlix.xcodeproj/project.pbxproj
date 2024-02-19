@@ -30,6 +30,7 @@
 		48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033472B81B9B6004CDA77 /* SearchViewModel.swift */; };
 		48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334B2B81CE67004CDA77 /* Extensions.swift */; };
 		48D0334E2B81D264004CDA77 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */; };
+		48D033502B81E30F004CDA77 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334F2B81E30F004CDA77 /* SearchViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		48D033472B81B9B6004CDA77 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		48D0334B2B81CE67004CDA77 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
+		48D0334F2B81E30F004CDA77 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 				48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */,
 				4823D69B2A9F057300F7DB9D /* APICallerTests.swift */,
 				480E80872AB9458B005DF869 /* MovieTests.swift */,
+				48D0334F2B81E30F004CDA77 /* SearchViewModelTests.swift */,
 			);
 			path = MovieFlixTests;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 			files = (
 				48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */,
 				480E80882AB9458B005DF869 /* MovieTests.swift in Sources */,
+				48D033502B81E30F004CDA77 /* SearchViewModelTests.swift in Sources */,
 				4823D69C2A9F057300F7DB9D /* APICallerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
