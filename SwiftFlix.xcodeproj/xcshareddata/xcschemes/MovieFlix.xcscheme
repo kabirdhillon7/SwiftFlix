@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1430"
+   LastUpgradeVersion = "1520"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -17,7 +17,7 @@
                BlueprintIdentifier = "483CA4E02A16D5BA00127430"
                BuildableName = "SwiftFlix.app"
                BlueprintName = "SwiftFlix"
-               ReferencedContainer = "container:MovieFlix.xcodeproj">
+               ReferencedContainer = "container:SwiftFlix.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,9 +40,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "483CA4F02A16D5BB00127430"
-               BuildableName = "MovieFlixTests.xctest"
-               BlueprintName = "MovieFlixTests"
-               ReferencedContainer = "container:MovieFlix.xcodeproj">
+               BuildableName = "SwiftFlixTests.xctest"
+               BlueprintName = "SwiftFlixTests"
+               ReferencedContainer = "container:SwiftFlix.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -51,9 +51,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "483CA4FA2A16D5BB00127430"
-               BuildableName = "MovieFlixUITests.xctest"
-               BlueprintName = "MovieFlixUITests"
-               ReferencedContainer = "container:MovieFlix.xcodeproj">
+               BuildableName = "SwiftFlixUITests.xctest"
+               BlueprintName = "SwiftFlixUITests"
+               ReferencedContainer = "container:SwiftFlix.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -75,7 +75,7 @@
             BlueprintIdentifier = "483CA4E02A16D5BA00127430"
             BuildableName = "SwiftFlix.app"
             BlueprintName = "SwiftFlix"
-            ReferencedContainer = "container:MovieFlix.xcodeproj">
+            ReferencedContainer = "container:SwiftFlix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -92,7 +92,7 @@
             BlueprintIdentifier = "483CA4E02A16D5BA00127430"
             BuildableName = "SwiftFlix.app"
             BlueprintName = "SwiftFlix"
-            ReferencedContainer = "container:MovieFlix.xcodeproj">
+            ReferencedContainer = "container:SwiftFlix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
