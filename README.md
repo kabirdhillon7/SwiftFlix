@@ -24,7 +24,7 @@ Some of the main features include:
     - Provides the option to bookmark a movie.
 - Saved Tab
   - Shows a list of bookmarked movies.
-  - Allows users to view their saved movies.
+  - Allows users to tap on a saved movie to see its details, similar to the Now Playing Tab.
 - Search Tab
   - Enables users to search for movies.
   - Users can tap on a search result to view its details, similar to the Now Playing Tab.
@@ -36,27 +36,33 @@ Some of the main features include:
 
 ## Demo
 ### Current Progress Walkthrough
-<img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/46ff5e9b-8d78-4bb3-b1b7-3e9726c776ab" width=250><br>
 
-### Progress 3 Walkthrough
+<img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/fd981292-6d8c-469d-8061-1e4548056c46" width=250><br>
+
+### Previous Version Walkthroughs
 <details>
   <summary>Click to view</summary>
-  
-  <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
-</details>
 
-### Progress 2 Walkthrough
-<details>
-  <summary>Click to view</summary>
-  
-  <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e5088951-de43-496c-96b2-475cbbc42e36" width=250><br>
-</details>
+  #### Progress 3 Walkthrough
+  <details>
+    <summary>Click to view</summary>
+    
+    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
+  </details>
 
-### Progress 1 Walkthrough
-<details>
-  <summary>Click to view</summary>
-  
-  <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/ff6a3818-32df-49c2-86bd-2494534f3c57" width=250><br>
+  #### Progress 2 Walkthrough
+  <details>
+    <summary>Click to view</summary>
+    
+    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e5088951-de43-496c-96b2-475cbbc42e36" width=250><br>
+  </details>
+
+  #### Progress 1 Walkthrough
+  <details>
+    <summary>Click to view</summary>
+    
+    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/ff6a3818-32df-49c2-86bd-2494534f3c57" width=250><br>
+  </details>
 </details>
 
 ## Dependencies
