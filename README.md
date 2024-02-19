@@ -1,9 +1,9 @@
 # MovieFlix
-MovieFix is an iOS app that allows users to discover and explore movies from [The Movie Database API](http://docs.themoviedb.apiary.io/#). 
+SwiftFlix is an iOS app that allows users to discover and explore movies from [The Movie Database API](http://docs.themoviedb.apiary.io/#). 
 
-The app provides a collection of movies, including their titles, posters, and overview. Users can browse through the movies, view detailed information about each movie. MovieFix makes it easy for users to find and enjoy their favorite movies.
+The app provides a collection of movies, including their titles, posters, and overview. Users can browse through the movies, view detailed information about each movie. SwiftFlix makes it easy for users to find and enjoy their favorite movies.
 
-MovieFix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) and designed using the Model-View-ViewModel (MVVM) pattern, which separates the app's data model, user interface, and business logic into distinct components.
+SwiftFlix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) and designed using the Model-View-ViewModel (MVVM) pattern, which separates the app's data model, user interface, and business logic into distinct components.
 
 ## Table of Contents
 
