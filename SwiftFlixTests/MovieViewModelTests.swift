@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import MovieFlix
+@testable import SwiftFlix
 
 final class MovieViewModelTests: XCTestCase {
     

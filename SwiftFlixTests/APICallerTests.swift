@@ -7,7 +7,7 @@
 
 import XCTest
 import Combine
-@testable import MovieFlix
+@testable import SwiftFlix
 
 final class MockAPIService: DataServicing {
     
@@ -22,11 +22,11 @@ final class MockAPIService: DataServicing {
         Result.Publisher(mockTrailerKey).eraseToAnyPublisher()
     }
     
-    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[MovieFlix.Movie], Error> {
+    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error> {
         Result.Publisher([]).eraseToAnyPublisher()
     }
     
-    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[MovieFlix.Movie], Error> {
+    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error> {
         Result.Publisher([]).eraseToAnyPublisher()
     }
 }

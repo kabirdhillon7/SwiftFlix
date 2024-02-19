@@ -17,19 +17,17 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:MovieFlix.xcodeproj",
+        "containerPath" : "container:SwiftFlix.xcodeproj",
         "identifier" : "483CA4F02A16D5BB00127430",
-        "name" : "MovieFlixTests"
+        "name" : "SwiftFlixTests"
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:MovieFlix.xcodeproj",
+        "containerPath" : "container:SwiftFlix.xcodeproj",
         "identifier" : "483CA4FA2A16D5BB00127430",
-        "name" : "MovieFlixUITests"
+        "name" : "SwiftFlixUITests"
       }
     }
   ],
