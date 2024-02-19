@@ -14,9 +14,10 @@ final class SavedMovie: ObservableObject {
     @Published var movies: Set<Movie>
     
     /// UserDefaults save key
-    private let saveKey = "SavedMovies"
+    private let saveKey: String
     
-    init() {
+    init(saveKey: String) {
+        self.saveKey = saveKey
         if let data = UserDefaults.standard.data(forKey: saveKey) {
             do {
                 // Create JSON Decoder

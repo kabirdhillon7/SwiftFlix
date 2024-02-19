@@ -16,7 +16,7 @@ struct MainView: View {
                 .tabItem {
                     Label("Movies", systemImage: "film")
                 }
-            SavedView()
+            ListsView()
                 .tabItem {
                     Label("Saved", systemImage: "bookmark.fill")
                 }
