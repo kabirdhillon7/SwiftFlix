@@ -1,5 +1,5 @@
 //
-//  SavedMovie.swift
+//  MovieManager.swift
 //  MovieFlix
 //
 //  Created by Kabir Dhillon on 8/25/23.
