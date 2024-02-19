@@ -61,7 +61,7 @@ struct MovieDetailView: View {
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        let savedMovie = savedMoviesViewModel.queuedMovie
+                        let savedMovie = savedMoviesViewModel.savedMovies
                         Button(role: .none) {
                             savedButtonTapped.toggle()
                             if savedMovie.contains(viewModel.movie) {

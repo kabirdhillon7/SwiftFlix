@@ -18,7 +18,7 @@ struct MainView: View {
                 }
             ListsView()
                 .tabItem {
-                    Label("Saved", systemImage: "bookmark.fill")
+                    Label("Lists", systemImage: "list.and.film")
                 }
             SearchView()
                 .tabItem {

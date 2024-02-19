@@ -18,7 +18,7 @@ struct ListsView: View {
         NavigationStack {
             VStack {
                 Picker("", selection: $selectedListTab) {
-                    Text("Queued")
+                    Text("Saved")
                         .tag(0)
                     Text("Watched")
                         .tag(1)
@@ -27,28 +27,15 @@ struct ListsView: View {
                 .padding(.horizontal)
                 
                 if selectedListTab == 0 {
-                    if savedMoviesViewModel.queuedMovie.movies.isEmpty {
+                    if savedMoviesViewModel.savedMovies.movies.isEmpty {
                         Spacer()
-                        Group {
-                            Image(systemName: "film.stack.fill")
-                                .font(.system(size: 75))
-                                .foregroundColor(Color(UIColor.lightGray))
-                            Spacer()
-                                .frame(height: 5)
-                            Text("No Queued Movies")
-                                .font(.title3)
-                                .fontWeight(.medium)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                            Text("When you add movies to your queue list, they'll appear here.")
-                                .font(.subheadline)
-                                .fontWeight(.regular)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                            Spacer()
-                        }
+                        CustomEmptyView(sfSymbolName: "bookmark",
+                                        title: "No Saved Movies",
+                                        subheading: "When you add movies to your saved list, they'll appear here.")
+                        Spacer()
                     } else {
                         List {
-                            ForEach(Array(savedMoviesViewModel.queuedMovie.movies), id: \.self) { movie in
+                            ForEach(Array(savedMoviesViewModel.savedMovies.movies), id: \.self) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                                     HStack {
                                         if let posterPath = movie.poster_path {
@@ -77,9 +64,13 @@ struct ListsView: View {
                     }
                 } else {
                     Spacer()
+                    CustomEmptyView(sfSymbolName: "tv.slash",
+                                    title: "No Watched Movies",
+                                    subheading: "When you add movies you've watched, they'll appear here.")
+                    Spacer()
                 }
             }
-            .navigationTitle("Saved")
+            .navigationTitle("Lists")
         }
     }
 }
