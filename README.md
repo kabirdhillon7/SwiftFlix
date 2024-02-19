@@ -18,13 +18,13 @@ SwiftFlix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) a
 Some of the main features include:
 
 - Now Playing Tab
-  - Displays a list of movies currently playing in theaters.
+  - Displays a list of movies currently playing in theaters, popular movies, and upcoming movies.
   - Allows users to tap on a movie to see its details.
     - Movie details include poster image, backdrop image, title, plot description, and rating.
     - Provides the option to bookmark a movie.
-- Saved Tab
-  - Shows a list of bookmarked movies.
-  - Allows users to tap on a saved movie to see its details, similar to the Now Playing Tab.
+- List Tab
+  - Shows a list of saved and watched movies.
+  - Allows users to tap on a listed movie to see its details, similar to the Now Playing Tab.
 - Search Tab
   - Enables users to search for movies.
   - Users can tap on a search result to view its details, similar to the Now Playing Tab.
@@ -46,22 +46,19 @@ Some of the main features include:
   #### Progress 3 Walkthrough
   <details>
     <summary>Click to view</summary>
-    
-    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
+      <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e365449a-90cb-45bd-9d1e-5ed2621be7c2" width=250><br>
   </details>
 
   #### Progress 2 Walkthrough
   <details>
     <summary>Click to view</summary>
-    
-    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e5088951-de43-496c-96b2-475cbbc42e36" width=250><br>
+      <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/e5088951-de43-496c-96b2-475cbbc42e36" width=250><br>
   </details>
 
   #### Progress 1 Walkthrough
   <details>
     <summary>Click to view</summary>
-    
-    <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/ff6a3818-32df-49c2-86bd-2494534f3c57" width=250><br>
+      <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/ff6a3818-32df-49c2-86bd-2494534f3c57" width=250><br>
   </details>
 </details>
 
