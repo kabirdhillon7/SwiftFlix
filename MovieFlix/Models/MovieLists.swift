@@ -1,5 +1,5 @@
 //
-//  SavedViewModel.swift
+//  MovieLists.swift
 //  MovieFlix
 //
 //  Created by Kabir Dhillon on 8/25/23.
