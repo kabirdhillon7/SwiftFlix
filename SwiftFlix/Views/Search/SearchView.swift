@@ -38,13 +38,11 @@ struct SearchView: View {
                                 }
                             }
                             
-                            VStack {
+                            VStack(spacing: 5) {
                                 Text(movie.title)
                                     .font(.system(size: 20))
                                     .bold()
                                     .frame(maxWidth: .infinity,alignment: .leading)
-                                Spacer()
-                                    .frame(height: 5)
                                 Text(movie.overview)
                                     .font(.body)
                                     .frame(maxWidth: .infinity,alignment: .leading)
