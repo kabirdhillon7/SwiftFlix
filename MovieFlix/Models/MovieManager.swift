@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 /// Saved Movie
-final class SavedMovie: ObservableObject {
+final class MovieManager: ObservableObject {
     /// A set of saved Movie objects
     @Published var movies: Set<Movie>
     

@@ -11,7 +11,7 @@ import Combine
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var savedMoviesViewModel: SavedViewModel
+    @EnvironmentObject var savedMoviesViewModel: MovieLists
     
     @StateObject var viewModel: MovieDetailViewModel
     
@@ -155,6 +155,6 @@ struct MovieDetailView_Previews: PreviewProvider {
         )
         
         MovieDetailView(movie: sampleMovie)
-            .environmentObject(SavedViewModel())
+            .environmentObject(MovieLists())
     }
 }

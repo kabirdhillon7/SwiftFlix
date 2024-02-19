@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A view responsible for displaying movie lists
 struct ListsView: View {
-    @EnvironmentObject var savedMoviesViewModel: SavedViewModel
+    @EnvironmentObject var savedMoviesViewModel: MovieLists
     @Environment(\.colorScheme) var colorScheme
     
     @State var selectedListTab: Int = 0
@@ -78,6 +78,6 @@ struct ListsView: View {
 struct SavedView_Previews: PreviewProvider {
     static var previews: some View {
         ListsView()
-            .environmentObject(SavedViewModel())
+            .environmentObject(MovieLists())
     }
 }

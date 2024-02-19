@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var savedMoviesVM = SavedViewModel()
+    @StateObject private var savedMoviesVM = MovieLists()
     
     var body: some View {
         TabView {
