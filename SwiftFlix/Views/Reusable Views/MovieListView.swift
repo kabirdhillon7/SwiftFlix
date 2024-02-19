@@ -1,0 +1,55 @@
+//
+//  MovieListView.swift
+//  SwiftFlix
+//
+//  Created by Kabir Dhillon on 2/19/24.
+//
+
+import SwiftUI
+
+/// A view responsible for displaying a list of movies.
+struct MovieListView: View {
+    @StateObject var viewModel: MovieListViewModel
+    
+    init(movieList: Set<Movie>) {
+        _viewModel = StateObject(wrappedValue: MovieListViewModel(movieList: movieList))
+    }
+    
+    var body: some View {
+        List {
+            ForEach(Array(viewModel.movieList), id: \.self) { movie in
+                NavigationLink(destination: MovieDetailView(movie: movie)) {
+                    HStack {
+                        if let posterPath = movie.poster_path {
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                                image
+                                    .resizable()
+                                    .frame(width: 92.5, height: 138.75)
+                                    .aspectRatio(contentMode: .fill)
+                                    .cornerRadius(15)
+                            } placeholder: {
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .frame(width: 92.5, height: 138.75)
+                                    .aspectRatio(contentMode: .fill)
+                                    .cornerRadius(15)
+                            }
+                        }
+                        
+                        Spacer()
+                            .frame(width: 10)
+                        
+                        Text(movie.title)
+                            .font(.system(size: 20))
+                            .bold()
+                            .frame(maxWidth: .infinity,alignment: .leading)
+                    }
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    MovieListView(movieList: Set<Movie>())
+}
