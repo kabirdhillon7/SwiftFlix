@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  MovieFlix
+//  SwiftFlix
 //
 //  Created by Kabir Dhillon on 5/18/23.
 //

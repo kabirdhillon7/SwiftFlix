@@ -1,6 +1,6 @@
 //
 //  MovieTests.swift
-//  MovieFlixTests
+//  SwiftFlixTests
 //
 //  Created by Kabir Dhillon on 9/18/23.
 //

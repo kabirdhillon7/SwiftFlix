@@ -1,6 +1,6 @@
 //
 //  CustomEmptyView.swift
-//  MovieFlix
+//  SwiftFlix
 //
 //  Created by Kabir Dhillon on 2/18/24.
 //

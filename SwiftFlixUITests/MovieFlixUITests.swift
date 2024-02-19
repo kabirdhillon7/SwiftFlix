@@ -1,6 +1,6 @@
 //
 //  MovieFlixUITests.swift
-//  MovieFlixUITests
+//  SwiftFlixUITests
 //
 //  Created by Kabir Dhillon on 5/18/23.
 //

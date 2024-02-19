@@ -1,6 +1,6 @@
 //
 //  Extensions.swift
-//  MovieFlix
+//  SwiftFlix
 //
 //  Created by Kabir Dhillon on 2/17/24.
 //

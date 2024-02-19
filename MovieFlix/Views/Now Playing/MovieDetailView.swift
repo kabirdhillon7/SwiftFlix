@@ -1,6 +1,6 @@
 //
 //  MovieDetailView.swift
-//  MovieFlix
+//  SwiftFlix
 //
 //  Created by Kabir Dhillon on 5/19/23.
 //
@@ -11,11 +11,12 @@ import Combine
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var savedMoviesViewModel: MovieLists
+    @EnvironmentObject var movieLists: MovieLists
     
     @StateObject var viewModel: MovieDetailViewModel
     
     @State var savedButtonTapped = false
+    @State var watchedButtonTapped = false
     
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
@@ -61,27 +62,49 @@ struct MovieDetailView: View {
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        let savedMovie = savedMoviesViewModel.savedMovies
-                        Button(role: .none) {
-                            savedButtonTapped.toggle()
-                            if savedMovie.contains(viewModel.movie) {
-                                savedMovie.remove(viewModel.movie)
-                            } else {
-                                savedMovie.add(viewModel.movie)
+                        HStack(alignment: .firstTextBaseline, spacing: 1) {
+                            let savedMovie = movieLists.savedMovies
+                            Button(role: .none) {
+                                savedButtonTapped.toggle()
+                                if savedMovie.contains(viewModel.movie) {
+                                    savedMovie.remove(viewModel.movie)
+                                } else {
+                                    savedMovie.add(viewModel.movie)
+                                }
+                                DispatchQueue.main.async {
+                                    movieLists.objectWillChange.send()
+                                }
+                            } label: {
+                                Image(systemName: savedMovie.contains(viewModel.movie) ? "bookmark.fill" : "bookmark")
+                                    .font(.body)
+                                    .symbolEffect(.bounce, value: savedButtonTapped)
                             }
-                            DispatchQueue.main.async {
-                                savedMoviesViewModel.objectWillChange.send()
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.circle)
+                            .sensoryFeedback(.success, trigger: savedButtonTapped)
+                            
+                            let watchedMovies = movieLists.watchedMovies
+                            Button(role: .none) {
+                                watchedButtonTapped.toggle()
+                                if watchedMovies.contains(viewModel.movie) {
+                                    watchedMovies.remove(viewModel.movie)
+                                } else {
+                                    watchedMovies.add(viewModel.movie)
+                                }
+                                DispatchQueue.main.async {
+                                    movieLists.objectWillChange.send()
+                                }
+                            } label: {
+                                Image(systemName: watchedMovies.contains(viewModel.movie) ? "checkmark.square" : "xmark.square")
+                                    .font(.body)
+                                    .symbolEffect(.bounce, value: watchedButtonTapped)
                             }
-                        } label: {
-                            Image(systemName: savedMovie.contains(viewModel.movie) ? "bookmark.fill" : "bookmark")
-                                .font(.body)
-                                .symbolEffect(.bounce, value: savedButtonTapped)
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.circle)
+                            .sensoryFeedback(.success, trigger: watchedButtonTapped)
+                            
+                            Spacer()
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .buttonStyle(.bordered)
-                        .buttonBorderShape(.circle)
-                        .sensoryFeedback(.success, trigger: savedButtonTapped)
-                        
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -137,7 +160,6 @@ struct MovieDetailView: View {
                 viewModel.fetchMovieRecommendations()
             }
             .navigationBarTitleDisplayMode(.inline)
-            .accentColor(.primary)
         }
         .edgesIgnoringSafeArea(.top)
     }

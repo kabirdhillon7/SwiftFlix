@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "483CA4E02A16D5BA00127430"
-               BuildableName = "MovieFlix.app"
-               BlueprintName = "MovieFlix"
+               BuildableName = "SwiftFlix.app"
+               BlueprintName = "SwiftFlix"
                ReferencedContainer = "container:MovieFlix.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:MovieFlix.xctestplan"
+            reference = "container:SwiftFlix.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -73,8 +73,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "483CA4E02A16D5BA00127430"
-            BuildableName = "MovieFlix.app"
-            BlueprintName = "MovieFlix"
+            BuildableName = "SwiftFlix.app"
+            BlueprintName = "SwiftFlix"
             ReferencedContainer = "container:MovieFlix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -90,8 +90,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "483CA4E02A16D5BA00127430"
-            BuildableName = "MovieFlix.app"
-            BlueprintName = "MovieFlix"
+            BuildableName = "SwiftFlix.app"
+            BlueprintName = "SwiftFlix"
             ReferencedContainer = "container:MovieFlix.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

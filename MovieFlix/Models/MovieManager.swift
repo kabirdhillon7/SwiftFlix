@@ -1,6 +1,6 @@
 //
 //  MovieManager.swift
-//  MovieFlix
+//  SwiftFlix
 //
 //  Created by Kabir Dhillon on 8/25/23.
 //
