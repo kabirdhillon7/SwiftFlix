@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 /// Saved Movie
 final class MovieManager: ObservableObject {

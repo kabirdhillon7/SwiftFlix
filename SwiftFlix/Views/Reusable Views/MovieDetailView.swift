@@ -17,6 +17,7 @@ struct MovieDetailView: View {
     
     @State var savedButtonTapped = false
     @State var watchedButtonTapped = false
+    @State var presentAddToWatchListSheet = false
     
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
@@ -103,6 +104,17 @@ struct MovieDetailView: View {
                             .buttonBorderShape(.circle)
                             .sensoryFeedback(.success, trigger: watchedButtonTapped)
                             
+                            Button(role: .none) {
+                                presentAddToWatchListSheet = true
+                            } label: {
+                                Image(systemName: "plus")
+                                    .font(.body)
+                                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
+                            }
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.circle)
+                            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
+                            
                             Spacer()
                         }
                         Spacer()
@@ -160,6 +172,11 @@ struct MovieDetailView: View {
                 viewModel.fetchMovieRecommendations()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $presentAddToWatchListSheet) {
+                NavigationStack {
+                    AddToWatchListView(movie: viewModel.movie)
+                }
+            }
         }
         .edgesIgnoringSafeArea(.top)
     }
