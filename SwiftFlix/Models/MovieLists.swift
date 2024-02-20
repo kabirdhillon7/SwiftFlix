@@ -23,10 +23,10 @@ final class MovieLists: ObservableObject {
                 self.watchLists = watchListsArray
             } catch {
                 print("Unable to load watch lists: \(error)")
-                self.watchLists = []  // Initialize with an empty array in case of decoding failure
+                self.watchLists = []
             }
         } else {
-            self.watchLists = [Watchlist]()  // Initialize with an empty array if no data is present
+            self.watchLists = [Watchlist]()
         }
     }
     
@@ -47,11 +47,11 @@ final class MovieLists: ObservableObject {
                 let watchListsArray = try decoder.decode([Watchlist].self, from: data)
                 self.watchLists = watchListsArray
             } catch {
-                print("Unable to load watch lists: \(error)")
-                self.watchLists = []  // Initialize with an empty array in case of decoding failure
+                print("Unable to load watchlists: \(error)")
+                self.watchLists = []
             }
         } else {
-            self.watchLists = []  // Initialize with an empty array if no data is present
+            self.watchLists = []
         }
     }
 }
