@@ -79,6 +79,7 @@ struct ListsView: View {
                         .onDelete(perform: { indexSet in
                             DispatchQueue.main.async {
                                 movieLists.watchLists.remove(atOffsets: indexSet)
+                                movieLists.saveWatchLists()
                             }
                         })
                     }
