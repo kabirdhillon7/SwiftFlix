@@ -40,7 +40,14 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "film")
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundColor(.white.opacity(0.5))
+                                            .frame(width: 185, height: 277.5)
+                                        Image(systemName: "film")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(Color(UIColor.lightGray))
+                                    }
                                 }
                             }
                         }
@@ -50,7 +57,14 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "film")
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundColor(.white.opacity(0.5))
+                                            .frame(width: 185, height: 277.5)
+                                        Image(systemName: "film")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(Color(UIColor.lightGray))
+                                    }
                                 }
                             }
                         }
@@ -60,7 +74,14 @@ struct MovieView: View {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
                                 } else {
-                                    Image(systemName: "film")
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundColor(.white.opacity(0.5))
+                                            .frame(width: 185, height: 277.5)
+                                        Image(systemName: "film")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(Color(UIColor.lightGray))
+                                    }
                                 }
                             }
                         }
