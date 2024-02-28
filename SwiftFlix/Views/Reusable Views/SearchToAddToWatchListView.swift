@@ -20,7 +20,6 @@ struct SearchToAddToWatchListView: View {
                 HStack(spacing: 5) {
                     if let posterPath = movie.poster_path {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                            
                             image
                                 .resizable()
                                 .frame(width: 61, height: 91.5)
@@ -29,12 +28,14 @@ struct SearchToAddToWatchListView: View {
                                 .padding()
                             
                         } placeholder: {
-                            Image(systemName: "photo")
-                                .resizable()
-                                .frame(width: 61, height: 91.5)
-                                .aspectRatio(contentMode: .fit)
-                                .cornerRadius(15)
-                                .padding()
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 15)
+                                    .foregroundColor(.white.opacity(0.5))
+                                    .frame(width: 61, height: 91.5)
+                                Image(systemName: "film")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(Color(UIColor.lightGray))
+                            }
                         }
                     }
                     

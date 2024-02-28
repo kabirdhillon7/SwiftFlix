@@ -270,13 +270,13 @@
 		48D033712B8338C9004CDA77 /* Reusable Views */ = {
 			isa = PBXGroup;
 			children = (
+				48D0337A2B841D01004CDA77 /* AddToWatchListView.swift */,
 				48D033722B8338F1004CDA77 /* CustomEmptyView.swift */,
 				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
 				48D033742B83D6B8004CDA77 /* MovieListView.swift */,
-				485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */,
-				48D0337A2B841D01004CDA77 /* AddToWatchListView.swift */,
-				48D0337C2B8429E5004CDA77 /* WatchlistView.swift */,
 				48D033812B8486FB004CDA77 /* SearchToAddToWatchListView.swift */,
+				48D0337C2B8429E5004CDA77 /* WatchlistView.swift */,
+				485A79B62A3EE5CB00B5F110 /* YouTubePlayerView.swift */,
 			);
 			path = "Reusable Views";
 			sourceTree = "<group>";

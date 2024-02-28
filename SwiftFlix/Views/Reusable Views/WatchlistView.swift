@@ -54,11 +54,14 @@ struct WatchlistView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .cornerRadius(15)
                             } placeholder: {
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .frame(width: 61, height: 91.5)
-                                    .aspectRatio(contentMode: .fill)
-                                    .cornerRadius(15)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .frame(width: 61, height: 91.5)
+                                    Image(systemName: "film")
+                                        .font(.system(size: 50))
+                                        .foregroundColor(Color(UIColor.lightGray))
+                                }
                             }
                         }
                         

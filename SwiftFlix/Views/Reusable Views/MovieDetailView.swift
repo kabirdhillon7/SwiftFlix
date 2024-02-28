@@ -44,9 +44,14 @@ struct MovieDetailView: View {
                             .frame(width: 185, height: 277.5)
                             .cornerRadius(15)
                     } else {
-                        Image(systemName: "film")
-                            .frame(width: 185, height: 277.5)
-                            .cornerRadius(15)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 15)
+                                .foregroundColor(.white.opacity(0.5))
+                                .frame(width: 185, height: 277.5)
+                            Image(systemName: "film")
+                                .font(.system(size: 50))
+                                .foregroundColor(Color(UIColor.lightGray))
+                        }
                     }
                     
                     VStack(spacing: 5) {
@@ -156,9 +161,14 @@ struct MovieDetailView: View {
                                             .frame(width: 185, height: 277.5)
                                             .cornerRadius(15)
                                     } else {
-                                        Image(systemName: "film")
-                                            .frame(width: 185, height: 277.5)
-                                            .cornerRadius(15)
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .foregroundColor(.white.opacity(0.5))
+                                                .frame(width: 185, height: 277.5)
+                                            Image(systemName: "film")
+                                                .font(.system(size: 50))
+                                                .foregroundColor(Color(UIColor.lightGray))
+                                        }
                                     }
                                 }
                             }

@@ -28,11 +28,14 @@ struct MovieListView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .cornerRadius(15)
                             } placeholder: {
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .frame(width: 92.5, height: 138.75)
-                                    .aspectRatio(contentMode: .fill)
-                                    .cornerRadius(15)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .frame(width: 92.5, height: 138.75)
+                                    Image(systemName: "film")
+                                        .font(.system(size: 50))
+                                        .foregroundColor(Color(UIColor.lightGray))
+                                }
                             }
                         }
                         
