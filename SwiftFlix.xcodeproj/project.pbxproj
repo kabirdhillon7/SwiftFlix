@@ -108,6 +108,7 @@
 		48D0337C2B8429E5004CDA77 /* WatchlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
 		48D033812B8486FB004CDA77 /* SearchToAddToWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToAddToWatchListView.swift; sourceTree = "<group>"; };
 		48D033832B848748004CDA77 /* SearchToAddToWatchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchToAddToWatchListViewModel.swift; sourceTree = "<group>"; };
+		48FA40682B8F0FB9005AD894 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +175,7 @@
 		483CA4E32A16D5BA00127430 /* SwiftFlix */ = {
 			isa = PBXGroup;
 			children = (
+				48FA40682B8F0FB9005AD894 /* Info.plist */,
 				48C247262A99D8FD0089DEE0 /* SwiftFlix.xctestplan */,
 				483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */,
 				483CA5112A17509200127430 /* Networking */,
@@ -602,6 +604,7 @@
 				DEVELOPMENT_TEAM = SBCRL8SBBK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftFlix/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwiftFlix;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -638,6 +641,7 @@
 				DEVELOPMENT_TEAM = SBCRL8SBBK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftFlix/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwiftFlix;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
