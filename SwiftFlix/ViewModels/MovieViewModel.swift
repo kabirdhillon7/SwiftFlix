@@ -14,6 +14,9 @@ final class MovieViewModel: ObservableObject {
     @Published var popularMovies = [Movie]()
     @Published var upcomingMovies = [Movie]()
     
+    @Published var linkedMovie: Movie?
+    @Published var presentLinkError = false
+    
     private let apiCaller: APICaller = APICaller()
     private var cancellables: Set<AnyCancellable> = []
         
@@ -73,6 +76,27 @@ final class MovieViewModel: ObservableObject {
                     return
                 }
                 self.upcomingMovies = movies
+            }
+            .store(in: &cancellables)
+    }
+    
+    /// Fetches a movie object from a movie ID
+    func fetchMovieObject(movieId: Int) {
+        apiCaller.getMovie(movieID: movieId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("Finished getting movie details")
+                case .failure(let error):
+                    print("Error getting movie details: \(error)")
+                    self.presentLinkError = true
+                }
+            } receiveValue: { [weak self] movie in
+                guard let self = self else {
+                    return
+                }
+                self.linkedMovie = movie
             }
             .store(in: &cancellables)
     }

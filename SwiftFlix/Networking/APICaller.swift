@@ -19,6 +19,7 @@ protocol DataServicing {
     func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error>
     func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
     func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error>
+    func getMovie(movieID: Int) -> AnyPublisher<Movie, Error>
 }
 
 /// Class responsible for making API calls
@@ -141,6 +142,25 @@ class APICaller: DataServicing {
             .map({ $0.data })
             .decode(type: MovieResults.self, decoder: JSONDecoder())
             .map({ $0.results })
+            .eraseToAnyPublisher()
+    }
+    
+    /// Fetches movie details for a specific movie ID from The Movie Database API
+    ///
+    /// - Parameters:
+    ///     - movieID: The id of the specfic movie to fetch the trailer for
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing a `Movie` object and a possible `Error`.
+    func getMovie(movieID: Int) -> AnyPublisher<Movie, Error> {
+        guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)?api_key=\(apiKey.rawValue)") else {
+            return Fail(error: NSError(domain: "Unable to get movie details from movie id", code: 0)).eraseToAnyPublisher()
+        }
+        
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map({ $0.data })
+            .decode(type: Movie.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
 }

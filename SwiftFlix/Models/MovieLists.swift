@@ -13,6 +13,10 @@ final class MovieLists: ObservableObject {
     @Published var watchedMovies: MovieManager
     @Published var watchLists: [Watchlist]
     
+    @Published var presentDetailMovie = false
+    @Published var presentLinkError = false
+    var linkedDetailMovieId: Int?
+    
     init() {
         savedMovies = MovieManager(saveKey: "QueueMovies")
         watchedMovies = MovieManager(saveKey: "WatchedMovies")
