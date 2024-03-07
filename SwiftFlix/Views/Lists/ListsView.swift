@@ -49,7 +49,38 @@ struct ListsView: View {
                                         subheading: "When you add movies you've watched, they'll appear here.")
                         Spacer()
                     } else {
-                        MovieListView(movieList: movieLists.watchedMovies.movies)
+//                        MovieListView(movieList: movieLists.watchedMovies.movies)
+                        ScrollView {
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 3), spacing: 0) {
+                                ForEach(Array(movieLists.watchedMovies.movies), id: \.self) { movie in
+                                    NavigationLink(destination: MovieDetailView(movie: movie)) {
+                                        if let posterPath = movie.poster_path {
+                                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                                switch phase {
+                                                case .success(let image):
+                                                    image
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .clipped()
+                                                case .failure(_):
+                                                    ZStack {
+                                                        Rectangle()
+                                                            .foregroundColor(.white.opacity(0.5))
+                                                        //                                                        .frame(width: 185, height: 277.5)
+                                                        Image(systemName: "film")
+                                                            .font(.system(size: 50))
+                                                            .foregroundColor(Color(UIColor.lightGray))
+                                                    }
+                                                default:
+                                                    ProgressView()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
                     }
                 } else {
                     List {
@@ -94,11 +125,16 @@ struct ListsView: View {
                 TextField("",
                           text: $newWatchListTitle,
                           prompt: Text("Watchlist Title"))
-                Button("Cancel", role: .cancel) { }
+                Button("Cancel", role: .cancel) { 
+                    newWatchListTitle = ""
+                }
                 Button("Add") {
-                    DispatchQueue.main.async {
-                        movieLists.watchLists.append(Watchlist(name: newWatchListTitle))
-                        movieLists.saveWatchLists()
+                    if !newWatchListTitle.isEmpty {
+                        DispatchQueue.main.async {
+                            movieLists.watchLists.append(Watchlist(name: newWatchListTitle))
+                            movieLists.saveWatchLists()
+                            newWatchListTitle = ""
+                        }
                     }
                 }
             }

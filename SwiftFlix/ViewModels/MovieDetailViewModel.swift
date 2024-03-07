@@ -7,13 +7,14 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 /// A view model responsible for movie information and data
 final class MovieDetailViewModel: ObservableObject {
     
     var movie: Movie
-    
     var trailerKey: String?
+    var moviePosterImage: Image?
     @Published var recommendedMovies = [Movie]()
     
     private let apiCaller: APICaller = APICaller()

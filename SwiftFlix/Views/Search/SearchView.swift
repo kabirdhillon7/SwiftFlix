@@ -17,26 +17,38 @@ struct SearchView: View {
             List {
                 ForEach(viewModel.searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        HStack(spacing: 5) {
+                        HStack(spacing: 10) {
                             if let posterPath = movie.poster_path {
-                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                                    
-                                    image
-                                        .resizable()
-                                        .frame(width: 92.5, height: 138.75)
-                                        .aspectRatio(contentMode: .fill)
-                                        .cornerRadius(15)
-                                        .padding()
-                                    
-                                } placeholder: {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .foregroundColor(.white.opacity(0.5))
+                                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                    switch phase {
+                                    case .success(let image):
+                                        image
+                                            .resizable()
                                             .frame(width: 92.5, height: 138.75)
-                                        Image(systemName: "film")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(Color(UIColor.lightGray))
+                                            .aspectRatio(contentMode: .fit)
+                                            .cornerRadius(10)
+                                    case .failure(_):
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .foregroundColor(.white.opacity(0.5))
+                                                .frame(width: 185, height: 277.5)
+                                            Image(systemName: "film")
+                                                .font(.system(size: 50))
+                                                .foregroundColor(Color(UIColor.lightGray))
+                                        }
+                                    default:
+                                        ProgressView()
                                     }
+                                }
+                            } else {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .frame(width: 92.5, height: 138.75)
+//                                        .padding()
+                                    Image(systemName: "film")
+                                        .font(.system(size: 50))
+                                        .foregroundColor(Color(UIColor.lightGray))
                                 }
                             }
                             
@@ -44,7 +56,8 @@ struct SearchView: View {
                                 Text(movie.title)
                                     .font(.system(size: 20))
                                     .bold()
-                                    .frame(maxWidth: .infinity,alignment: .leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .lineLimit(2)
                                 Text(movie.overview)
                                     .font(.body)
                                     .frame(maxWidth: .infinity,alignment: .leading)
@@ -53,7 +66,7 @@ struct SearchView: View {
                         }
                     }
                 }
-                .listRowInsets(EdgeInsets())
+//                .listRowInsets(EdgeInsets())
             }
             .searchable(text: $viewModel.searchQuery, prompt: "Search movies")
             .onSubmit(of: .search) {

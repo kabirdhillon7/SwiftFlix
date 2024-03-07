@@ -47,21 +47,35 @@ struct WatchlistView: View {
                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                     HStack(spacing: 10) {
                         if let posterPath = movie.poster_path {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                                image
-                                    .resizable()
-                                    .frame(width: 61, height: 91.5)
-                                    .aspectRatio(contentMode: .fill)
-                                    .cornerRadius(15)
-                            } placeholder: {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .foregroundColor(.white.opacity(0.5))
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
                                         .frame(width: 61, height: 91.5)
-                                    Image(systemName: "film")
-                                        .font(.system(size: 50))
-                                        .foregroundColor(Color(UIColor.lightGray))
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(10)
+                                case .failure(_):
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .foregroundColor(.white.opacity(0.5))
+                                            .frame(width: 61, height: 91.5)
+                                        Image(systemName: "film")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(Color(UIColor.lightGray))
+                                    }
+                                default:
+                                    ProgressView()
                                 }
+                            }
+                        } else {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(.white.opacity(0.5))
+                                    .frame(width: 61, height: 91.5)
+                                Image(systemName: "film")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(Color(UIColor.lightGray))
                             }
                         }
                         

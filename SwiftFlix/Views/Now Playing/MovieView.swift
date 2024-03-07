@@ -41,15 +41,25 @@ struct MovieView: View {
                         ForEach(movieViewModel.nowPlayingMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.poster_path {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
-                                } else {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .foregroundColor(.white.opacity(0.5))
-                                            .frame(width: 185, height: 277.5)
-                                        Image(systemName: "film")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(Color(UIColor.lightGray))
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                        switch phase {
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .clipped()
+                                        case .failure(_):
+                                            ZStack {
+                                                Rectangle()
+                                                    .foregroundColor(.white.opacity(0.5))
+                                                    .frame(width: 185, height: 277.5)
+                                                Image(systemName: "film")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(Color(UIColor.lightGray))
+                                            }
+                                        default:
+                                            ProgressView()
+                                        }
                                     }
                                 }
                             }
@@ -58,15 +68,25 @@ struct MovieView: View {
                         ForEach(movieViewModel.popularMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.poster_path {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
-                                } else {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .foregroundColor(.white.opacity(0.5))
-                                            .frame(width: 185, height: 277.5)
-                                        Image(systemName: "film")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(Color(UIColor.lightGray))
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                        switch phase {
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .clipped()
+                                        case .failure(_):
+                                            ZStack {
+                                                Rectangle()
+                                                    .foregroundColor(.white.opacity(0.5))
+                                                    .frame(width: 185, height: 277.5)
+                                                Image(systemName: "film")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(Color(UIColor.lightGray))
+                                            }
+                                        default:
+                                            ProgressView()
+                                        }
                                     }
                                 }
                             }
@@ -75,15 +95,25 @@ struct MovieView: View {
                         ForEach(movieViewModel.upcomingMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.poster_path {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
-                                } else {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .foregroundColor(.white.opacity(0.5))
-                                            .frame(width: 185, height: 277.5)
-                                        Image(systemName: "film")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(Color(UIColor.lightGray))
+                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                        switch phase {
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .clipped()
+                                        case .failure(_):
+                                            ZStack {
+                                                Rectangle()
+                                                    .foregroundColor(.white.opacity(0.5))
+                                                    .frame(width: 185, height: 277.5)
+                                                Image(systemName: "film")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(Color(UIColor.lightGray))
+                                            }
+                                        default:
+                                            ProgressView()
+                                        }
                                     }
                                 }
                             }
@@ -91,6 +121,7 @@ struct MovieView: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden)
             .onChange(of: movieLists.presentDetailMovie) {
                 if let movieId = movieLists.linkedDetailMovieId {
                     movieViewModel.fetchMovieObject(movieId: movieId)
