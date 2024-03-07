@@ -37,11 +37,21 @@ Some of the main features include:
 ## Demo
 ### Current Progress Walkthrough
 
-<img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/fd981292-6d8c-469d-8061-1e4548056c46" width=250><br>
+<img src="https://github.com/kabirdhillon7/SwiftFlix/assets/74223402/badb80ab-4086-4101-90ad-5307d1be04f2" width=200> 
+<img src="https://github.com/kabirdhillon7/SwiftFlix/assets/74223402/7df7b4bd-2f1b-44b9-9e37-5c6eaab7aa71" width=200> 
+<img src="https://github.com/kabirdhillon7/SwiftFlix/assets/74223402/56121297-f221-43b8-90d5-520ce4d64057" width=200> 
+<img src="https://github.com/kabirdhillon7/SwiftFlix/assets/74223402/3c4d865f-f4ec-44f7-840c-163bbb75783f" width=200>
+<br>
 
 ### Previous Version Walkthroughs
 <details>
   <summary>Click to view</summary>
+
+  #### Progress 4 Walkthrough
+  <details>
+    <summary>Click to view</summary>
+      <img src="https://github.com/kabirdhillon7/MovieFlix/assets/74223402/fd981292-6d8c-469d-8061-1e4548056c46" width=250><br>
+  </details>
 
   #### Progress 3 Walkthrough
   <details>
