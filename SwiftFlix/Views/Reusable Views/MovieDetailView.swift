@@ -25,7 +25,7 @@ struct MovieDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 5) {
+            VStack(spacing: 10) {
                 if let backdropPath = viewModel.movie.backdrop_path {
                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath))
                         .frame(height: 200, alignment: .center)
@@ -40,17 +40,44 @@ struct MovieDetailView: View {
                 
                 HStack {
                     if let posterPath = viewModel.movie.poster_path {
-                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
-                            .frame(width: 185, height: 277.5)
-                            .cornerRadius(15)
+                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                           switch phase {
+                           case .success(let image):
+                               image
+                                   .resizable()
+                                   .frame(width: 185, height: 277.5)
+                                   .aspectRatio(contentMode: .fit)
+                                   .cornerRadius(10)
+                                   .onAppear {
+                                       viewModel.moviePosterImage = image
+                                   }
+                           case .failure(_):
+                               ZStack {
+                                   RoundedRectangle(cornerRadius: 10)
+                                       .foregroundColor(.white.opacity(0.5))
+                                       .frame(width: 185, height: 277.5)
+                                   Image(systemName: "film")
+                                       .font(.system(size: 50))
+                                       .foregroundColor(Color(UIColor.lightGray))
+                               }
+                               .onAppear {
+                                   viewModel.moviePosterImage = Image(systemName: "film")
+                               }
+                           default:
+                               ProgressView()
+                           }
+                       }
                     } else {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 15)
+                            RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(.white.opacity(0.5))
                                 .frame(width: 185, height: 277.5)
                             Image(systemName: "film")
                                 .font(.system(size: 50))
                                 .foregroundColor(Color(UIColor.lightGray))
+                        }
+                        .onAppear {
+                            viewModel.moviePosterImage = Image(systemName: "film")
                         }
                     }
                     
@@ -126,21 +153,27 @@ struct MovieDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .padding(.horizontal)
                 
-                Spacer()
                 
                 Text(viewModel.movie.overview)
                     .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
+                    .padding(.horizontal)
+
                 
                 if let videoID = viewModel.trailerKey {
+                    Text("Trailer")
+                        .font(.system(size: 21))
+                        .font(.subheadline)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    
                     YouTubePlayerView(videoID: videoID)
-                        .frame(height: 300)
+                        .frame(height: 250)
+                        .padding(.horizontal)
                 }
-                
-                Spacer()
                 
                 if !viewModel.recommendedMovies.isEmpty {
                     Text("Recommended")
@@ -148,21 +181,35 @@ struct MovieDetailView: View {
                         .font(.subheadline)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Spacer()
-                        .frame(height: 5)
+                        .padding(.horizontal)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHGrid(rows: [GridItem(.flexible())], content: {
                             ForEach($viewModel.recommendedMovies.wrappedValue) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                                     if let posterPath = movie.poster_path {
-                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))
-                                            .frame(width: 185, height: 277.5)
-                                            .cornerRadius(15)
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                            switch phase {
+                                            case .success(let image):
+                                                image
+                                                    .resizable()
+                                                    .frame(width: 185, height: 277.5)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .cornerRadius(10)
+                                            default:
+                                                ZStack {
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        .frame(width: 185, height: 277.5)
+                                                    Image(systemName: "film")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(Color(UIColor.lightGray))
+                                                }
+                                            }
+                                        }
                                     } else {
                                         ZStack {
-                                            RoundedRectangle(cornerRadius: 15)
+                                            RoundedRectangle(cornerRadius: 10)
                                                 .foregroundColor(.white.opacity(0.5))
                                                 .frame(width: 185, height: 277.5)
                                             Image(systemName: "film")
@@ -173,6 +220,7 @@ struct MovieDetailView: View {
                                 }
                             }
                         })
+                        .scenePadding(.leading)
                     }
                 }
             }
@@ -180,6 +228,17 @@ struct MovieDetailView: View {
             .onAppear {
                 viewModel.fetchMovieTrailer()
                 viewModel.fetchMovieRecommendations()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if let movieUrl = URL(string: "swiftflix://movie/\(viewModel.movie.id)"),
+                        let moviePosterImage = viewModel.moviePosterImage {
+                        ShareLink(item: movieUrl,
+                                  preview: SharePreview(viewModel.movie.title, image: moviePosterImage)) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $presentAddToWatchListSheet) {
@@ -202,8 +261,9 @@ struct MovieDetailView_Previews: PreviewProvider {
             backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
             vote_average: 7.7
         )
-        
-        MovieDetailView(movie: sampleMovie)
-            .environmentObject(MovieLists())
+        NavigationStack {
+            MovieDetailView(movie: sampleMovie)
+                .environmentObject(MovieLists())
+        }
     }
 }

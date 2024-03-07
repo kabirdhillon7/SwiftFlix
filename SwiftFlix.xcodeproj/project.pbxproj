@@ -28,7 +28,6 @@
 		48C18E5A2A4808BE009980F3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C18E592A4808BE009980F3 /* SearchView.swift */; };
 		48C247252A99D8560089DEE0 /* MovieViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */; };
 		48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033472B81B9B6004CDA77 /* SearchViewModel.swift */; };
-		48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334B2B81CE67004CDA77 /* Extensions.swift */; };
 		48D0334E2B81D264004CDA77 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */; };
 		48D033502B81E30F004CDA77 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D0334F2B81E30F004CDA77 /* SearchViewModelTests.swift */; };
 		48D033732B8338F1004CDA77 /* CustomEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D033722B8338F1004CDA77 /* CustomEmptyView.swift */; };
@@ -97,7 +96,6 @@
 		48C247242A99D8560089DEE0 /* MovieViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModelTests.swift; sourceTree = "<group>"; };
 		48C247262A99D8FD0089DEE0 /* SwiftFlix.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftFlix.xctestplan; sourceTree = SOURCE_ROOT; };
 		48D033472B81B9B6004CDA77 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		48D0334B2B81CE67004CDA77 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		48D0334D2B81D264004CDA77 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		48D0334F2B81E30F004CDA77 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
 		48D033722B8338F1004CDA77 /* CustomEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEmptyView.swift; sourceTree = "<group>"; };
@@ -184,7 +182,6 @@
 				483CA5172A1752A000127430 /* ViewModels */,
 				483CA4E82A16D5BB00127430 /* Assets.xcassets */,
 				483CA4EA2A16D5BB00127430 /* Preview Content */,
-				48D0334B2B81CE67004CDA77 /* Extensions.swift */,
 			);
 			path = SwiftFlix;
 			sourceTree = "<group>";
@@ -435,7 +432,6 @@
 				480B6E502A99A55A008ACF3D /* MovieManager.swift in Sources */,
 				48D033842B848748004CDA77 /* SearchToAddToWatchListViewModel.swift in Sources */,
 				485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */,
-				48D0334C2B81CE67004CDA77 /* Extensions.swift in Sources */,
 				48D033822B8486FB004CDA77 /* SearchToAddToWatchListView.swift in Sources */,
 				48D033772B83D6D4004CDA77 /* MovieListViewModel.swift in Sources */,
 			);

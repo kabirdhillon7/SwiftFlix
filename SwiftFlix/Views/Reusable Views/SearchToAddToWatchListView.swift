@@ -44,6 +44,7 @@ struct SearchToAddToWatchListView: View {
                             .font(.system(size: 20))
                             .bold()
                             .frame(maxWidth: .infinity,alignment: .leading)
+                            .lineLimit(1)
                         Text(movie.overview) // TODO: Maybe remove
                             .font(.body)
                             .frame(maxWidth: .infinity,alignment: .leading)
