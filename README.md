@@ -17,7 +17,7 @@ SwiftFlix is built using [SwiftUI](https://developer.apple.com/xcode/swiftui/) a
 
 Some of the main features include:
 
-- Now Playing Tab
+- Movies Tab
   - Displays a list of movies currently playing in theaters, popular movies, and upcoming movies.
   - Allows users to tap on a movie to see its details.
     - Movie details include poster image, backdrop image, title, plot description, and rating.
