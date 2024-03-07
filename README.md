@@ -21,9 +21,9 @@ Some of the main features include:
   - Displays a list of movies currently playing in theaters, popular movies, and upcoming movies.
   - Allows users to tap on a movie to see its details.
     - Movie details include poster image, backdrop image, title, plot description, and rating.
-    - Provides the option to bookmark a movie.
+    - Provides the option to save a movie, mark a movie as watched, or add a movie to a watchlist.
 - List Tab
-  - Shows a list of saved and watched movies.
+  - Shows a list of saved movies, watched movies, and watchlists.
   - Allows users to tap on a listed movie to see its details, similar to the Now Playing Tab.
 - Search Tab
   - Enables users to search for movies.
