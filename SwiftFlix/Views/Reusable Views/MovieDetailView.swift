@@ -228,13 +228,13 @@ struct MovieDetailView: View {
             .onAppear {
                 viewModel.fetchMovieTrailer()
                 viewModel.fetchMovieRecommendations()
+                
+                movieLists.presentDetailMovie = false
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if let movieUrl = URL(string: "swiftflix://movie/\(viewModel.movie.id)"),
-                        let moviePosterImage = viewModel.moviePosterImage {
-                        ShareLink(item: movieUrl,
-                                  preview: SharePreview(viewModel.movie.title, image: moviePosterImage)) {
+                    if let movieUrl = URL(string: "swiftflix://movie/\(viewModel.movie.id)") {
+                        ShareLink(item: movieUrl) {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }

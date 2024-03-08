@@ -15,6 +15,7 @@ final class MovieViewModel: ObservableObject {
     @Published var upcomingMovies = [Movie]()
     
     @Published var linkedMovie: Movie?
+    @Published var presentDetailViewForLink = false
     @Published var presentLinkError = false
     
     private let apiCaller: APICaller = APICaller()
@@ -97,6 +98,7 @@ final class MovieViewModel: ObservableObject {
                     return
                 }
                 self.linkedMovie = movie
+                self.presentDetailViewForLink = true
             }
             .store(in: &cancellables)
     }

@@ -10,7 +10,6 @@ import Combine
 @testable import SwiftFlix
 
 final class MockAPIService: DataServicing {
-    
     var mockTrailerKey = ""
     var cancellables = Set<AnyCancellable>()
     

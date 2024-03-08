@@ -61,6 +61,7 @@ struct MainView: View {
         case "search":
             currentTab = .search
         case "movie":
+            print("movie case")
             movieLists.presentDetailMovie = true
             
             let path = components.path.replacingOccurrences(of: "/", with: "")

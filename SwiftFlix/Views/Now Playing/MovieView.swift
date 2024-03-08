@@ -13,9 +13,7 @@ struct MovieView: View {
     @EnvironmentObject var movieLists: MovieLists
     @StateObject var movieViewModel = MovieViewModel()
     @State private var selectedTab = 0
-    
-    @State var presentDetailViewForLink = false
-    
+        
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -122,13 +120,10 @@ struct MovieView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .onChange(of: movieLists.presentDetailMovie) {
-                if let movieId = movieLists.linkedDetailMovieId {
+            .onChange(of: movieLists.presentDetailMovie) { newValue in
+                if newValue, let movieId = movieLists.linkedDetailMovieId {
                     movieViewModel.fetchMovieObject(movieId: movieId)
                 }
-            }
-            .onChange(of: movieViewModel.linkedMovie) {
-                presentDetailViewForLink = true
             }
             .alert(isPresented: $movieViewModel.presentLinkError) {
                 Alert(title: Text("Error: Unable to Open Movie Details"),
@@ -138,7 +133,7 @@ struct MovieView: View {
                 Alert(title: Text("Error: Unable to Open Movie Details"),
                       message: Text("We couldn't find a movie with the provided movie ID. Please check the URL and try again."))
             }
-            .navigationDestination(isPresented: $presentDetailViewForLink, destination: {
+            .navigationDestination(isPresented: $movieViewModel.presentDetailViewForLink, destination: {
                 if let movie = movieViewModel.linkedMovie {
                     MovieDetailView(movie: movie)
                 }
