@@ -10,6 +10,7 @@ import Combine
 
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var movieLists: MovieLists
     
@@ -27,11 +28,26 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(spacing: 10) {
                 if let backdropPath = viewModel.movie.backdrop_path {
-                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath))
-                        .frame(height: 200, alignment: .center)
-                        .mask(
-                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
-                        )
+                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .frame(height: 200, alignment: .center)
+                                .aspectRatio(contentMode: .fill)
+                                .mask(
+                                    LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
+                                )
+                        case .failure(_):
+                            Rectangle()
+                                .frame(height: 200, alignment: .center)
+                                .foregroundStyle(.clear)
+                        default:
+                            Rectangle()
+                                .frame(height: 200, alignment: .center)
+                                .foregroundStyle(.clear)
+                        }
+                    }
                 } else {
                     Rectangle()
                         .frame(height: 200, alignment: .center)
@@ -184,7 +200,7 @@ struct MovieDetailView: View {
                         .padding(.horizontal)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHGrid(rows: [GridItem(.flexible())], content: {
+                        HStack {
                             ForEach($viewModel.recommendedMovies.wrappedValue) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                                     if let posterPath = movie.poster_path {
@@ -196,30 +212,41 @@ struct MovieDetailView: View {
                                                     .frame(width: 185, height: 277.5)
                                                     .aspectRatio(contentMode: .fit)
                                                     .cornerRadius(10)
+                                            case .failure(_):
+                                                ZStack {
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        .frame(width: 185, height: 277.5)
+                                                    Image(systemName: "film")
+                                                        .resizable()
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(Color(UIColor.lightGray))
+                                                }
                                             default:
                                                 ZStack {
                                                     RoundedRectangle(cornerRadius: 10)
                                                         .foregroundColor(.white.opacity(0.5))
                                                         .frame(width: 185, height: 277.5)
                                                     Image(systemName: "film")
+                                                        .resizable()
                                                         .font(.system(size: 50))
                                                         .foregroundColor(Color(UIColor.lightGray))
                                                 }
                                             }
                                         }
-                                    } else {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .foregroundColor(.white.opacity(0.5))
-                                                .frame(width: 185, height: 277.5)
-                                            Image(systemName: "film")
-                                                .font(.system(size: 50))
-                                                .foregroundColor(Color(UIColor.lightGray))
+                                        .containerRelativeFrame(.horizontal,
+                                                                count: verticalSizeClass == .regular ? 2 : 4,
+                                                                spacing: 10)
+                                        .scrollTransition { content, phase in
+                                            content
+                                                .opacity(phase.isIdentity ? 1.0 : 0.75)
+                                                .scaleEffect(phase.isIdentity ? 1 : 0.75)
                                         }
                                     }
                                 }
                             }
-                        })
+                        }
+                        .scrollTargetLayout()
                         .scenePadding(.leading)
                     }
                 }

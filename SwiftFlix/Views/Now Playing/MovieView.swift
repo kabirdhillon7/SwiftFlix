@@ -10,6 +10,7 @@ import Combine
 
 /// A view responsible for displaying recently playing movies
 struct MovieView: View {
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @EnvironmentObject var movieLists: MovieLists
     @StateObject var movieViewModel = MovieViewModel()
     @State private var selectedTab = 0
@@ -33,7 +34,7 @@ struct MovieView: View {
                 })
                 
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0),
-                                         count: UIDevice.current.userInterfaceIdiom == .pad ? 4 : 2),
+                                         count: verticalSizeClass == .regular ? 2 : 3),
                           spacing: 0) {
                     if selectedTab == 0 {
                         ForEach(movieViewModel.nowPlayingMovies) { movie in
