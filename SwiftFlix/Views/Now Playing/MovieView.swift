@@ -121,11 +121,11 @@ struct MovieView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .onChange(of: movieLists.presentDetailMovie) { newValue in
-                if newValue, let movieId = movieLists.linkedDetailMovieId {
+            .onChange(of: movieLists.presentDetailMovie, {
+                if let movieId = movieLists.linkedDetailMovieId {
                     movieViewModel.fetchMovieObject(movieId: movieId)
                 }
-            }
+            })
             .alert(isPresented: $movieViewModel.presentLinkError) {
                 Alert(title: Text("Error: Unable to Open Movie Details"),
                       message: Text("We couldn't find a movie with the provided movie ID. Please check the URL and try again."))
