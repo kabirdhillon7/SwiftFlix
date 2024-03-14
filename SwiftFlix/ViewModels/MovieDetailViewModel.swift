@@ -15,6 +15,7 @@ final class MovieDetailViewModel: ObservableObject {
     var movie: Movie
     var trailerKey: String?
     var moviePosterImage: Image?
+    var watchProviderLinkString: String?
     @Published var recommendedMovies = [Movie]()
     
     private let apiCaller: APICaller = APICaller()
@@ -53,6 +54,23 @@ final class MovieDetailViewModel: ObservableObject {
                 }
             } receiveValue: { movies in
                 self.recommendedMovies = movies
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchWatchProviderLink() {
+        apiCaller.getUSLink(movieID: movie.id)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("Finished getting watch provider link")
+                case .failure(let error):
+                    print("Error getting watch provider link: \(error)")
+                }
+            } receiveValue: { link in
+                print("Link: \(link)")
+                self.watchProviderLinkString = link
             }
             .store(in: &cancellables)
     }

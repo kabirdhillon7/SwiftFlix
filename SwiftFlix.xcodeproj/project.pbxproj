@@ -13,6 +13,7 @@
 		480E80882AB9458B005DF869 /* MovieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480E80872AB9458B005DF869 /* MovieTests.swift */; };
 		481FE92D2A947AC200D6E88A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */; };
 		4823D69C2A9F057300F7DB9D /* APICallerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4823D69B2A9F057300F7DB9D /* APICallerTests.swift */; };
+		4828E38D2BA2B178009F8691 /* WatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828E38C2BA2B178009F8691 /* WatchProvider.swift */; };
 		483CA4E52A16D5BA00127430 /* SwiftFlixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */; };
 		483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E62A16D5BA00127430 /* MovieView.swift */; };
 		483CA4E92A16D5BB00127430 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483CA4E82A16D5BB00127430 /* Assets.xcassets */; };
@@ -77,6 +78,7 @@
 		480E80872AB9458B005DF869 /* MovieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTests.swift; sourceTree = "<group>"; };
 		481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4823D69B2A9F057300F7DB9D /* APICallerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallerTests.swift; sourceTree = "<group>"; };
+		4828E38C2BA2B178009F8691 /* WatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchProvider.swift; sourceTree = "<group>"; };
 		483CA4E12A16D5BA00127430 /* SwiftFlix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftFlix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftFlixApp.swift; sourceTree = "<group>"; };
 		483CA4E62A16D5BA00127430 /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				480B6E4D2A996C2A008ACF3D /* MovieLists.swift */,
 				480B6E4F2A99A55A008ACF3D /* MovieManager.swift */,
 				48D033782B841A82004CDA77 /* Watchlist.swift */,
+				4828E38C2BA2B178009F8691 /* WatchProvider.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				483CA5132A1750B600127430 /* APICaller.swift in Sources */,
 				48D033732B8338F1004CDA77 /* CustomEmptyView.swift in Sources */,
 				48D033482B81B9B6004CDA77 /* SearchViewModel.swift in Sources */,
+				4828E38D2BA2B178009F8691 /* WatchProvider.swift in Sources */,
 				480B6E4E2A996C2A008ACF3D /* MovieLists.swift in Sources */,
 				48D033792B841A82004CDA77 /* Watchlist.swift in Sources */,
 				483CA5162A1750E200127430 /* Movie.swift in Sources */,

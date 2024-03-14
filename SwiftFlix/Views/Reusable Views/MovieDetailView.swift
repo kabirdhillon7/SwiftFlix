@@ -12,6 +12,7 @@ import Combine
 struct MovieDetailView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.openURL) var openURL
     @EnvironmentObject var movieLists: MovieLists
     
     @StateObject var viewModel: MovieDetailViewModel
@@ -19,6 +20,7 @@ struct MovieDetailView: View {
     @State var savedButtonTapped = false
     @State var watchedButtonTapped = false
     @State var presentAddToWatchListSheet = false
+    @State var presentWatchListViewSheet = false
     
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
@@ -191,6 +193,29 @@ struct MovieDetailView: View {
                         .padding(.horizontal)
                 }
                 
+                if let watchProviderLinkString = viewModel.watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
+                    Text("Watch")
+                        .font(.system(size: 21))
+                        .font(.subheadline)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    Text("Seaming information provided by JustWatch.")
+                        .font(.footnote)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    Link(destination: watchProviderLinkUrl, label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.accentColor)
+                                .padding(.horizontal)
+                            Text("View Watch Providers")
+                                .foregroundColor(.white)
+                                .padding(.vertical, 10)
+                        }
+                    })
+                }
+                
                 if !viewModel.recommendedMovies.isEmpty {
                     Text("Recommended")
                         .font(.system(size: 21))
@@ -255,6 +280,7 @@ struct MovieDetailView: View {
             .onAppear {
                 viewModel.fetchMovieTrailer()
                 viewModel.fetchMovieRecommendations()
+                viewModel.fetchWatchProviderLink()
                 
                 movieLists.presentDetailMovie = false
             }
