@@ -8,13 +8,13 @@
 import Foundation
 
 struct WatchProviderResults: Codable {
-    var results: [String:CountryResult]
+    let results: [String:CountryResult]
 }
 
 struct WatchProvider: Codable {
-    var results: WatchProviderResults
+    let results: WatchProviderResults
 }
 
 struct CountryResult: Codable {
-    var link: String
+    let link: String
 }

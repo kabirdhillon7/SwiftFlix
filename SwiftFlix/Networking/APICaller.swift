@@ -179,4 +179,19 @@ class APICaller: DataServicing {
             }
             .eraseToAnyPublisher()
     }
+    
+    func fetchMovieCredits(movieID: Int) -> AnyPublisher<Credits, Error> {
+        guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/credits?api_key=\(apiKey.rawValue)") else {
+            return Fail(error: NSError(domain: "Unable to get movie providers link from movie id", code: 0)).eraseToAnyPublisher()
+        }
+        
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .map({ $0.data })
+            .decode(type: Credits.self, decoder: decoder)
+            .eraseToAnyPublisher()
+    }
 }
