@@ -67,9 +67,6 @@ struct MovieDetailView: View {
                                    .aspectRatio(contentMode: .fit)
                                    .frame(width: 185, height: 277.5)
                                    .cornerRadius(10)
-                                   .onAppear {
-                                       viewModel.moviePosterImage = image
-                                   }
                            case .failure(_):
                                ZStack {
                                    RoundedRectangle(cornerRadius: 10)
@@ -78,9 +75,6 @@ struct MovieDetailView: View {
                                    Image(systemName: "film")
                                        .font(.system(size: 50))
                                        .foregroundColor(Color(UIColor.lightGray))
-                               }
-                               .onAppear {
-                                   viewModel.moviePosterImage = Image(systemName: "film")
                                }
                            default:
                                ProgressView()
@@ -94,9 +88,6 @@ struct MovieDetailView: View {
                             Image(systemName: "film")
                                 .font(.system(size: 50))
                                 .foregroundColor(Color(UIColor.lightGray))
-                        }
-                        .onAppear {
-                            viewModel.moviePosterImage = Image(systemName: "film")
                         }
                     }
                     

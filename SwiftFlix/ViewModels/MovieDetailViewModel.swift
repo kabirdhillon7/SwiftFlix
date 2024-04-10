@@ -14,8 +14,8 @@ final class MovieDetailViewModel: ObservableObject {
     
     var movie: Movie
     var trailerKey: String?
-    var moviePosterImage: Image?
     var watchProviderLinkString: String?
+    
     @Published var recommendedMovies = [Movie]()
     @Published var movieCredits: Credits?
     
@@ -59,8 +59,9 @@ final class MovieDetailViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    /// Fetches a watch provider link for a particular movie
     func fetchWatchProviderLink() {
-        apiCaller.getUSLink(movieID: movie.id)
+        apiCaller.getWatchProviders(movieID: movie.id)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -76,6 +77,7 @@ final class MovieDetailViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    /// Fetches the credits for a particular movie
     func fetchCredits() {
         apiCaller.fetchMovieCredits(movieID: movie.id)
             .receive(on: DispatchQueue.main)
@@ -87,7 +89,6 @@ final class MovieDetailViewModel: ObservableObject {
                     print("Error getting credits: \(error)")
                 }
             } receiveValue: { credits in
-                print("Credits: \(credits)")
                 self.movieCredits = credits
             }
             .store(in: &cancellables)

@@ -163,7 +163,13 @@ class APICaller: DataServicing {
             .eraseToAnyPublisher()
     }
     
-    func getUSLink(movieID: Int) -> AnyPublisher<String, Error> {
+    /// Fetches a String link of streaming providers for a movie from The Movie Database API
+    ///
+    /// - Parameters:
+    ///     - movieID: The id of the specfic movie to fetch the trailer for
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing a `String` and a possible `Error`.
+    func getWatchProviders(movieID: Int) -> AnyPublisher<String, Error> {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/watch/providers?api_key=\(apiKey.rawValue)") else {
             return Fail(error: NSError(domain: "Unable to get movie providers link from movie id", code: 0)).eraseToAnyPublisher()
         }
@@ -180,6 +186,12 @@ class APICaller: DataServicing {
             .eraseToAnyPublisher()
     }
     
+    /// Fetches the credits for a movie from The Movie Database API
+    ///
+    /// - Parameters:
+    ///     - movieID: The id of the specfic movie to fetch the trailer for
+    /// - Returns:
+    ///     -  An `AnyPublisher` containing a `Credits` object and a possible `Error`.
     func fetchMovieCredits(movieID: Int) -> AnyPublisher<Credits, Error> {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/credits?api_key=\(apiKey.rawValue)") else {
             return Fail(error: NSError(domain: "Unable to get movie providers link from movie id", code: 0)).eraseToAnyPublisher()
