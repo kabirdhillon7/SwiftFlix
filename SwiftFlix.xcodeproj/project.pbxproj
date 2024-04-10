@@ -14,6 +14,7 @@
 		481FE92D2A947AC200D6E88A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */; };
 		4823D69C2A9F057300F7DB9D /* APICallerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4823D69B2A9F057300F7DB9D /* APICallerTests.swift */; };
 		4828E38D2BA2B178009F8691 /* WatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828E38C2BA2B178009F8691 /* WatchProvider.swift */; };
+		4828E38F2BA2CDEB009F8691 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828E38E2BA2CDEB009F8691 /* Credits.swift */; };
 		483CA4E52A16D5BA00127430 /* SwiftFlixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */; };
 		483CA4E72A16D5BA00127430 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483CA4E62A16D5BA00127430 /* MovieView.swift */; };
 		483CA4E92A16D5BB00127430 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 483CA4E82A16D5BB00127430 /* Assets.xcassets */; };
@@ -79,6 +80,7 @@
 		481FE92C2A947AC200D6E88A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4823D69B2A9F057300F7DB9D /* APICallerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallerTests.swift; sourceTree = "<group>"; };
 		4828E38C2BA2B178009F8691 /* WatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchProvider.swift; sourceTree = "<group>"; };
+		4828E38E2BA2CDEB009F8691 /* Credits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		483CA4E12A16D5BA00127430 /* SwiftFlix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftFlix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftFlixApp.swift; sourceTree = "<group>"; };
 		483CA4E62A16D5BA00127430 /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				480B6E4F2A99A55A008ACF3D /* MovieManager.swift */,
 				48D033782B841A82004CDA77 /* Watchlist.swift */,
 				4828E38C2BA2B178009F8691 /* WatchProvider.swift */,
+				4828E38E2BA2CDEB009F8691 /* Credits.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				48D0334E2B81D264004CDA77 /* MovieDetailViewModel.swift in Sources */,
 				48D0337D2B8429E5004CDA77 /* WatchlistView.swift in Sources */,
 				480B6E502A99A55A008ACF3D /* MovieManager.swift in Sources */,
+				4828E38F2BA2CDEB009F8691 /* Credits.swift in Sources */,
 				48D033842B848748004CDA77 /* SearchToAddToWatchListViewModel.swift in Sources */,
 				485A79B72A3EE5CB00B5F110 /* YouTubePlayerView.swift in Sources */,
 				48D033822B8486FB004CDA77 /* SearchToAddToWatchListView.swift in Sources */,

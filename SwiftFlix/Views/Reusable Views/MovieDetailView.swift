@@ -13,6 +13,7 @@ struct MovieDetailView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.openURL) var openURL
+    
     @EnvironmentObject var movieLists: MovieLists
     
     @StateObject var viewModel: MovieDetailViewModel
@@ -35,8 +36,8 @@ struct MovieDetailView: View {
                         case .success(let image):
                             image
                                 .resizable()
-                                .frame(height: 200, alignment: .center)
                                 .aspectRatio(contentMode: .fill)
+                                .frame(height: 200, alignment: .center)
                                 .mask(
                                     LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
                                 )
@@ -63,8 +64,8 @@ struct MovieDetailView: View {
                            case .success(let image):
                                image
                                    .resizable()
-                                   .frame(width: 185, height: 277.5)
                                    .aspectRatio(contentMode: .fit)
+                                   .frame(width: 185, height: 277.5)
                                    .cornerRadius(10)
                                    .onAppear {
                                        viewModel.moviePosterImage = image
@@ -101,15 +102,14 @@ struct MovieDetailView: View {
                     
                     VStack(spacing: 5) {
                         Text(viewModel.movie.title)
-                            .font(.system(size: 21))
-                            .bold()
+                            .font(.title2.bold())
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         
                         Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", viewModel.movie.vote_average)) / 10")
-                            .font(.system(size: 17))
+                            .font(.headline.weight(.medium))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
@@ -182,9 +182,7 @@ struct MovieDetailView: View {
                 
                 if let videoID = viewModel.trailerKey {
                     Text("Trailer")
-                        .font(.system(size: 21))
-                        .font(.subheadline)
-                        .bold()
+                        .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     
@@ -195,15 +193,15 @@ struct MovieDetailView: View {
                 
                 if let watchProviderLinkString = viewModel.watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
                     Text("Watch")
-                        .font(.system(size: 21))
-                        .font(.subheadline)
-                        .bold()
+                        .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
+                    
                     Text("Seaming information provided by JustWatch.")
-                        .font(.footnote)
+                        .font(.footnote.weight(.light))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
+                    
                     Link(destination: watchProviderLinkUrl, label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 10)
@@ -216,11 +214,86 @@ struct MovieDetailView: View {
                     })
                 }
                 
+                if let credits = viewModel.movieCredits {
+                    Text("Cast & Crew")
+                        .font(.title2.weight(.semibold))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(credits.cast, id: \.id) { cast in
+                                VStack {
+                                    if let profilePath = cast.profilePath {
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + profilePath)) { phase in
+                                            switch phase {
+                                            case .success(let image):
+                                                image
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fill)
+                                                    .frame(width: 120, height: 120)
+                                                    .clipShape(Circle())
+                                            case .failure(_):
+                                                ZStack {
+                                                    Circle()
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        .frame(width: 120, height: 120)
+                                                    Image(systemName: "person.fill")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(Color(UIColor.lightGray))
+                                                }
+                                            default:
+                                                ZStack {
+                                                    Circle()
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        .frame(width: 120, height: 120)
+                                                    Image(systemName: "person.fill")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(Color(UIColor.lightGray))
+                                                        .padding()
+                                                }
+                                            }
+                                        }
+                                        .containerRelativeFrame(.horizontal,
+                                                                count: verticalSizeClass == .regular ? 3 : 5,
+                                                                spacing: 10)
+                                        .scrollTransition { content, phase in
+                                            content
+                                                .opacity(phase.isIdentity ? 1.0 : 0.75)
+                                                .scaleEffect(phase.isIdentity ? 1 : 0.75)
+                                        }
+                                    } else {
+                                        ZStack {
+                                            Circle()
+                                                .foregroundColor(.white.opacity(0.5))
+                                                .frame(width: 120, height: 120)
+                                            Image(systemName: "person.fill")
+                                                .font(.system(size: 50))
+                                                .foregroundColor(Color(UIColor.lightGray))
+                                                .padding()
+                                        }
+                                    }
+                                    Text(cast.name)
+                                        .frame(width: 120)
+                                        .frame(alignment: .center)
+                                        .lineLimit(1)
+                                    Text(cast.character)
+                                        .frame(width: 120)
+                                        .frame(alignment: .center)
+                                        .font(.footnote)
+                                        .lineLimit(1)
+                                }
+                            }
+
+                        }
+                        .scenePadding(.leading)
+                    }
+                    .scrollIndicators(.hidden)
+                }
+                
                 if !viewModel.recommendedMovies.isEmpty {
                     Text("Recommended")
-                        .font(.system(size: 21))
-                        .font(.subheadline)
-                        .bold()
+                        .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     
@@ -234,8 +307,8 @@ struct MovieDetailView: View {
                                             case .success(let image):
                                                 image
                                                     .resizable()
-                                                    .frame(width: 185, height: 277.5)
                                                     .aspectRatio(contentMode: .fit)
+                                                    .frame(width: 185, height: 277.5)
                                                     .cornerRadius(10)
                                             case .failure(_):
                                                 ZStack {
@@ -281,6 +354,7 @@ struct MovieDetailView: View {
                 viewModel.fetchMovieTrailer()
                 viewModel.fetchMovieRecommendations()
                 viewModel.fetchWatchProviderLink()
+                viewModel.fetchCredits()
                 
                 movieLists.presentDetailMovie = false
             }
