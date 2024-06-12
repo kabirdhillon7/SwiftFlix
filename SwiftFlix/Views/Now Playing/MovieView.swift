@@ -38,7 +38,9 @@ struct MovieView: View {
                           spacing: 0) {
                     if selectedTab == 0 {
                         ForEach(movieViewModel.nowPlayingMovies) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
+                            NavigationLink {
+                                MovieDetailView(movie: movie)
+                            } label: {
                                 if let posterPath = movie.poster_path {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                                         switch phase {

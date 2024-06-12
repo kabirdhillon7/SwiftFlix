@@ -352,9 +352,10 @@ struct MovieDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if let movieUrl = URL(string: "swiftflix://movie/\(viewModel.movie.id)") {
-                        ShareLink(item: movieUrl) {
+                        ShareLink(item: movieUrl, preview: SharePreview(viewModel.movie.title)) {
                             Image(systemName: "square.and.arrow.up")
                         }
+                        
                     }
                 }
             }
