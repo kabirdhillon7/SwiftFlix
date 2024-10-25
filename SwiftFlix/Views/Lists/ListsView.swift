@@ -54,7 +54,7 @@ struct ListsView: View {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 3), spacing: 0) {
                                 ForEach(Array(movieLists.watchedMovies.movies), id: \.self) { movie in
                                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                        if let posterPath = movie.poster_path {
+                                        if let posterPath = movie.posterPath {
                                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                                                 switch phase {
                                                 case .success(let image):

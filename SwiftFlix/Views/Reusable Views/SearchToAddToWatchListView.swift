@@ -18,7 +18,7 @@ struct SearchToAddToWatchListView: View {
         List {
             ForEach(viewModel.searchResults) { movie in
                 HStack(spacing: 5) {
-                    if let posterPath = movie.poster_path {
+                    if let posterPath = movie.posterPath {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                             image
                                 .resizable()

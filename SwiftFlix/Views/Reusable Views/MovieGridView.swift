@@ -21,7 +21,7 @@ struct MovieGridView: View {
                     NavigationLink {
                         MovieDetailView(movie: movie)
                     } label: {
-                        if let posterPath = movie.poster_path, !posterPath.isEmpty {
+                        if let posterPath = movie.posterPath, !posterPath.isEmpty {
                             AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                                 image
                                     .resizable()
@@ -51,9 +51,9 @@ struct MovieGridView: View {
         id: 502356,
         title: "The Super Mario Bros. Movie",
         overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-        poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-        backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-        vote_average: 7.7
+        posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+        backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+        voteAverage: 7.7
     )
     MovieGridView(movies: [sampleMovie, sampleMovie, sampleMovie])
 }

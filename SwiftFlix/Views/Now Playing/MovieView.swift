@@ -13,7 +13,6 @@ struct MovieView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @EnvironmentObject var movieLists: MovieLists
     @State var movieViewModel = MovieViewModel()
-    @State private var selectedTab = 1
     
     @State private var presentNowPlayingList: Bool = false
     @State private var presentPopularList: Bool = false
@@ -39,7 +38,9 @@ struct MovieView: View {
                         .scrollTargetLayout()
                     }
                     .onAppear(perform: {
-                        movieViewModel.fetchNowPlayingMovies()
+                        Task {
+                            await movieViewModel.fetchNowPlayingMovies()
+                        }
                     })
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding(.horizontal)
@@ -61,7 +62,9 @@ struct MovieView: View {
                         .scrollTargetLayout()
                     }
                     .onAppear(perform: {
-                        movieViewModel.fetchPopularMovies()
+                        Task {
+                            await movieViewModel.fetchPopularMovies()
+                        }
                     })
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding(.horizontal)
@@ -83,7 +86,9 @@ struct MovieView: View {
                         .scrollTargetLayout()
                     }
                     .onAppear(perform: {
-                        movieViewModel.fetchUpcomingMovies()
+                        Task {
+                            await movieViewModel.fetchUpcomingMovies()
+                        }
                     })
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding(.horizontal)

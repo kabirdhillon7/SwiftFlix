@@ -18,7 +18,7 @@ struct SearchView: View {
                 ForEach(viewModel.searchResults) { movie in
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
                         HStack(spacing: 10) {
-                            if let posterPath = movie.poster_path {
+                            if let posterPath = movie.posterPath {
                                 AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                                     switch phase {
                                     case .success(let image):
