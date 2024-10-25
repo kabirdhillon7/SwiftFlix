@@ -9,14 +9,27 @@ import Foundation
 import Combine
 
 /// A view model responsible for managing movie data and API calls
-final class MovieViewModel: ObservableObject {
-    @Published var nowPlayingMovies = [Movie]()
-    @Published var popularMovies = [Movie]()
-    @Published var upcomingMovies = [Movie]()
+@Observable
+final class MovieViewModel {
+    var nowPlayingMovies = [Movie]()
+    var popularMovies = [Movie]()
+    var upcomingMovies = [Movie]()
     
-    @Published var linkedMovie: Movie?
-    @Published var presentDetailViewForLink = false
-    @Published var presentLinkError = false
+    var filteredPopularMovies: [Movie] {
+        popularMovies.filter {
+            !nowPlayingMovies.contains($0) && !upcomingMovies.contains($0)
+        }
+    }
+    
+    var filteredUpcomingMovies: [Movie] {
+        upcomingMovies.filter {
+            !nowPlayingMovies.contains($0) && !popularMovies.contains($0)
+        }
+    }
+    
+    var linkedMovie: Movie?
+    var presentDetailViewForLink = false
+    var presentLinkError = false
     
     private let apiCaller: APICaller = APICaller()
     private var cancellables: Set<AnyCancellable> = []
