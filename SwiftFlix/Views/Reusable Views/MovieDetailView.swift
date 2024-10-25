@@ -30,7 +30,7 @@ struct MovieDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
-                if let backdropPath = viewModel.movie.backdrop_path {
+                if let backdropPath = viewModel.movie.backdropPath {
                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { phase in
                         switch phase {
                         case .success(let image):
@@ -58,7 +58,7 @@ struct MovieDetailView: View {
                 }
                 
                 HStack {
-                    if let posterPath = viewModel.movie.poster_path {
+                    if let posterPath = viewModel.movie.posterPath {
                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                            switch phase {
                            case .success(let image):
@@ -99,7 +99,7 @@ struct MovieDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         
-                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", viewModel.movie.vote_average)) / 10")
+                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", viewModel.movie.voteAverage)) / 10")
                             .font(.headline.weight(.medium))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -292,7 +292,7 @@ struct MovieDetailView: View {
                         HStack {
                             ForEach($viewModel.recommendedMovies.wrappedValue) { movie in
                                 NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                    if let posterPath = movie.poster_path {
+                                    if let posterPath = movie.posterPath {
                                         AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                                             switch phase {
                                             case .success(let image):
@@ -376,9 +376,9 @@ struct MovieDetailView_Previews: PreviewProvider {
             id: 502356,
             title: "The Super Mario Bros. Movie",
             overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-            poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-            backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-            vote_average: 7.7
+            posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+            backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+            voteAverage: 7.7
         )
         NavigationStack {
             MovieDetailView(movie: sampleMovie)

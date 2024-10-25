@@ -25,6 +25,17 @@ protocol DataServicing {
 class APICaller: DataServicing {
     
     let apiKey = APIInformation.key
+        
+    func getData<T: Codable>(urlString: String, decoderType: T.Type) async throws -> T {
+        guard let url = URL(string: urlString + apiKey.rawValue) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(decoderType, from: data)
+    }
     
     /// Fetches a list of movies recently playing in theaters
     /// - Parameters:

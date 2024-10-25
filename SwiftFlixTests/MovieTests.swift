@@ -34,8 +34,8 @@ final class MovieTests: XCTestCase {
         XCTAssertEqual(movie.title, "The Super Mario Bros. Movie")
         XCTAssertEqual(movie.overview, "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.")
         XCTAssertEqual(movie.poster_path, "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg")
-        XCTAssertEqual(movie.backdrop_path, "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg")
-        XCTAssertEqual(movie.vote_average, 7.7)
+        XCTAssertEqual(movie.backdropPath, "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg")
+        XCTAssertEqual(movie.voteAverage, 7.7)
     }
     
     func test_movie_shouldNotBeNil() {

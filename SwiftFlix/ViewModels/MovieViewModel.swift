@@ -35,63 +35,39 @@ final class MovieViewModel {
     private var cancellables: Set<AnyCancellable> = []
         
     /// Fetches a list of movies now playing in theaters
-    func fetchNowPlayingMovies() {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=") else { return }
+    @MainActor
+    func fetchNowPlayingMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key="
         
-        apiCaller.getNowPlayingMovies(toUrl: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting now playing movies")
-                case .failure(let error):
-                    print("Error getting now playing movies: \(error)")
-                }
-            } receiveValue: { [weak self] movies in
-                self?.nowPlayingMovies = movies
-            }
-            .store(in: &cancellables)
+        do {
+            nowPlayingMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
     }
     
     /// Fetches a list of movies now playing in theaters
-    func fetchPopularMovies() {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=") else { return }
+    @MainActor
+    func fetchPopularMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key="
         
-        apiCaller.getNowPlayingMovies(toUrl: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting now playing movies")
-                case .failure(let error):
-                    print("Error getting now playing movies: \(error)")
-                }
-            } receiveValue: { [weak self] movies in
-                self?.popularMovies = movies
-            }
-            .store(in: &cancellables)
+        do {
+            popularMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
     }
     
     /// Fetches a list of movies upcoming in theaters
-    func fetchUpcomingMovies() {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=") else { return }
+    @MainActor
+    func fetchUpcomingMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key="
         
-        apiCaller.getUpcomingMovies(toUrl: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting upcoming movies")
-                case .failure(let error):
-                    print("Error getting upcoming movies: \(error)")
-                }
-            } receiveValue: { [weak self] movies in
-                guard let self = self else {
-                    return
-                }
-                self.upcomingMovies = movies
-            }
-            .store(in: &cancellables)
+        do {
+            upcomingMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
     }
     
     /// Fetches a movie object from a movie ID
