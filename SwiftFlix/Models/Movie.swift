@@ -8,7 +8,7 @@
 import Foundation
 
 /// Movie
-struct Movie: Codable, Identifiable, Hashable {
+struct Movie: Codable, Identifiable, Hashable, Equatable {
     
     let id: Int
     let title: String
@@ -24,6 +24,10 @@ struct Movie: Codable, Identifiable, Hashable {
         self.poster_path = poster_path
         self.backdrop_path = backdrop_path
         self.vote_average = vote_average
+    }
+    
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
