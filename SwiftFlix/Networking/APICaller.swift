@@ -16,9 +16,10 @@ enum APIInformation: String {
 /// Protocol for DataServicing
 protocol DataServicing {
     func getNowPlayingMovies(toUrl url: URL) -> AnyPublisher<[Movie], Error>
-    func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error>
-    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
-    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error>
+    func getMovieTrailer(movieId: Int) async throws -> String
+//    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
+    func getWatchProviders(movieID: Int) async throws -> String
+//    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error>
 }
 
 /// Class responsible for making API calls
@@ -27,7 +28,7 @@ class APICaller: DataServicing {
     let apiKey = APIInformation.key
         
     func getData<T: Codable>(urlString: String, decoderType: T.Type) async throws -> T {
-        guard let url = URL(string: urlString + apiKey.rawValue) else {
+        guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         
@@ -97,20 +98,18 @@ class APICaller: DataServicing {
     ///    - movieId: The id of the specfic movie to fetch the trailer for
     /// - Returns:
     ///    -  An `AnyPublisher` of a `String` representing the key for the trailer, and an `Error`
-    func getMovieTrailer(movieId: Int) -> AnyPublisher<String, Error> {
+    func getMovieTrailer(movieId: Int) async throws -> String {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieId)/videos?api_key=\(apiKey.rawValue)") else {
-            return Fail(error: NSError(domain: "Invalid trailer URL", code: 0)).eraseToAnyPublisher()
+            throw URLError(.badURL)
         }
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .map { $0.data }
-            .tryMap { try JSONSerialization.jsonObject(with: $0) }
-            .compactMap { $0 as? [String: Any] }
-            .compactMap { $0["results"] as? [[String: Any]] }
-            .compactMap { $0.first(where: { ($0["type"] as? String) == "Trailer" }) }
-            .map { ($0?["key"] as? String)! }
-            .eraseToAnyPublisher()
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let json = try await JSONSerialization.jsonObject(with: data)
+        guard let dictionary = json as? [String: Any], let results = dictionary["results"] as? [[String: Any]], let trailerData = results.first(where: { ($0["type"] as? String) == "Trailer" }), let trailerString = trailerData["key"] as? String else {
+            throw URLError(.unknown)
+        }
+        
+        return trailerString
     }
     
     /// Fetches movie search results from The Movie Database API
@@ -129,27 +128,6 @@ class APICaller: DataServicing {
         
         return URLSession.shared.dataTaskPublisher(for: request)
             .map(\.data)
-            .decode(type: MovieResults.self, decoder: JSONDecoder())
-            .map({ $0.results })
-            .eraseToAnyPublisher()
-    }
-    
-    
-    /// Fetches movie recommendations results for a specific movie from The Movie Database API
-    ///
-    /// - Parameters:
-    ///     - movieID: The id of the specfic movie to fetch the trailer for
-    /// - Returns:
-    ///     -  An `AnyPublisher` containing an array of `Movie` objects and a possible `Error`.
-    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error> {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/recommendations?api_key=\(apiKey.rawValue)") else {
-            return Fail(error: NSError(domain: "Invalid movie recommendations", code: 0)).eraseToAnyPublisher()
-        }
-        
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .map({ $0.data })
             .decode(type: MovieResults.self, decoder: JSONDecoder())
             .map({ $0.results })
             .eraseToAnyPublisher()
@@ -180,41 +158,18 @@ class APICaller: DataServicing {
     ///     - movieID: The id of the specfic movie to fetch the trailer for
     /// - Returns:
     ///     -  An `AnyPublisher` containing a `String` and a possible `Error`.
-    func getWatchProviders(movieID: Int) -> AnyPublisher<String, Error> {
+    func getWatchProviders(movieID: Int) async throws -> String {
         guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/watch/providers?api_key=\(apiKey.rawValue)") else {
-            return Fail(error: NSError(domain: "Unable to get movie providers link from movie id", code: 0)).eraseToAnyPublisher()
+            throw URLError(.badURL)
         }
         
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .map({ $0.data })
-            .decode(type: WatchProviderResults.self, decoder: JSONDecoder())
-            .map { response in
-                let result = response.results["US"]
-                return result?.link ?? ""
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    /// Fetches the credits for a movie from The Movie Database API
-    ///
-    /// - Parameters:
-    ///     - movieID: The id of the specfic movie to fetch the trailer for
-    /// - Returns:
-    ///     -  An `AnyPublisher` containing a `Credits` object and a possible `Error`.
-    func fetchMovieCredits(movieID: Int) -> AnyPublisher<Credits, Error> {
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)/credits?api_key=\(apiKey.rawValue)") else {
-            return Fail(error: NSError(domain: "Unable to get movie providers link from movie id", code: 0)).eraseToAnyPublisher()
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        let response = try JSONDecoder().decode(WatchProviderResults.self, from: data)
+        guard let usResult = response.results["US"] else {
+            throw URLError(.unknown)
         }
         
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .map({ $0.data })
-            .decode(type: Credits.self, decoder: decoder)
-            .eraseToAnyPublisher()
+        return usResult.link
     }
 }
