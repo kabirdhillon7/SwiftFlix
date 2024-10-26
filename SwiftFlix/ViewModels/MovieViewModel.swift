@@ -37,7 +37,7 @@ final class MovieViewModel {
     /// Fetches a list of movies now playing in theaters
     @MainActor
     func fetchNowPlayingMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key="
+        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(APIInformation.key.rawValue)"
         
         do {
             nowPlayingMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
@@ -49,7 +49,7 @@ final class MovieViewModel {
     /// Fetches a list of movies now playing in theaters
     @MainActor
     func fetchPopularMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key="
+        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=\(APIInformation.key.rawValue)"
         
         do {
             popularMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
@@ -61,7 +61,7 @@ final class MovieViewModel {
     /// Fetches a list of movies upcoming in theaters
     @MainActor
     func fetchUpcomingMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key="
+        let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=\(APIInformation.key.rawValue)"
         
         do {
             upcomingMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results

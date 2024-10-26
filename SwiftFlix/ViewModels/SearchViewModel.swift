@@ -9,27 +9,23 @@ import Foundation
 import Combine
 
 /// A view model responsible for managing movie search data and API calls
-final class SearchViewModel: ObservableObject {
-    @Published var searchQuery: String = ""
-    @Published var searchResults = [Movie]()
+@Observable
+final class SearchViewModel {
+    var searchQuery: String = ""
+    var searchResults = [Movie]()
     
     private let apiCaller: APICaller = APICaller()
-    private var cancellables = Set<AnyCancellable>()
     
     /// Fetches search results from API
-    func searchMovies() {
-        apiCaller.getSearchMovieResults(searchQuery: searchQuery)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Search error: \(error.localizedDescription)")
-                }
-            } receiveValue: { movies in
-                self.searchResults = movies
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func searchMovies() async {
+        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(APIInformation.key.rawValue)&query=\(encodedQuery)"
+        
+        do {
+            searchResults = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Search error: \(error.localizedDescription)")
+        }
     }
 }

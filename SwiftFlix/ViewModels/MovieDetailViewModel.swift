@@ -10,14 +10,15 @@ import Combine
 import SwiftUI
 
 /// A view model responsible for movie information and data
-final class MovieDetailViewModel: ObservableObject {
+@Observable
+final class MovieDetailViewModel {
     
     var movie: Movie
     var trailerKey: String?
     var watchProviderLinkString: String?
     
-    @Published var recommendedMovies = [Movie]()
-    @Published var movieCredits: Credits?
+    var recommendedMovies = [Movie]()
+    var movieCredits: Credits?
     
     private let apiCaller: APICaller = APICaller()
     private var cancellables = Set<AnyCancellable>()
@@ -27,70 +28,48 @@ final class MovieDetailViewModel: ObservableObject {
     }
     
     /// Fetches a the movie trailer for a particular movie
-    func fetchMovieTrailer() {
-        apiCaller.getMovieTrailer(movieId: movie.id)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Error getting movie trailer: \(error)")
-                }
-            } receiveValue: { videoID in
-                self.trailerKey = videoID
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func fetchMovieTrailer() async {
+        do {
+            trailerKey = try await apiCaller.getMovieTrailer(movieId: movie.id)
+        } catch {
+            print("Error getting movie trailer: \(error)")
+        }
     }
     
     /// Fetches a list of recommended movies for a particular movie
-    func fetchMovieRecommendations() {
-        apiCaller.getMovieRecommendations(movieID: movie.id)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting recommended movies")
-                case .failure(let error):
-                    print("Error getting recommended movies: \(error)")
-                }
-            } receiveValue: { movies in
-                self.recommendedMovies = movies
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func fetchMovieRecommendations() async {
+        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/recommendations?api_key=\(APIInformation.key.rawValue)"
+        
+        do {
+            recommendedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Error getting recommended movies: \(error)")
+        }
     }
     
     /// Fetches a watch provider link for a particular movie
-    func fetchWatchProviderLink() {
-        apiCaller.getWatchProviders(movieID: movie.id)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting watch provider link")
-                case .failure(let error):
-                    print("Error getting watch provider link: \(error)")
-                }
-            } receiveValue: { link in
-                print("Link: \(link)")
-                self.watchProviderLinkString = link
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func fetchWatchProviderLink() async {
+        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/watch/providers?api_key=\(APIInformation.key.rawValue)"
+        
+        do {
+            watchProviderLinkString = try await apiCaller.getWatchProviders(movieID: movie.id)
+        } catch {
+            print("Error getting watch provider link: \(error)")
+        }
     }
     
     /// Fetches the credits for a particular movie
-    func fetchCredits() {
-        apiCaller.fetchMovieCredits(movieID: movie.id)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Finished getting credits")
-                case .failure(let error):
-                    print("Error getting credits: \(error)")
-                }
-            } receiveValue: { credits in
-                self.movieCredits = credits
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func fetchCredits() async {
+        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/credits?api_key=\(APIInformation.key.rawValue)"
+        
+        do {
+            movieCredits = try await apiCaller.getData(urlString: urlString, decoderType: Credits.self)
+        } catch {
+            print("Error getting credits: \(error)")
+        }
     }
 }
