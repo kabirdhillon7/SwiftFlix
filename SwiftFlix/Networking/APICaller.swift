@@ -19,7 +19,6 @@ protocol DataServicing {
     func getMovieTrailer(movieId: Int) async throws -> String
 //    func getSearchMovieResults(searchQuery: String) -> AnyPublisher<[Movie], Error>
     func getWatchProviders(movieID: Int) async throws -> String
-//    func getMovieRecommendations(movieID: Int) -> AnyPublisher<[Movie], Error>
 }
 
 /// Class responsible for making API calls
@@ -31,10 +30,7 @@ class APICaller: DataServicing {
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
-        
         let (data, _) = try await URLSession.shared.data(from: url)
-//        let decoder = JSONDecoder()
-//        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try JSONDecoder().decode(decoderType, from: data)
     }
     
