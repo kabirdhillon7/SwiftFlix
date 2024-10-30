@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddToWatchListView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var movieLists: MovieLists
+//    @EnvironmentObject var movieLists: MovieLists
     
     var movie: Movie
     @State var presentNewWatchlist: Bool = false
@@ -21,45 +21,46 @@ struct AddToWatchListView: View {
     
     var body: some View {
         List {
-            Button {
-                presentNewWatchlist = true
-            } label: {
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    Image(systemName: "plus.app")
-                        .font(.system(size: 20))
-                    Text("New Watchlist...")
-                        .font(.system(size: 20))
-                }
-                .foregroundColor(.accentColor)
-            }
-            
-            ForEach(movieLists.watchLists, id: \.id) { watchList in
-                Button {
-                    if watchList.moviesList.contains(movie) {
-                        movieInWatchlist = true
-                    } else {
-                        watchList.add(movie)
-                        movieLists.saveWatchLists()
-                        movieAdded = true
-                    }
-                } label: {
-                    VStack(spacing: 5) {
-                        Text(watchList.name)
-                            .font(.system(size: 20))
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.primary)
-                        
-                        if watchList.moviesList.contains(movie) {
-                            Text("Already Added")
-                                .font(.body)
-                                .foregroundColor(.gray)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .lineLimit(1)
-                        }
-                    }
-                }
-            }
+            EmptyView()
+//            Button {
+//                presentNewWatchlist = true
+//            } label: {
+//                HStack(alignment: .firstTextBaseline, spacing: 10) {
+//                    Image(systemName: "plus.app")
+//                        .font(.system(size: 20))
+//                    Text("New Watchlist...")
+//                        .font(.system(size: 20))
+//                }
+//                .foregroundColor(.accentColor)
+//            }
+//            
+//            ForEach(movieLists.watchLists, id: \.id) { watchList in
+//                Button {
+//                    if watchList.moviesList.contains(movie) {
+//                        movieInWatchlist = true
+//                    } else {
+//                        watchList.add(movie)
+//                        movieLists.saveWatchLists()
+//                        movieAdded = true
+//                    }
+//                } label: {
+//                    VStack(spacing: 5) {
+//                        Text(watchList.name)
+//                            .font(.system(size: 20))
+//                            .bold()
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                            .foregroundColor(.primary)
+//                        
+//                        if watchList.moviesList.contains(movie) {
+//                            Text("Already Added")
+//                                .font(.body)
+//                                .foregroundColor(.gray)
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                                .lineLimit(1)
+//                        }
+//                    }
+//                }
+//            }
         }
         .listStyle(.plain)
         .alert("New Watchlist", isPresented: $presentNewWatchlist) {
@@ -68,13 +69,13 @@ struct AddToWatchListView: View {
                       prompt: Text("Watchlist Title"))
             Button("Cancel", role: .cancel) { }
             Button("Add") {
-                DispatchQueue.main.async {
-                    movieLists.watchLists.append(Watchlist(name: newWatchListTitle))
-                    if let newestWatchList = movieLists.watchLists.last {
-                        newestWatchList.add(movie)
-                    }
-                    movieLists.saveWatchLists()
-                }
+//                DispatchQueue.main.async {
+//                    movieLists.watchLists.append(Watchlist(name: newWatchListTitle))
+//                    if let newestWatchList = movieLists.watchLists.last {
+//                        newestWatchList.add(movie)
+//                    }
+//                    movieLists.saveWatchLists()
+//                }
             }
         }
         .alert("This movie is already in your watchlist", isPresented: $movieInWatchlist) {

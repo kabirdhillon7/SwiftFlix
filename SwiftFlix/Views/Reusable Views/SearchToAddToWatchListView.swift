@@ -9,10 +9,10 @@ import SwiftUI
 
 struct SearchToAddToWatchListView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var movieLists: MovieLists
+//    @EnvironmentObject var movieLists: MovieLists
     
     @StateObject var viewModel = SearchToAddToWatchListViewModel()
-    @Binding var watchlist: Watchlist
+//    @Binding var watchlist: Watchlist
     
     var body: some View {
         List {
@@ -80,7 +80,7 @@ struct SearchToAddToWatchListView: View {
         }
         .interactiveDismissDisabled()
         .listStyle(.plain)
-        .navigationTitle("Add to \"\(watchlist.name)\"")
+//        .navigationTitle("Add to \"\(watchlist.name)\"")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -93,12 +93,13 @@ struct SearchToAddToWatchListView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    if let index = movieLists.watchLists.firstIndex(where: { $0.id == watchlist.id }) {
-                        for movie in viewModel.selectedMovies {
-                            movieLists.watchLists[index].moviesList.insert(movie)
-                        }
-                        movieLists.saveWatchLists()
-                    }
+                    // TODO: add
+//                    if let index = movieLists.watchLists.firstIndex(where: { $0.id == watchlist.id }) {
+//                        for movie in viewModel.selectedMovies {
+//                            movieLists.watchLists[index].moviesList.insert(movie)
+//                        }
+//                        movieLists.saveWatchLists()
+//                    }
                     dismiss()
                 } label: {
                     Text("Done")
@@ -110,6 +111,6 @@ struct SearchToAddToWatchListView: View {
     }
 }
 
-//#Preview {
-//    SearchToAddToWatchListView()
-//}
+#Preview {
+    SearchToAddToWatchListView()
+}

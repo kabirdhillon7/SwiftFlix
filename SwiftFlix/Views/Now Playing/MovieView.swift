@@ -5,18 +5,33 @@
 //  Created by Kabir Dhillon on 5/18/23.
 //
 
+import SwiftData
 import SwiftUI
-import Combine
 
 /// A view responsible for displaying recently playing movies
 struct MovieView: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @EnvironmentObject var movieLists: MovieLists
-    @State var movieViewModel = MovieViewModel()
+    
+//    @State var viewModel: ViewModel
+    private let apiCaller = APICaller()
+    
+    @State private var nowPlayingMovies = [Movie]()
+    @State private var popularMovies = [Movie]()
+    @State private var upcomingMovies = [Movie]()
     
     @State private var presentNowPlayingList: Bool = false
     @State private var presentPopularList: Bool = false
     @State private var presentUpcomingList: Bool = false
+    
+//    init(modelContext: ModelContext) {
+//        _viewModel = State(
+//            initialValue: ViewModel(
+//                modelContext: modelContext,
+//                apiCaller: APICaller()
+//            )
+//        )
+//    }
         
     var body: some View {
         NavigationStack {
@@ -26,9 +41,10 @@ struct MovieView: View {
                     
                     ScrollView(.horizontal) {
                         LazyHStack {
-                            ForEach(movieViewModel.nowPlayingMovies) { movie in
+                            ForEach(nowPlayingMovies) { movie in
                                 NavigationLink {
                                     MovieDetailView(movie: movie)
+                                        .modelContext(modelContext)
                                 } label: {
                                     MovieCardView(movie: movie)
                                 }
@@ -39,7 +55,7 @@ struct MovieView: View {
                     }
                     .onAppear(perform: {
                         Task {
-                            await movieViewModel.fetchNowPlayingMovies()
+                            await fetchNowPlayingMovies()
                         }
                     })
                     .scrollTargetBehavior(.viewAligned)
@@ -50,9 +66,10 @@ struct MovieView: View {
                     
                     ScrollView(.horizontal) {
                         LazyHStack {
-                            ForEach(movieViewModel.filteredPopularMovies) { movie in
+                            ForEach(popularMovies) { movie in
                                 NavigationLink {
                                     MovieDetailView(movie: movie)
+                                        .modelContext(modelContext)
                                 } label: {
                                     MovieCardView(movie: movie)
                                 }
@@ -63,7 +80,7 @@ struct MovieView: View {
                     }
                     .onAppear(perform: {
                         Task {
-                            await movieViewModel.fetchPopularMovies()
+                            await fetchPopularMovies()
                         }
                     })
                     .scrollTargetBehavior(.viewAligned)
@@ -74,9 +91,10 @@ struct MovieView: View {
                     
                     ScrollView(.horizontal) {
                         LazyHStack {
-                            ForEach(movieViewModel.filteredUpcomingMovies) { movie in
+                            ForEach(upcomingMovies) { movie in
                                 NavigationLink {
                                     MovieDetailView(movie: movie)
+                                        .modelContext(modelContext)
                                 } label: {
                                     MovieCardView(movie: movie)
                                 }
@@ -87,7 +105,7 @@ struct MovieView: View {
                     }
                     .onAppear(perform: {
                         Task {
-                            await movieViewModel.fetchUpcomingMovies()
+                            await fetchUpcomingMovies()
                         }
                     })
                     .scrollTargetBehavior(.viewAligned)
@@ -95,32 +113,14 @@ struct MovieView: View {
                     .scrollIndicators(.hidden)
                 }
                 .navigationTitle("Movies")
-                .onChange(of: movieLists.presentDetailMovie, {
-                    if let movieId = movieLists.linkedDetailMovieId {
-                        movieViewModel.fetchMovieObject(movieId: movieId)
-                    }
-                })
-                .alert(isPresented: $movieViewModel.presentLinkError) {
-                    Alert(title: Text("Error: Unable to Open Movie Details"),
-                          message: Text("We couldn't find a movie with the provided movie ID. Please check the URL and try again."))
-                }
-                .alert(isPresented: $movieLists.presentLinkError) {
-                    Alert(title: Text("Error: Unable to Open Movie Details"),
-                          message: Text("We couldn't find a movie with the provided movie ID. Please check the URL and try again."))
-                }
                 .navigationDestination(isPresented: $presentNowPlayingList, destination: {
-                    MovieGridView(movies: movieViewModel.nowPlayingMovies)
+                    MovieGridView(movies: nowPlayingMovies)
                 })
                 .navigationDestination(isPresented: $presentPopularList, destination: {
-                    MovieGridView(movies: movieViewModel.filteredPopularMovies)
+                    MovieGridView(movies: popularMovies)
                 })
                 .navigationDestination(isPresented: $presentUpcomingList, destination: {
-                    MovieGridView(movies: movieViewModel.filteredUpcomingMovies)
-                })
-                .navigationDestination(isPresented: $movieViewModel.presentDetailViewForLink, destination: {
-                    if let movie = movieViewModel.linkedMovie {
-                        MovieDetailView(movie: movie)
-                    }
+                    MovieGridView(movies: upcomingMovies)
                 })
             }
         }
@@ -182,9 +182,65 @@ struct MovieView: View {
             }
         }
     }
+    
+    @MainActor
+    func fetchNowPlayingMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(APIInformation.key.rawValue)"
+        do {
+            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+            for movie in fetchedMovies where !nowPlayingMovies.contains(where: { $0.id == movie.id }) {
+                modelContext.insert(movie)
+            }
+            nowPlayingMovies = fetchedMovies
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
+    }
+    
+    /// Fetches a list of movies now playing in theaters
+    @MainActor
+    func fetchPopularMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=\(APIInformation.key.rawValue)"
+        do {
+            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+            for movie in fetchedMovies where !popularMovies.contains(where: { $0.id == movie.id }) {
+                modelContext.insert(movie)
+            }
+            popularMovies = fetchedMovies.filter {
+                !nowPlayingMovies.contains($0) &&
+                !upcomingMovies.contains($0)
+            }
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
+    }
+    
+    /// Fetches a list of movies upcoming in theaters
+    @MainActor
+    func fetchUpcomingMovies() async {
+        let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=\(APIInformation.key.rawValue)"
+        do {
+            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+            for movie in fetchedMovies where !upcomingMovies.contains(where: { $0.id == movie.id }) {
+                modelContext.insert(movie)
+            }
+            upcomingMovies = fetchedMovies.filter {
+                !nowPlayingMovies.contains($0) &&
+                !popularMovies.contains($0)
+            }
+        } catch {
+            print("Error getting now playing movies: \(error)")
+        }
+    }
 }
 
 #Preview {
-    MovieView()
-        .environmentObject(MovieLists())
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Movie.self, configurations: config)
+        return MovieView()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create model container for previewing: \(error.localizedDescription)")
+    }
 }

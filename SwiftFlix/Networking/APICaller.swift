@@ -27,15 +27,15 @@ class APICaller: DataServicing {
     
     let apiKey = APIInformation.key
         
-    func getData<T: Codable>(urlString: String, decoderType: T.Type) async throws -> T {
+    func getData<T: Decodable>(urlString: String, decoderType: T.Type) async throws -> T {
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(decoderType, from: data)
+//        let decoder = JSONDecoder()
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try JSONDecoder().decode(decoderType, from: data)
     }
     
     /// Fetches a list of movies recently playing in theaters
@@ -104,7 +104,7 @@ class APICaller: DataServicing {
         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
-        let json = try await JSONSerialization.jsonObject(with: data)
+        let json = try JSONSerialization.jsonObject(with: data)
         guard let dictionary = json as? [String: Any], let results = dictionary["results"] as? [[String: Any]], let trailerData = results.first(where: { ($0["type"] as? String) == "Trailer" }), let trailerString = trailerData["key"] as? String else {
             throw URLError(.unknown)
         }

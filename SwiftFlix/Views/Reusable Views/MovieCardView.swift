@@ -87,7 +87,9 @@ struct MovieCardView: View {
         overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
         posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
         backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-        voteAverage: 7.7
+        voteAverage: 7.7,
+        isWatched: false,
+        isBookmarked: false
     )
     MovieCardView(movie: sampleMovie)
 }
@@ -99,7 +101,9 @@ struct MovieCardView: View {
         overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
         posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
         backdropPath: "",
-        voteAverage: 7.7
+        voteAverage: 7.7,
+        isWatched: false,
+        isBookmarked: false
     )
     MovieCardView(movie: sampleMovie2)
 }

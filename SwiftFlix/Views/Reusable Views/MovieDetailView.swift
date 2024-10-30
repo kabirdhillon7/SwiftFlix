@@ -5,27 +5,40 @@
 //  Created by Kabir Dhillon on 5/19/23.
 //
 
+import SwiftData
 import SwiftUI
-import Combine
 
 /// A view responsible for displaying movie information
 struct MovieDetailView: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.openURL) var openURL
     
-    @EnvironmentObject var movieLists: MovieLists
+//    @State private var viewModel: ViewModel
+    @Bindable var movie: Movie
     
-    @State var viewModel: MovieDetailViewModel
+    @State private(set) var trailerKey: String?
+    @State private(set) var watchProviderLinkString: String?
+    @State private(set) var recommendedMovies = [Movie]()
+    @State private(set) var movieCredits: Credits?
     
+    private let apiCaller = APICaller()
+
     @State var savedButtonTapped = false
     @State var watchedButtonTapped = false
+    @State var presentRecommendedList = false
     @State var presentAddToWatchListSheet = false
     @State var presentWatchListViewSheet = false
     
-    init(movie: Movie) {
-        _viewModel = State(wrappedValue: MovieDetailViewModel(movie: movie))
-    }
+//    init(movie: Movie, modelContext: ModelContext) {
+//        _viewModel = State(
+//            wrappedValue: ViewModel(
+//                movie: movie,
+//                modelContext: modelContext,
+//                apiCaller: APICaller()
+//            )
+//        )
+//    }
     
     var body: some View {
         ScrollView {
@@ -34,95 +47,70 @@ struct MovieDetailView: View {
                 
                 HStack {
                     posterImage
-                    
                     VStack(spacing: 5) {
-                        Text(viewModel.movie.title)
+                        Text(movie.title)
                             .font(.title2.bold())
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        
-                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", viewModel.movie.voteAverage)) / 10")
+                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.voteAverage)) / 10")
                             .font(.headline.weight(.medium))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
                         buttonView
-                        
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal)
                 
-                Text(viewModel.movie.overview)
+                Text(movie.overview)
                     .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
-                
                 trailerView
-                
                 watchView
-                
                 creditView
-                
                 recommendedView
             }
             .frame(width: UIScreen.main.bounds.width)
             .onAppear {
                 Task {
-                    await viewModel.fetchMovieTrailer()
-                    await viewModel.fetchMovieRecommendations()
-                    await viewModel.fetchWatchProviderLink()
-                    await viewModel.fetchCredits()
-                }
-
-                movieLists.presentDetailMovie = false
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    if let movieUrl = URL(string: "swiftflix://movie/\(viewModel.movie.id)") {
-                        ShareLink(item: movieUrl, preview: SharePreview(viewModel.movie.title)) {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        
-                    }
+                    await fetchMovieTrailer()
+                    await fetchMovieRecommendations()
+                    await fetchWatchProviderLink()
+                    await fetchCredits()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $presentAddToWatchListSheet) {
-                NavigationStack {
-                    AddToWatchListView(movie: viewModel.movie)
-                }
+            .navigationDestination(isPresented: $presentRecommendedList) {
+                MovieGridView(movies: recommendedMovies)
             }
+//            .sheet(isPresented: $presentAddToWatchListSheet) {
+//                NavigationStack {
+//                    AddToWatchListView(movie: viewModel.movie)
+//                }
+//            }
         }
         .edgesIgnoringSafeArea(.top)
     }
     
     var backdropImage: some View {
         VStack {
-            if let backdropPath = viewModel.movie.backdropPath {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 200, alignment: .center)
-                            .mask(
-                                LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
-                            )
-                    case .failure(_):
-                        Rectangle()
-                            .frame(height: 200, alignment: .center)
-                            .foregroundStyle(.clear)
-                    default:
-                        Rectangle()
-                            .frame(height: 200, alignment: .center)
-                            .foregroundStyle(.clear)
-                    }
+            if let backdropPath = movie.backdropPath {
+                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 200, alignment: .center)
+                        .mask(
+                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
+                        )
+                } placeholder: {
+                    Rectangle()
+                        .frame(height: 200, alignment: .center)
+                        .foregroundStyle(.clear)
                 }
             } else {
                 Rectangle()
@@ -134,27 +122,16 @@ struct MovieDetailView: View {
     
     var posterImage: some View {
         VStack {
-            if let posterPath = viewModel.movie.posterPath {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 185, height: 277.5)
-                            .cornerRadius(10)
-                    case .failure(_):
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(.white.opacity(0.5))
-                                .frame(width: 185, height: 277.5)
-                            Image(systemName: "film")
-                                .font(.system(size: 50))
-                                .foregroundColor(Color(UIColor.lightGray))
-                        }
-                    default:
-                        ProgressView()
-                    }
+            if let posterPath = movie.posterPath {
+                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 185, height: 277.5)
+                        .cornerRadius(10)
+                } placeholder: {
+                    ProgressView()
+                        .frame(width: 185, height: 277.5)
                 }
             } else {
                 ZStack {
@@ -171,56 +148,42 @@ struct MovieDetailView: View {
     
     var buttonView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
-            let savedMovie = movieLists.savedMovies
             Button(role: .none) {
+                movie.isBookmarked.toggle()
                 savedButtonTapped.toggle()
-                if savedMovie.contains(viewModel.movie) {
-                    savedMovie.remove(viewModel.movie)
-                } else {
-                    savedMovie.add(viewModel.movie)
-                }
-                DispatchQueue.main.async {
-                    movieLists.objectWillChange.send()
-                }
             } label: {
-                Image(systemName: savedMovie.contains(viewModel.movie) ? "bookmark.fill" : "bookmark")
+                Image(systemName: movie.isBookmarked ? "bookmark.fill" : "bookmark")
+                    .foregroundStyle(movie.isBookmarked ? .green : .accentColor)
                     .font(.body)
-                    .symbolEffect(.bounce, value: savedButtonTapped)
             }
+            .contentTransition(.symbolEffect(.replace))
             .buttonStyle(.bordered)
             .buttonBorderShape(.circle)
             .sensoryFeedback(.success, trigger: savedButtonTapped)
             
-            let watchedMovies = movieLists.watchedMovies
             Button(role: .none) {
+                movie.isWatched.toggle()
                 watchedButtonTapped.toggle()
-                if watchedMovies.contains(viewModel.movie) {
-                    watchedMovies.remove(viewModel.movie)
-                } else {
-                    watchedMovies.add(viewModel.movie)
-                }
-                DispatchQueue.main.async {
-                    movieLists.objectWillChange.send()
-                }
             } label: {
-                Image(systemName: watchedMovies.contains(viewModel.movie) ? "checkmark.square" : "xmark.square")
+                Image(systemName: movie.isWatched ? "checkmark.square" : "xmark.square")
+                    .foregroundStyle(movie.isWatched ? .green : .accentColor)
                     .font(.body)
-                    .symbolEffect(.bounce, value: watchedButtonTapped)
             }
+            .contentTransition(.symbolEffect(.replace))
             .buttonStyle(.bordered)
             .buttonBorderShape(.circle)
             .sensoryFeedback(.success, trigger: watchedButtonTapped)
             
-            Button(role: .none) {
-                presentAddToWatchListSheet = true
-            } label: {
-                Image(systemName: "plus")
-                    .font(.body)
-                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
-            }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.circle)
-            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
+//            Button(role: .none) {
+//                presentAddToWatchListSheet = true
+//            } label: {
+//                Image(systemName: "plus")
+//                    .font(.body)
+//                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
+//            }
+//            .buttonStyle(.bordered)
+//            .buttonBorderShape(.circle)
+//            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
             
             Spacer()
         }
@@ -228,7 +191,7 @@ struct MovieDetailView: View {
     
     var trailerView: some View {
         VStack {
-            if let videoID = viewModel.trailerKey {
+            if let videoID = trailerKey {
                 Text("Trailer")
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -243,7 +206,7 @@ struct MovieDetailView: View {
     
     var watchView: some View {
         VStack {
-            if let watchProviderLinkString = viewModel.watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
+            if let watchProviderLinkString = watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
                 Text("Watch")
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -270,7 +233,7 @@ struct MovieDetailView: View {
     
     var creditView: some View {
         VStack {
-            if let credits = viewModel.movieCredits {
+            if let credits = movieCredits {
                 Text("Cast & Crew")
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -299,15 +262,17 @@ struct MovieDetailView: View {
                                                     .foregroundColor(Color(UIColor.lightGray))
                                             }
                                         default:
-                                            ZStack {
-                                                Circle()
-                                                    .foregroundColor(.white.opacity(0.5))
-                                                    .frame(width: 120, height: 120)
-                                                Image(systemName: "person.fill")
-                                                    .font(.system(size: 50))
-                                                    .foregroundColor(Color(UIColor.lightGray))
-                                                    .padding()
-                                            }
+                                            ProgressView()
+                                                .frame(width: 120, height: 120)
+//                                            ZStack {
+//                                                Circle()
+//                                                    .foregroundColor(.white.opacity(0.5))
+//                                                    .frame(width: 120, height: 120)
+//                                                Image(systemName: "person.fill")
+//                                                    .font(.system(size: 50))
+//                                                    .foregroundColor(Color(UIColor.lightGray))
+//                                                    .padding()
+//                                            }
                                         }
                                     }
                                     .containerRelativeFrame(.horizontal,
@@ -351,15 +316,27 @@ struct MovieDetailView: View {
     
     var recommendedView: some View {
         VStack {
-            if !viewModel.recommendedMovies.isEmpty {
-                Text("Recommended")
-                    .font(.title2.weight(.semibold))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
+            if !recommendedMovies.isEmpty {
+                HStack {
+                    Text("Recommended")
+                        .font(.title2.weight(.semibold))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    Spacer()
+                    Button {
+                        presentRecommendedList.toggle()
+                    } label: {
+                        Text("See all")
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 16, weight: .medium))
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.horizontal)
+                    }
+                }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach($viewModel.recommendedMovies.wrappedValue) { movie in
+                        ForEach(recommendedMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.posterPath {
                                     AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
@@ -381,15 +358,17 @@ struct MovieDetailView: View {
                                                     .foregroundColor(Color(UIColor.lightGray))
                                             }
                                         default:
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .foregroundColor(.white.opacity(0.5))
-                                                    .frame(width: 185, height: 277.5)
-                                                Image(systemName: "film")
-                                                    .resizable()
-                                                    .font(.system(size: 50))
-                                                    .foregroundColor(Color(UIColor.lightGray))
-                                            }
+                                            ProgressView()
+                                                .frame(width: 185, height: 277.5)
+//                                            ZStack {
+//                                                RoundedRectangle(cornerRadius: 10)
+//                                                    .foregroundColor(.white.opacity(0.5))
+//                                                    .frame(width: 185, height: 277.5)
+//                                                Image(systemName: "film")
+//                                                    .resizable()
+//                                                    .font(.system(size: 50))
+//                                                    .foregroundColor(Color(UIColor.lightGray))
+//                                            }
                                         }
                                     }
                                     .containerRelativeFrame(.horizontal,
@@ -410,20 +389,77 @@ struct MovieDetailView: View {
             }
         }
     }
-}
-struct MovieDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleMovie = Movie(
-            id: 502356,
-            title: "The Super Mario Bros. Movie",
-            overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-            posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-            backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-            voteAverage: 7.7
-        )
-        NavigationStack {
-            MovieDetailView(movie: sampleMovie)
-                .environmentObject(MovieLists())
+    
+    /// Fetches a the movie trailer for a particular movie
+    @MainActor
+    func fetchMovieTrailer() async {
+        do {
+            trailerKey = try await apiCaller.getMovieTrailer(movieId: movie.id)
+        } catch {
+            print("Error getting movie trailer: \(error)")
+        }
+    }
+    
+    /// Fetches a list of recommended movies for a particular movie
+    @MainActor
+    func fetchMovieRecommendations() async {
+        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/recommendations?api_key=\(APIInformation.key.rawValue)"
+        
+        do {
+            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+            for movie in fetchedMovies where !recommendedMovies.contains(movie) {
+                modelContext.insert(movie)
+            }
+            recommendedMovies = fetchedMovies
+        } catch {
+            print("Error getting recommended movies: \(error)")
+        }
+    }
+    
+    /// Fetches a watch provider link for a particular movie
+    @MainActor
+    func fetchWatchProviderLink() async {
+        do {
+            watchProviderLinkString = try await apiCaller.getWatchProviders(movieID: movie.id)
+        } catch {
+            print("Error getting watch provider link: \(error)")
+        }
+    }
+    
+    /// Fetches the credits for a particular movie
+    @MainActor
+    func fetchCredits() async {
+        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/credits?api_key=\(APIInformation.key.rawValue)"
+        
+        do {
+            movieCredits = try await apiCaller.getData(urlString: urlString, decoderType: Credits.self)
+        } catch {
+            print("Error getting credits: \(error)")
         }
     }
 }
+
+#Preview {
+    NavigationStack {
+        do {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try ModelContainer(for: Movie.self, configurations: config)
+            let sampleMovie = Movie(
+                id: 502356,
+                title: "The Super Mario Bros. Movie",
+                overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+                posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+                backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+                voteAverage: 7.7,
+                isWatched: false,
+                isBookmarked: false
+            )
+            
+            return MovieDetailView(movie: sampleMovie)
+                .modelContainer(container)
+        } catch {
+            fatalError("Failed to create model container for previewing: \(error.localizedDescription)")
+        }
+    }
+}
+
