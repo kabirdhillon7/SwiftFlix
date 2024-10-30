@@ -5,7 +5,6 @@
 //  Created by Kabir Dhillon on 5/18/23.
 //
 
-import Foundation
 import SwiftData
 
 /// Movie Results from The Movie Database

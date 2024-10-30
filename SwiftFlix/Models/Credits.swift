@@ -5,9 +5,9 @@
 //  Created by Kabir Dhillon on 3/13/24.
 //
 
-import Foundation
 import SwiftData
 
+/// Credits
 @Model
 final class Credits: Decodable {
     let cast: [Cast]
@@ -29,6 +29,7 @@ final class Credits: Decodable {
     }
 }
 
+/// Cast
 @Model
 final class Cast: Decodable {
     let id: Int
@@ -57,6 +58,7 @@ final class Cast: Decodable {
     }
 }
 
+/// Crew
 @Model
 final class Crew: Decodable {
     let id: Int
