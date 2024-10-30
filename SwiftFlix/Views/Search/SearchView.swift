@@ -5,25 +5,29 @@
 //  Created by Kabir Dhillon on 6/24/23.
 //
 
+import SwiftData
 import SwiftUI
-import Combine
 
 /// A view that displays search results for movies
 struct SearchView: View {
-    @State var viewModel = SearchViewModel()
+    @Environment(\.modelContext) var modelContext
+//    @State var viewModel = SearchViewModel()
+    @State private var searchResults = [Movie]()
+    @State private var searchQuery: String = ""
+    private let apiCaller = APICaller()
     
     var body: some View {
         NavigationStack {
             VStack {
-                if viewModel.searchResults.isEmpty && !viewModel.searchQuery.isEmpty {
+                if searchResults.isEmpty && !searchQuery.isEmpty {
                     ContentUnavailableView(
                         "",
                         systemImage: "magnifyingglass",
-                        description: Text("No search results for \(viewModel.searchQuery)")
+                        description: Text("No search results for \(searchQuery)")
                     )
                 } else {
                     List {
-                        ForEach(viewModel.searchResults) { movie in
+                        ForEach(searchResults) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 HStack(spacing: 10) {
                                     if let posterPath = movie.posterPath {
@@ -65,18 +69,18 @@ struct SearchView: View {
                     }
                 }
             }
-            .searchable(text: $viewModel.searchQuery, prompt: "Search movies")
+            .searchable(text: $searchQuery, prompt: "Search movies")
             .onSubmit(of: .search) {
                 Task {
-                    await viewModel.searchMovies()
+                    await searchMovies()
                 }
             }
-            .onChange(of: viewModel.searchQuery) {
-                if viewModel.searchQuery.isEmpty {
-                    viewModel.searchResults.removeAll()
+            .onChange(of: searchQuery) {
+                if searchQuery.isEmpty {
+                    searchResults.removeAll()
                 } else {
                     Task {
-                        await viewModel.searchMovies()
+                        await searchMovies()
                     }
                 }
             }
@@ -84,9 +88,20 @@ struct SearchView: View {
             .navigationTitle("Search")
         }
     }
+    
+    @MainActor
+    func searchMovies() async {
+        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(APIInformation.key.rawValue)&query=\(encodedQuery)"
+        
+        do {
+            searchResults = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
+        } catch {
+            print("Search error: \(error.localizedDescription)")
+        }
+    }
 }
 
 #Preview {
     SearchView()
-    
 }

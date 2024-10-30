@@ -5,10 +5,12 @@
 //  Created by Kabir Dhillon on 2/19/24.
 //
 
+import SwiftData
 import SwiftUI
 
 /// A view responsible for displaying a list of movies.
 struct MovieListView: View {
+    @Environment(\.modelContext) var modelContext
     @StateObject var viewModel: MovieListViewModel
     
     init(movieList: Set<Movie>) {
