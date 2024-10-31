@@ -10,9 +10,17 @@ import SwiftUI
 
 struct MainView: View {
     
+    // MARK: Properties
+    
     @State private var container: ModelContainer
     
+    // MARK: Init
+    
     init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Raleway-Bold", size: 35)!]
+        UINavigationBar.appearance().titleTextAttributes = [.font : UIFont(name: "Raleway-SemiBold", size: 18)!]
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "Raleway-SemiBold", size: 11)! ], for: .normal)
+    
         do {
             let config = ModelConfiguration(for: Movie.self)
             container = try  ModelContainer(for: Movie.self, configurations: config)
@@ -22,6 +30,7 @@ struct MainView: View {
     }
     
     // MARK: View
+    
     var body: some View {
         TabView {
             MovieView()

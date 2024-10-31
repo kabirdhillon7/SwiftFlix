@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -109,6 +109,10 @@
 		48FA40682B8F0FB9005AD894 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		48F9EB4E2CD1E82C000D1172 /* Font */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Font; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		483CA4DE2A16D5BA00127430 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -176,6 +180,7 @@
 				48FA40682B8F0FB9005AD894 /* Info.plist */,
 				48C247262A99D8FD0089DEE0 /* SwiftFlix.xctestplan */,
 				483CA4E42A16D5BA00127430 /* SwiftFlixApp.swift */,
+				48F9EB4E2CD1E82C000D1172 /* Font */,
 				483CA5112A17509200127430 /* Networking */,
 				483CA5142A1750CC00127430 /* Models */,
 				483CA5102A17503A00127430 /* Views */,
@@ -268,8 +273,8 @@
 		48D033712B8338C9004CDA77 /* Reusable Views */ = {
 			isa = PBXGroup;
 			children = (
-				48D0337A2B841D01004CDA77 /* AddToWatchListView.swift */,
 				483CA51A2A188D3900127430 /* MovieDetailView.swift */,
+				48D0337A2B841D01004CDA77 /* AddToWatchListView.swift */,
 				48D033742B83D6B8004CDA77 /* MovieListView.swift */,
 				48D033812B8486FB004CDA77 /* SearchToAddToWatchListView.swift */,
 				48D0337C2B8429E5004CDA77 /* WatchlistView.swift */,
@@ -295,6 +300,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				48F9EB4E2CD1E82C000D1172 /* Font */,
 			);
 			name = SwiftFlix;
 			productName = MovieFlix;

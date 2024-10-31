@@ -61,6 +61,7 @@ struct MovieView: View {
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding(.horizontal)
                     .scrollIndicators(.hidden)
+                    .padding(.bottom, 10)
                     
                     popularHeader
                     
@@ -86,6 +87,7 @@ struct MovieView: View {
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding(.horizontal)
                     .scrollIndicators(.hidden)
+                    .padding(.bottom, 10)
                     
                     upcomingHeader
                     
@@ -113,14 +115,24 @@ struct MovieView: View {
                     .scrollIndicators(.hidden)
                 }
                 .navigationTitle("Movies")
+//                .toolbar(content: {
+//                    ToolbarItem(placement: .topBarLeading) {
+//                        Text("Movies")
+//                            .font(.custom("Raleway-Bold", size: 30, relativeTo: .largeTitle))
+//                    }
+//                })
+                .navigationBarTitleDisplayMode(.large)
                 .navigationDestination(isPresented: $presentNowPlayingList, destination: {
                     MovieGridView(movies: nowPlayingMovies)
+                        .padding(.horizontal)
                 })
                 .navigationDestination(isPresented: $presentPopularList, destination: {
                     MovieGridView(movies: popularMovies)
+                        .padding(.horizontal)
                 })
                 .navigationDestination(isPresented: $presentUpcomingList, destination: {
                     MovieGridView(movies: upcomingMovies)
+                        .padding(.horizontal)
                 })
             }
         }
@@ -129,7 +141,9 @@ struct MovieView: View {
     var nowPlayingHeader: some View {
         HStack {
             Text("Now Playing")
-                .font(.title2.weight(.semibold))
+                .ralewayFont(.title)
+//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
+//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -138,7 +152,9 @@ struct MovieView: View {
             } label: {
                 Text("See all")
                     .foregroundStyle(.gray)
-                    .font(.system(size: 16, weight: .medium))
+                    .ralewayFont(.footnote)
+//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
+//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }
@@ -148,7 +164,9 @@ struct MovieView: View {
     var popularHeader: some View {
         HStack {
             Text("Popular")
-                .font(.title2.weight(.semibold))
+                .ralewayFont(.title)
+//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
+//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -157,7 +175,9 @@ struct MovieView: View {
             } label: {
                 Text("See all")
                     .foregroundStyle(.gray)
-                    .font(.system(size: 16, weight: .medium))
+                    .ralewayFont(.footnote)
+//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
+//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }
@@ -167,7 +187,9 @@ struct MovieView: View {
     var upcomingHeader: some View {
         HStack {
             Text("Upcoming")
-                .font(.title2.weight(.semibold))
+                .ralewayFont(.title)
+//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
+//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -176,7 +198,9 @@ struct MovieView: View {
             } label: {
                 Text("See all")
                     .foregroundStyle(.gray)
-                    .font(.system(size: 16, weight: .medium))
+                    .ralewayFont(.footnote)
+//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
+//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }

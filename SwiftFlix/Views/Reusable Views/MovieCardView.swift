@@ -23,7 +23,7 @@ struct MovieCardView: View {
                             LinearGradient(
                                 gradient: Gradient(stops: [
                                     .init(color: .accentColor, location: 0),
-                                    .init(color: .clear, location: 0.3)
+                                    .init(color: .clear, location: 0.35)
                                 ]),
                                 startPoint: .bottom,
                                 endPoint: .top
@@ -45,7 +45,9 @@ struct MovieCardView: View {
                 Text(movie.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(.white)
-                    .font(.system(size: 21, weight: .bold))
+                    .ralewayFont(.headline)
+//                    .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
+//                    .font(.system(size: 21, weight: .bold))
                     .lineLimit(1)
                     .padding()
             }
@@ -70,7 +72,9 @@ struct MovieCardView: View {
                     Text(movie.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundStyle(.white)
-                        .font(.system(size: 21, weight: .bold))
+                        .ralewayFont(.subheadline)
+//                        .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
+//                        .font(.system(size: 21, weight: .bold))
                         .lineLimit(1)
                         .padding()
                 }
