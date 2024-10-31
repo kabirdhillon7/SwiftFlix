@@ -16,26 +16,27 @@ struct ListsView: View {
     @Query(filter: #Predicate<Movie> { $0.isBookmarked == true }) private var bookmarkedMovies: [Movie]
     @Query(filter: #Predicate<Movie> { $0.isWatched == true }) private var watchedMovies: [Movie]
 
-    @State var selectedListTab: Int = 0
+    @State private var selectedListTab = ListPickerItem.saved
     
-//    @State var presentCreateNewWatchlist: Bool = false
-//    @State var newWatchListTitle: String = ""
+    private enum ListPickerItem: String, CaseIterable, Identifiable {
+        var id: Self { self }
+        case saved, watched
+    }
 
     var body: some View {
         NavigationStack {
             VStack {
                 Picker("", selection: $selectedListTab) {
-                    Text("Saved")
-                        .tag(0)
-                    Text("Watched")
-                        .tag(1)
-//                    Text("Watchlist")
-//                        .tag(2)
+                    ForEach(ListPickerItem.allCases) {
+                        Text($0.rawValue.capitalized)
+                            .ralewayFont(.body)
+                    }
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
+
                 switch selectedListTab {
-                case 0:
+                case .saved:
                     if bookmarkedMovies.isEmpty {
                         ContentUnavailableView(
                             "No Saved Movies",
@@ -46,7 +47,7 @@ struct ListsView: View {
                         MovieGridView(movies: bookmarkedMovies)
                             .padding(.horizontal)
                     }
-                case 1:
+                case .watched:
                     if watchedMovies.isEmpty {
                         ContentUnavailableView(
                             "No Watched Movies",

@@ -12,7 +12,7 @@ import SwiftUI
 struct MovieDetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
 //    @State private var viewModel: ViewModel
     @Bindable var movie: Movie
@@ -24,6 +24,7 @@ struct MovieDetailView: View {
     
     private let apiCaller = APICaller()
 
+    @State var dismissButtonTapped: Int = 0
     @State var savedButtonTapped = false
     @State var watchedButtonTapped = false
     @State var presentRecommendedList = false
@@ -49,14 +50,20 @@ struct MovieDetailView: View {
                     posterImage
                     VStack(spacing: 5) {
                         Text(movie.title)
-                            .font(.title2.bold())
+                            .ralewayFont(.title)
+//                            .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
+//                            .font(.title2.bold())
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.bottom, 2)
                         Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.voteAverage)) / 10")
-                            .font(.headline.weight(.medium))
+                            .ralewayFont(.body)
+//                            .font(.custom("Raleway-Medium", size: 16, relativeTo: .body))
+//                            .font(.headline.weight(.medium))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.bottom, 5)
                         buttonView
                         Spacer()
                     }
@@ -65,7 +72,9 @@ struct MovieDetailView: View {
                 .padding(.horizontal)
                 
                 Text(movie.overview)
-                    .font(.body)
+                    .ralewayFont(.body)
+//                    .font(.custom("Raleway-Regular", size: 17, relativeTo: .body))
+//                    .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -74,6 +83,29 @@ struct MovieDetailView: View {
                 creditView
                 recommendedView
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismissButtonTapped += 1
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            dismiss()
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .ralewayFont(.subheadline)
+//                            .font(.custom("Raleway-Bold", size: 18, relativeTo: .body))
+                            .foregroundStyle(.white)
+                            .symbolEffect(.bounce, value: dismissButtonTapped)
+                            .padding(8)
+                            .background {
+                                Circle()
+                                    .foregroundStyle(.black.opacity(0.2))
+                            }
+                    }
+                }
+            })
             .frame(width: UIScreen.main.bounds.width)
             .onAppear {
                 Task {
@@ -83,7 +115,6 @@ struct MovieDetailView: View {
                     await fetchCredits()
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $presentRecommendedList) {
                 MovieGridView(movies: recommendedMovies)
             }
@@ -153,6 +184,7 @@ struct MovieDetailView: View {
                 savedButtonTapped.toggle()
             } label: {
                 Image(systemName: movie.isBookmarked ? "bookmark.fill" : "bookmark")
+                    .ralewayFont(.body)
                     .foregroundStyle(movie.isBookmarked ? .green : .accentColor)
                     .font(.body)
             }
@@ -165,7 +197,8 @@ struct MovieDetailView: View {
                 movie.isWatched.toggle()
                 watchedButtonTapped.toggle()
             } label: {
-                Image(systemName: movie.isWatched ? "checkmark.square" : "xmark.square")
+                Image(systemName: movie.isWatched ? "checkmark.square.fill" : "xmark.square")
+                    .ralewayFont(.body)
                     .foregroundStyle(movie.isWatched ? .green : .accentColor)
                     .font(.body)
             }
@@ -193,7 +226,8 @@ struct MovieDetailView: View {
         VStack {
             if let videoID = trailerKey {
                 Text("Trailer")
-                    .font(.title2.weight(.semibold))
+                    .ralewayFont(.title)
+//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -208,12 +242,14 @@ struct MovieDetailView: View {
         VStack {
             if let watchProviderLinkString = watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
                 Text("Watch")
-                    .font(.title2.weight(.semibold))
+                    .ralewayFont(.title)
+//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
                 Text("Seaming information provided by JustWatch.")
-                    .font(.footnote.weight(.light))
+                    .ralewayFont(.caption)
+//                    .font(.footnote.weight(.light))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -223,6 +259,7 @@ struct MovieDetailView: View {
                             .foregroundColor(.accentColor)
                             .padding(.horizontal)
                         Text("View Watch Providers")
+                            .ralewayFont(.body)
                             .foregroundColor(.white)
                             .padding(.vertical, 10)
                     }
@@ -235,7 +272,8 @@ struct MovieDetailView: View {
         VStack {
             if let credits = movieCredits {
                 Text("Cast & Crew")
-                    .font(.title2.weight(.semibold))
+                    .ralewayFont(.title)
+//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -295,13 +333,14 @@ struct MovieDetailView: View {
                                     }
                                 }
                                 Text(cast.name)
+                                    .ralewayFont(.body)
                                     .frame(width: 120)
                                     .frame(alignment: .center)
                                     .lineLimit(1)
                                 Text(cast.character)
+                                    .ralewayFont(.caption)
                                     .frame(width: 120)
                                     .frame(alignment: .center)
-                                    .font(.footnote)
                                     .lineLimit(1)
                             }
                         }
@@ -319,7 +358,8 @@ struct MovieDetailView: View {
             if !recommendedMovies.isEmpty {
                 HStack {
                     Text("Recommended")
-                        .font(.title2.weight(.semibold))
+                        .ralewayFont(.title)
+//                        .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     Spacer()
@@ -328,7 +368,8 @@ struct MovieDetailView: View {
                     } label: {
                         Text("See all")
                             .foregroundStyle(.gray)
-                            .font(.system(size: 16, weight: .medium))
+                            .ralewayFont(.footnote)
+//                            .font(.system(size: 16, weight: .medium))
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .padding(.horizontal)
                     }

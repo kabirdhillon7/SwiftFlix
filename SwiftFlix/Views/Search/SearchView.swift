@@ -54,12 +54,14 @@ struct SearchView: View {
                                     
                                     VStack(spacing: 5) {
                                         Text(movie.title)
-                                            .font(.system(size: 20))
-                                            .bold()
+                                            .ralewayFont(.title)
+//                                            .font(.system(size: 20))
+//                                            .bold()
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .lineLimit(2)
                                         Text(movie.overview)
-                                            .font(.body)
+                                            .ralewayFont(.body)
+//                                            .font(.body)
                                             .frame(maxWidth: .infinity,alignment: .leading)
                                             .lineLimit(4)
                                     }

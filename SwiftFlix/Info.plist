@@ -15,5 +15,13 @@
 			</array>
 		</dict>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Raleway-Regular.ttf</string>
+		<string>Raleway-SemiBold.ttf</string>
+		<string>Raleway-Bold.ttf</string>
+		<string>Raleway-Medium.ttf</string>
+		<string>Raleway-Light.ttf</string>
+	</array>
 </dict>
 </plist>
