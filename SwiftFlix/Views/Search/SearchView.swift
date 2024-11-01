@@ -15,10 +15,46 @@ struct SearchView: View {
     @State private var searchResults = [Movie]()
     @State private var searchQuery: String = ""
     private let apiCaller = APICaller()
+    @FocusState private var keyboardFocus: Bool
     
     var body: some View {
         NavigationStack {
             VStack {
+                TextField("", text: $searchQuery, prompt: Text("Search movies"))
+                    .textFieldStyle(RoundedTextField())
+                    .focused($keyboardFocus)
+                    .padding(.horizontal)
+                    .onAppear {
+                        UITextField.appearance().clearButtonMode = .whileEditing
+                    }
+                    .onSubmit {
+                        if !searchQuery.isEmpty {
+                            Task {
+                                await searchMovies()
+                            }
+                        }
+                    }
+                    .onChange(of: searchQuery) {
+                        if searchQuery.isEmpty {
+                            searchResults.removeAll()
+                        } else {
+                            Task {
+                                await searchMovies()
+                            }
+                        }
+                    }
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            
+                            Button {
+                                keyboardFocus = false
+                            } label: {
+                                Text("Done")
+                            }
+                        }
+                    }
+                        
                 if searchResults.isEmpty && !searchQuery.isEmpty {
                     ContentUnavailableView(
                         "",
@@ -71,21 +107,21 @@ struct SearchView: View {
                     }
                 }
             }
-            .searchable(text: $searchQuery, prompt: "Search movies")
-            .onSubmit(of: .search) {
-                Task {
-                    await searchMovies()
-                }
-            }
-            .onChange(of: searchQuery) {
-                if searchQuery.isEmpty {
-                    searchResults.removeAll()
-                } else {
-                    Task {
-                        await searchMovies()
-                    }
-                }
-            }
+//            .searchable(text: $searchQuery, prompt: "Search movies")
+//            .onSubmit(of: .search) {
+//                Task {
+//                    await searchMovies()
+//                }
+//            }
+//            .onChange(of: searchQuery) {
+//                if searchQuery.isEmpty {
+//                    searchResults.removeAll()
+//                } else {
+//                    Task {
+//                        await searchMovies()
+//                    }
+//                }
+//            }
             .listStyle(.plain)
             .navigationTitle("Search")
         }

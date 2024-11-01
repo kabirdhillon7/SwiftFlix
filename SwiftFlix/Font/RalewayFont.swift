@@ -22,10 +22,16 @@ struct RalewayFont: ViewModifier {
     }
     
     var textStyle: TextStyle
+    var fontSize: CGFloat? // Optional specific font size
+        var fontWeight: Font.Weight?
     
     func body(content: Content) -> some View {
-        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
-        return content.font(.custom(fontName, size: scaledSize))
+//        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
+//        return content.font(.custom(fontName, size: scaledSize))
+        let scaledSize = UIFontMetrics.default.scaledValue(for: fontSize ?? defaultSize)
+                return content
+                    .font(.custom(fontName, size: scaledSize))
+                    .fontWeight(fontWeight ?? defaultWeight)
     }
     
     private var fontName: String {
@@ -66,6 +72,28 @@ struct RalewayFont: ViewModifier {
         }
     }
     
+    private var defaultSize: CGFloat {
+        switch textStyle {
+        case .largeTitle: return 35
+        case .title: return 21
+        case .headline: return 19
+        case .subheadline: return 18
+        case .body: return 17
+        case .footnote: return 16
+        case .caption: return 14
+        }
+    }
+    
+    private var defaultWeight: Font.Weight {
+        switch textStyle {
+        case .largeTitle, .title: return .bold
+        case .headline: return .semibold
+        case .subheadline, .body: return .regular
+        case .footnote: return .medium
+        case .caption: return .light
+        }
+    }
+    
     private var relativeToTextStyle: Font.TextStyle {
         switch textStyle {
         case .largeTitle: return .largeTitle
@@ -94,7 +122,10 @@ private extension RalewayFont.TextStyle {
 }
 
 extension View {
-    func ralewayFont(_ textStyle: RalewayFont.TextStyle) -> some View {
-        self.modifier(RalewayFont(textStyle: textStyle))
+//    func ralewayFont(_ textStyle: RalewayFont.TextStyle) -> some View {
+//        self.modifier(RalewayFont(textStyle: textStyle))
+//    }
+    func ralewayFont(_ textStyle: RalewayFont.TextStyle, size: CGFloat? = nil, weight: Font.Weight? = nil) -> some View {
+        self.modifier(RalewayFont(textStyle: textStyle, fontSize: size, fontWeight: weight))
     }
 }
