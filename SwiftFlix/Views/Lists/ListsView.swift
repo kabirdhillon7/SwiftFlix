@@ -26,14 +26,21 @@ struct ListsView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Picker("", selection: $selectedListTab) {
-                    ForEach(ListPickerItem.allCases) {
-                        Text($0.rawValue.capitalized)
-                            .ralewayFont(.body)
-                    }
+                CustomPicker(selection: $selectedListTab, items: ListPickerItem.allCases) { item in
+                    Text(item.rawValue.capitalized)
+                        .ralewayFont(.body, size: 16, weight: .semibold)
+                        .frame(maxWidth: .infinity)
                 }
-                .pickerStyle(.segmented)
                 .padding(.horizontal)
+//                .frame(maxWidth: .infinity)
+//                Picker("", selection: $selectedListTab) {
+//                    ForEach(ListPickerItem.allCases) {
+//                        Text($0.rawValue.capitalized)
+//                            .ralewayFont(.body)
+//                    }
+//                }
+//                .pickerStyle(.segmented)
+//                .padding(.horizontal)
 
                 switch selectedListTab {
                 case .saved:
@@ -61,40 +68,6 @@ struct ListsView: View {
                 default:
                     EmptyView()
                 }
-//                if selectedListTab == 0 {
-//                    if bookmarkedMovies.isEmpty {
-//                        ContentUnavailableView(
-//                            "No Saved Movies",
-//                            systemImage: "bookmark",
-//                            description: Text("When you add movies to your saved list, they'll appear here.")
-//                        )
-//                    } else {
-//                        
-//                    }
-//                } else if selectedListTab == 1 {
-//                    ContentUnavailableView(
-//                        "No Watched Movies",
-//                        systemImage: "tv.slash",
-//                        description: Text("When you add movies you've watched, they'll appear here.")
-//                    )
-//                } else {
-//                    List {
-//                        Button {
-//                            presentCreateNewWatchlist = true
-//                        } label: {
-//                            HStack(alignment: .firstTextBaseline, spacing: 10) {
-//                                Image(systemName: "plus.app")
-//                                    .font(.system(size: 20))
-//                                Text("New Watchlist...")
-//                                    .frame(maxWidth: .infinity,alignment: .leading)
-//                                    .font(.system(size: 20))
-//                            }
-//                            .foregroundColor(.accentColor)
-//                        }
-//                        
-//                    }
-//                    .listStyle(.plain)
-//                }
             }
             .navigationTitle("Lists")
         }
