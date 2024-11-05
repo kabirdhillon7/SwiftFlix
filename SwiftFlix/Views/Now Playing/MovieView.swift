@@ -115,12 +115,6 @@ struct MovieView: View {
                     .scrollIndicators(.hidden)
                 }
                 .navigationTitle("Movies")
-//                .toolbar(content: {
-//                    ToolbarItem(placement: .topBarLeading) {
-//                        Text("Movies")
-//                            .font(.custom("Raleway-Bold", size: 30, relativeTo: .largeTitle))
-//                    }
-//                })
                 .navigationBarTitleDisplayMode(.large)
                 .navigationDestination(isPresented: $presentNowPlayingList, destination: {
                     MovieGridView(movies: nowPlayingMovies)
@@ -142,8 +136,6 @@ struct MovieView: View {
         HStack {
             Text("Now Playing")
                 .ralewayFont(.title)
-//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
-//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -153,8 +145,6 @@ struct MovieView: View {
                 Text("See all")
                     .foregroundStyle(.gray)
                     .ralewayFont(.footnote)
-//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
-//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }
@@ -165,8 +155,6 @@ struct MovieView: View {
         HStack {
             Text("Popular")
                 .ralewayFont(.title)
-//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
-//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -176,8 +164,6 @@ struct MovieView: View {
                 Text("See all")
                     .foregroundStyle(.gray)
                     .ralewayFont(.footnote)
-//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
-//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }
@@ -188,8 +174,6 @@ struct MovieView: View {
         HStack {
             Text("Upcoming")
                 .ralewayFont(.title)
-//                .font(.custom("Raleway-SemiBold", size: 20, relativeTo: .title2))
-//                .font(.title2.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             Spacer()
@@ -199,8 +183,6 @@ struct MovieView: View {
                 Text("See all")
                     .foregroundStyle(.gray)
                     .ralewayFont(.footnote)
-//                    .font(.custom("Raleway-Medium", size: 16, relativeTo: .footnote))
-//                    .font(.system(size: 16, weight: .medium))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }

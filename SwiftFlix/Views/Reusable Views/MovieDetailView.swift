@@ -14,7 +14,7 @@ struct MovieDetailView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.dismiss) var dismiss
     
-//    @State private var viewModel: ViewModel
+    //    @State private var viewModel: ViewModel
     @Bindable var movie: Movie
     
     @State private(set) var trailerKey: String?
@@ -23,7 +23,7 @@ struct MovieDetailView: View {
     @State private(set) var movieCredits: Credits?
     
     private let apiCaller = APICaller()
-
+    
     @State var dismissButtonTapped: Int = 0
     @State var savedButtonTapped = false
     @State var watchedButtonTapped = false
@@ -31,15 +31,15 @@ struct MovieDetailView: View {
     @State var presentAddToWatchListSheet = false
     @State var presentWatchListViewSheet = false
     
-//    init(movie: Movie, modelContext: ModelContext) {
-//        _viewModel = State(
-//            wrappedValue: ViewModel(
-//                movie: movie,
-//                modelContext: modelContext,
-//                apiCaller: APICaller()
-//            )
-//        )
-//    }
+    //    init(movie: Movie, modelContext: ModelContext) {
+    //        _viewModel = State(
+    //            wrappedValue: ViewModel(
+    //                movie: movie,
+    //                modelContext: modelContext,
+    //                apiCaller: APICaller()
+    //            )
+    //        )
+    //    }
     
     var body: some View {
         ScrollView {
@@ -51,16 +51,12 @@ struct MovieDetailView: View {
                     VStack(spacing: 5) {
                         Text(movie.title)
                             .ralewayFont(.title)
-//                            .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
-//                            .font(.title2.bold())
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.bottom, 2)
                         Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.voteAverage)) / 10")
                             .ralewayFont(.body)
-//                            .font(.custom("Raleway-Medium", size: 16, relativeTo: .body))
-//                            .font(.headline.weight(.medium))
                             .foregroundColor(.orange)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.bottom, 5)
@@ -73,8 +69,6 @@ struct MovieDetailView: View {
                 
                 Text(movie.overview)
                     .ralewayFont(.body)
-//                    .font(.custom("Raleway-Regular", size: 17, relativeTo: .body))
-//                    .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -89,13 +83,10 @@ struct MovieDetailView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         dismissButtonTapped += 1
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            dismiss()
-                        }
+                        dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
                             .ralewayFont(.subheadline)
-//                            .font(.custom("Raleway-Bold", size: 18, relativeTo: .body))
                             .foregroundStyle(.white)
                             .symbolEffect(.bounce, value: dismissButtonTapped)
                             .padding(8)
@@ -118,11 +109,11 @@ struct MovieDetailView: View {
             .navigationDestination(isPresented: $presentRecommendedList) {
                 MovieGridView(movies: recommendedMovies)
             }
-//            .sheet(isPresented: $presentAddToWatchListSheet) {
-//                NavigationStack {
-//                    AddToWatchListView(movie: viewModel.movie)
-//                }
-//            }
+            //            .sheet(isPresented: $presentAddToWatchListSheet) {
+            //                NavigationStack {
+            //                    AddToWatchListView(movie: viewModel.movie)
+            //                }
+            //            }
         }
         .edgesIgnoringSafeArea(.top)
     }
@@ -207,16 +198,16 @@ struct MovieDetailView: View {
             .buttonBorderShape(.circle)
             .sensoryFeedback(.success, trigger: watchedButtonTapped)
             
-//            Button(role: .none) {
-//                presentAddToWatchListSheet = true
-//            } label: {
-//                Image(systemName: "plus")
-//                    .font(.body)
-//                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
-//            }
-//            .buttonStyle(.bordered)
-//            .buttonBorderShape(.circle)
-//            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
+            //            Button(role: .none) {
+            //                presentAddToWatchListSheet = true
+            //            } label: {
+            //                Image(systemName: "plus")
+            //                    .font(.body)
+            //                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
+            //            }
+            //            .buttonStyle(.bordered)
+            //            .buttonBorderShape(.circle)
+            //            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
             
             Spacer()
         }
@@ -227,7 +218,6 @@ struct MovieDetailView: View {
             if let videoID = trailerKey {
                 Text("Trailer")
                     .ralewayFont(.title)
-//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -243,13 +233,11 @@ struct MovieDetailView: View {
             if let watchProviderLinkString = watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
                 Text("Watch")
                     .ralewayFont(.title)
-//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
                 Text("Seaming information provided by JustWatch.")
                     .ralewayFont(.caption)
-//                    .font(.footnote.weight(.light))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -273,7 +261,6 @@ struct MovieDetailView: View {
             if let credits = movieCredits {
                 Text("Cast & Crew")
                     .ralewayFont(.title)
-//                    .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 
@@ -302,15 +289,6 @@ struct MovieDetailView: View {
                                         default:
                                             ProgressView()
                                                 .frame(width: 120, height: 120)
-//                                            ZStack {
-//                                                Circle()
-//                                                    .foregroundColor(.white.opacity(0.5))
-//                                                    .frame(width: 120, height: 120)
-//                                                Image(systemName: "person.fill")
-//                                                    .font(.system(size: 50))
-//                                                    .foregroundColor(Color(UIColor.lightGray))
-//                                                    .padding()
-//                                            }
                                         }
                                     }
                                     .containerRelativeFrame(.horizontal,
@@ -359,7 +337,6 @@ struct MovieDetailView: View {
                 HStack {
                     Text("Recommended")
                         .ralewayFont(.title)
-//                        .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     Spacer()
@@ -369,7 +346,6 @@ struct MovieDetailView: View {
                         Text("See all")
                             .foregroundStyle(.gray)
                             .ralewayFont(.footnote)
-//                            .font(.system(size: 16, weight: .medium))
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .padding(.horizontal)
                     }
@@ -401,15 +377,6 @@ struct MovieDetailView: View {
                                         default:
                                             ProgressView()
                                                 .frame(width: 185, height: 277.5)
-//                                            ZStack {
-//                                                RoundedRectangle(cornerRadius: 10)
-//                                                    .foregroundColor(.white.opacity(0.5))
-//                                                    .frame(width: 185, height: 277.5)
-//                                                Image(systemName: "film")
-//                                                    .resizable()
-//                                                    .font(.system(size: 50))
-//                                                    .foregroundColor(Color(UIColor.lightGray))
-//                                            }
                                         }
                                     }
                                     .containerRelativeFrame(.horizontal,
