@@ -14,7 +14,7 @@ struct MovieResults: Decodable {
 
 /// Movie
 @Model
-final class Movie: Decodable, Identifiable, Hashable, Equatable {
+final class Movie: Decodable, Identifiable, Hashable, Equatable, Sendable {
     
     let id: Int
     let title: String
