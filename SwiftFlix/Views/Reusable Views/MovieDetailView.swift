@@ -5,6 +5,7 @@
 //  Created by Kabir Dhillon on 5/19/23.
 //
 
+import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
@@ -121,7 +122,7 @@ struct MovieDetailView: View {
     var backdropImage: some View {
         VStack {
             if let backdropPath = movie.backdropPath {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
+                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -145,7 +146,7 @@ struct MovieDetailView: View {
     var posterImage: some View {
         VStack {
             if let posterPath = movie.posterPath {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -269,7 +270,7 @@ struct MovieDetailView: View {
                         ForEach(credits.cast, id: \.id) { cast in
                             VStack {
                                 if let profilePath = cast.profilePath {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + profilePath)) { phase in
+                                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + profilePath)) { phase in
                                         switch phase {
                                         case .success(let image):
                                             image
@@ -356,7 +357,7 @@ struct MovieDetailView: View {
                         ForEach(recommendedMovies) { movie in
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 if let posterPath = movie.posterPath {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
+                                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
                                         switch phase {
                                         case .success(let image):
                                             image

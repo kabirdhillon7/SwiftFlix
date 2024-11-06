@@ -5,6 +5,7 @@
 //  Created by Kabir Dhillon on 10/24/24.
 //
 
+import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
@@ -27,7 +28,7 @@ struct MovieGridView: View {
                         MovieDetailView(movie: movie)
                     } label: {
                         if let posterPath = movie.posterPath, !posterPath.isEmpty {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                            CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
