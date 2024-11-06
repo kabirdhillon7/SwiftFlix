@@ -5,6 +5,7 @@
 //  Created by Kabir Dhillon on 2/19/24.
 //
 
+import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
@@ -23,7 +24,7 @@ struct MovieListView: View {
                 NavigationLink(destination: MovieDetailView(movie: movie)) {
                     HStack(spacing: 10) {
                         if let posterPath = movie.posterPath {
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))  { phase in
+                            CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath))  { phase in
                                 switch phase {
                                 case .success(let image):
                                     image

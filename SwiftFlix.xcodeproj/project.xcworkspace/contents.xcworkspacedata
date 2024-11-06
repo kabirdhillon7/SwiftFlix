@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/kabirdhillon/Documents/iOS/MovieFlix/SwiftFlix.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

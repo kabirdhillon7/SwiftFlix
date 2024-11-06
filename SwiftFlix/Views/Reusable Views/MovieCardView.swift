@@ -5,6 +5,7 @@
 //  Created by Kabir Dhillon on 10/24/24.
 //
 
+import CachedAsyncImage
 import SwiftUI
 
 struct MovieCardView: View {
@@ -14,7 +15,7 @@ struct MovieCardView: View {
     var body: some View {
         if let backdropPath = movie.backdropPath, !backdropPath.isEmpty {
             ZStack(alignment: .bottomLeading) {
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
+                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import CachedAsyncImage
 
 /// A view that displays search results for movies
 struct SearchView: View {
@@ -67,7 +68,7 @@ struct SearchView: View {
                             NavigationLink(destination: MovieDetailView(movie: movie)) {
                                 HStack(spacing: 10) {
                                     if let posterPath = movie.posterPath {
-                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
+                                        CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
                                             image
                                                 .resizable()
                                                 .frame(width: 92.5, height: 138.75)
