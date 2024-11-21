@@ -2,7 +2,7 @@
 //  MovieGridView.swift
 //  SwiftFlix
 //
-//  Created by Kabir Dhillon on 10/24/24.
+//  Created by Kabir Dhillon on 11/20/24.
 //
 
 import CachedAsyncImage
@@ -12,11 +12,8 @@ import SwiftUI
 struct MovieGridView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(\.dismiss) var dismiss
     
     let movies: [Movie]
-    
-    @State var dismissButtonTapped: Int = 0
     
     var body: some View {
         ScrollView {
@@ -47,28 +44,6 @@ struct MovieGridView: View {
                             }
                         }
                     }
-                }
-            }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismissButtonTapped += 1
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        dismiss()
-                    }
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .ralewayFont(.subheadline)
-                        .foregroundStyle(.white)
-                        .symbolEffect(.bounce, value: dismissButtonTapped)
-                        .padding(8)
-                        .background {
-                            Circle()
-                                .foregroundStyle(.black.opacity(0.2))
-                        }
                 }
             }
         }

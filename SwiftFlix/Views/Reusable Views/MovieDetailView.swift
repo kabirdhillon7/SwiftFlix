@@ -25,12 +25,11 @@ struct MovieDetailView: View {
     
     private let apiCaller = APICaller()
     
-    @State var dismissButtonTapped: Int = 0
-    @State var savedButtonTapped = false
-    @State var watchedButtonTapped = false
-    @State var presentRecommendedList = false
-    @State var presentAddToWatchListSheet = false
-    @State var presentWatchListViewSheet = false
+    @State private var savedButtonTapped = false
+    @State private var watchedButtonTapped = false
+    @State private var presentRecommendedList = false
+    @State private var presentAddToWatchListSheet = false
+    @State private var presentWatchListViewSheet = false
     
     //    init(movie: Movie, modelContext: ModelContext) {
     //        _viewModel = State(
@@ -83,13 +82,11 @@ struct MovieDetailView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        dismissButtonTapped += 1
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
                             .ralewayFont(.subheadline)
                             .foregroundStyle(.white)
-                            .symbolEffect(.bounce, value: dismissButtonTapped)
                             .padding(8)
                             .background {
                                 Circle()
@@ -108,13 +105,13 @@ struct MovieDetailView: View {
                 }
             }
             .navigationDestination(isPresented: $presentRecommendedList) {
-                MovieGridView(movies: recommendedMovies)
+                ExpandedMovieGridView(movies: recommendedMovies)
             }
-            //            .sheet(isPresented: $presentAddToWatchListSheet) {
-            //                NavigationStack {
-            //                    AddToWatchListView(movie: viewModel.movie)
-            //                }
-            //            }
+            .sheet(isPresented: $presentAddToWatchListSheet) {
+                NavigationStack {
+                    AddToWatchListView(movie: movie)
+                }
+            }
         }
         .edgesIgnoringSafeArea(.top)
     }
@@ -199,16 +196,16 @@ struct MovieDetailView: View {
             .buttonBorderShape(.circle)
             .sensoryFeedback(.success, trigger: watchedButtonTapped)
             
-            //            Button(role: .none) {
-            //                presentAddToWatchListSheet = true
-            //            } label: {
-            //                Image(systemName: "plus")
-            //                    .font(.body)
-            //                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
-            //            }
-            //            .buttonStyle(.bordered)
-            //            .buttonBorderShape(.circle)
-            //            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
+            Button(role: .none) {
+                presentAddToWatchListSheet = true
+            } label: {
+                Image(systemName: "plus")
+                    .ralewayFont(.body)
+                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.circle)
+            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
             
             Spacer()
         }
