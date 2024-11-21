@@ -117,15 +117,15 @@ struct MovieView: View {
                 .navigationTitle("Movies")
                 .navigationBarTitleDisplayMode(.large)
                 .navigationDestination(isPresented: $presentNowPlayingList, destination: {
-                    MovieGridView(movies: nowPlayingMovies)
+                    ExpandedMovieGridView(movies: nowPlayingMovies)
                         .padding(.horizontal)
                 })
                 .navigationDestination(isPresented: $presentPopularList, destination: {
-                    MovieGridView(movies: popularMovies)
+                    ExpandedMovieGridView(movies: popularMovies)
                         .padding(.horizontal)
                 })
                 .navigationDestination(isPresented: $presentUpcomingList, destination: {
-                    MovieGridView(movies: upcomingMovies)
+                    ExpandedMovieGridView(movies: upcomingMovies)
                         .padding(.horizontal)
                 })
             }

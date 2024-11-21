@@ -57,11 +57,7 @@ struct SearchView: View {
                     }
                         
                 if searchResults.isEmpty && !searchQuery.isEmpty {
-                    ContentUnavailableView(
-                        "",
-                        systemImage: "magnifyingglass",
-                        description: Text("No search results for \(searchQuery)")
-                    )
+                    ContentUnavailableView.search
                 } else {
                     List {
                         ForEach(searchResults) { movie in
@@ -92,15 +88,13 @@ struct SearchView: View {
                                     VStack(spacing: 5) {
                                         Text(movie.title)
                                             .ralewayFont(.title)
-//                                            .font(.system(size: 20))
-//                                            .bold()
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .lineLimit(2)
                                         Text(movie.overview)
                                             .ralewayFont(.body)
-//                                            .font(.body)
                                             .frame(maxWidth: .infinity,alignment: .leading)
                                             .lineLimit(4)
+                                        Spacer()
                                     }
                                 }
                             }
@@ -108,21 +102,6 @@ struct SearchView: View {
                     }
                 }
             }
-//            .searchable(text: $searchQuery, prompt: "Search movies")
-//            .onSubmit(of: .search) {
-//                Task {
-//                    await searchMovies()
-//                }
-//            }
-//            .onChange(of: searchQuery) {
-//                if searchQuery.isEmpty {
-//                    searchResults.removeAll()
-//                } else {
-//                    Task {
-//                        await searchMovies()
-//                    }
-//                }
-//            }
             .listStyle(.plain)
             .navigationTitle("Search")
         }

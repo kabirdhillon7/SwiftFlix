@@ -15,72 +15,71 @@ struct MovieCardView: View {
     var body: some View {
         if let backdropPath = movie.backdropPath, !backdropPath.isEmpty {
             ZStack(alignment: .bottomLeading) {
-                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200, alignment: .center)
-                        .overlay(
-                            LinearGradient(
-                                gradient: Gradient(stops: [
-                                    .init(color: .accentColor, location: 0),
-                                    .init(color: .clear, location: 0.35)
-                                ]),
-                                startPoint: .bottom,
-                                endPoint: .top
+                Group {
+                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 200, alignment: .center)
+                            .overlay(
+                                LinearGradient(
+                                    gradient: Gradient(stops: [
+                                        .init(color: .accentColor, location: 0),
+                                        .init(color: .clear, location: 0.35)
+                                    ]),
+                                    startPoint: .bottom,
+                                    endPoint: .top
+                                )
                             )
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                } placeholder: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(UIColor.systemGray6))
-                            .frame(height: 200)
-                            .frame(maxWidth: .infinity)
-                        ProgressView()
-                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } placeholder: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(UIColor.systemGray6))
+                                .frame(height: 200)
+                                .frame(maxWidth: .infinity)
+                            ProgressView()
+                                .frame(width: 50, height: 50)
+                        }
+                        .frame(height: 200)
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
                 }
-                Text(movie.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(.white)
-                    .ralewayFont(.headline)
-//                    .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
-//                    .font(.system(size: 21, weight: .bold))
-                    .lineLimit(1)
-                    .padding()
+                .overlay(alignment: .bottomLeading) {
+                    movieTitleText
+                }
             }
         } else {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(Color(UIColor.systemGray6))
-                    .overlay(
-                        LinearGradient(
-                            gradient: Gradient(colors: [.accentColor, .clear]),
-                            startPoint: .bottom,
-                            endPoint: .top
-                        )
+            RoundedRectangle(cornerRadius: 10)
+                .frame(height: 200)
+                .frame(maxWidth: .infinity)
+                .foregroundColor(Color(UIColor.systemGray6))
+                .overlay(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.accentColor, .clear]),
+                        startPoint: .bottom,
+                        endPoint: .top
                     )
-                Image(systemName: "film")
-                    .font(.system(size: 50))
-                    .foregroundColor(.white)
-                VStack {
-                    Spacer()
-                    Text(movie.title)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundStyle(.white)
-                        .ralewayFont(.subheadline)
-//                        .font(.custom("Raleway-Bold", size: 21, relativeTo: .title3))
-//                        .font(.system(size: 21, weight: .bold))
-                        .lineLimit(1)
-                        .padding()
+                )
+                .overlay(alignment: .center) {
+                    Image(systemName: "film")
+                        .font(.system(size: 50))
+                        .foregroundColor(.white)
                 }
-            }
-            .frame(height: 200)
+                .overlay(alignment: .bottomLeading) {
+                    movieTitleText
+                }
+        }
+    }
+    
+    var movieTitleText: some View {
+        VStack {
+            Text(movie.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundStyle(.white)
+                .ralewayFont(.headline)
+                .lineLimit(1)
+                .padding()
         }
     }
 }

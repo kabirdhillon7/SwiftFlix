@@ -12,7 +12,7 @@ struct MainView: View {
     
     // MARK: Properties
     
-    @State private var container: ModelContainer
+//    @State private var container: ModelContainer
     
     // MARK: Init
     
@@ -21,12 +21,12 @@ struct MainView: View {
         UINavigationBar.appearance().titleTextAttributes = [.font : UIFont(name: "Raleway-SemiBold", size: 18)!]
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "Raleway-SemiBold", size: 11)! ], for: .normal)
     
-        do {
-            let config = ModelConfiguration(for: Movie.self)
-            container = try  ModelContainer(for: Movie.self, configurations: config)
-        } catch {
-            fatalError("Failed to set up the model container: \(error)")
-        }
+//        do {
+//            let config = ModelConfiguration(for: Movie.self, WatchListCollection.self)
+//            container = try  ModelContainer(for: Movie.self, WatchListCollection.self, configurations: config)
+//        } catch {
+//            fatalError("Failed to set up the model container: \(error)")
+//        }
     }
     
     // MARK: View
@@ -46,7 +46,8 @@ struct MainView: View {
                     Label("Search", systemImage: "magnifyingglass")
                 }
         }
-        .modelContainer(container)
+        .modelContainer(for: [Movie.self, WatchlistCollection.self])
+//        .modelContainer(container)
     }
 }
 

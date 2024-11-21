@@ -6,102 +6,113 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddToWatchListView: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
-//    @EnvironmentObject var movieLists: MovieLists
-    
     var movie: Movie
-    @State var presentNewWatchlist: Bool = false
-    @State var newWatchListTitle: String = ""
     
-    @State var movieInWatchlist: Bool = false
-    @State var movieAddedToWatchlist: Bool = false
-    @State var movieAdded: Bool = false
+    @Query(sort: \Watchlist.title) var watchlists: [Watchlist]
+    @State private var newWatchListName: String = ""
+    @State private var presentNewWatchListAlert: Bool = false
     
     var body: some View {
-        List {
-            EmptyView()
-//            Button {
-//                presentNewWatchlist = true
-//            } label: {
-//                HStack(alignment: .firstTextBaseline, spacing: 10) {
-//                    Image(systemName: "plus.app")
-//                        .font(.system(size: 20))
-//                    Text("New Watchlist...")
-//                        .font(.system(size: 20))
-//                }
-//                .foregroundColor(.accentColor)
-//            }
-//            
-//            ForEach(movieLists.watchLists, id: \.id) { watchList in
-//                Button {
-//                    if watchList.moviesList.contains(movie) {
-//                        movieInWatchlist = true
-//                    } else {
-//                        watchList.add(movie)
-//                        movieLists.saveWatchLists()
-//                        movieAdded = true
-//                    }
-//                } label: {
-//                    VStack(spacing: 5) {
-//                        Text(watchList.name)
-//                            .font(.system(size: 20))
-//                            .bold()
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                            .foregroundColor(.primary)
-//                        
-//                        if watchList.moviesList.contains(movie) {
-//                            Text("Already Added")
-//                                .font(.body)
-//                                .foregroundColor(.gray)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .lineLimit(1)
-//                        }
-//                    }
-//                }
-//            }
-        }
-        .listStyle(.plain)
-        .alert("New Watchlist", isPresented: $presentNewWatchlist) {
-            TextField("",
-                      text: $newWatchListTitle,
-                      prompt: Text("Watchlist Title"))
-            Button("Cancel", role: .cancel) { }
-            Button("Add") {
-//                DispatchQueue.main.async {
-//                    movieLists.watchLists.append(Watchlist(name: newWatchListTitle))
-//                    if let newestWatchList = movieLists.watchLists.last {
-//                        newestWatchList.add(movie)
-//                    }
-//                    movieLists.saveWatchLists()
-//                }
+        VStack {
+            List {
+                createWatchListButton
+                ForEach(watchlists) { watchlist in
+                    Button {
+                        addMovieToWatchList(watchlist)
+                    } label: {
+                        Text(watchlist.title)
+                            .foregroundStyle(.primary)
+                            .ralewayFont(.body, size: 16, weight: .semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
             }
+            .listStyle(.plain)
         }
-        .alert("This movie is already in your watchlist", isPresented: $movieInWatchlist) {
-            Button("OK", role: .cancel) { }
-        }
-        .alert("Movie added to watchlist", isPresented: $movieAddedToWatchlist) {
-            Button("OK", role: .cancel) { }
-        }
-        .alert("Movie added to watchlist", isPresented: $movieAdded) {
-            Button("OK", role: .cancel) { }
-        }
-        .navigationTitle("Add to a Watchlist")
+        .navigationTitle("Add to a Watch List")
         .navigationBarTitleDisplayMode(.inline)
+        .padding(.horizontal)
+        .alert("New Watch List", isPresented: $presentNewWatchListAlert, actions: {
+            TextField("", text: $newWatchListName, prompt: Text("Watch List Title"))
+            Button("Cancel", role: .cancel) {
+                newWatchListName = ""
+            }
+            Button("Add", role: .none) {
+                createNewWatchList()
+            }
+            .disabled(newWatchListName.isEmpty)
+        })
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button {
+                Button(role: .destructive) {
                     dismiss()
                 } label: {
                     Text("Cancel")
+                        .foregroundStyle(.red)
+                        .ralewayFont(.body, size: 16, weight: .semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: .destructive) {
+                    dismiss()
+                } label: {
+                    Text("Done")
+                        .foregroundStyle(.primary)
+                        .ralewayFont(.body, size: 16, weight: .semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
     }
+    
+    var createWatchListButton: some View {
+        Button {
+            presentNewWatchListAlert.toggle()
+        } label: {
+            Label("Create New Watch List", systemImage: "plus")
+                .ralewayFont(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private func createNewWatchList() {
+        let newWatchList = Watchlist(
+            name: newWatchListName,
+            details: "",
+            movies: [movie]
+        )
+        modelContext.insert(newWatchList)
+        try? modelContext.save()
+        newWatchListName = ""
+        
+        dismiss()
+    }
+    
+    private func addMovieToWatchList(_ watchList: Watchlist) {
+        watchList.movies.append(movie)
+        try? modelContext.save()
+    }
+
 }
 
-//#Preview {
-//    AddToWatchListView()
-//        .environmentObject(MovieLists())
-//}
+#Preview {
+    let sampleMovie = Movie(
+        id: 502356,
+        title: "The Super Mario Bros. Movie",
+        overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+        posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+        backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
+        voteAverage: 7.7,
+        isWatched: false,
+        isBookmarked: false
+    )
+    NavigationStack {
+        AddToWatchListView(movie: sampleMovie)
+    }
+}
