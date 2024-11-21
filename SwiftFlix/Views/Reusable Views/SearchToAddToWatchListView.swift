@@ -12,22 +12,14 @@ import SwiftUI
 struct SearchToAddToWatchListView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
-    //    @EnvironmentObject var movieLists: MovieLists
     
-    @StateObject var viewModel = SearchToAddToWatchListViewModel()
     @Bindable var watchlist: Watchlist
     
     @State private var searchResults = [Movie]()
     @State private var searchQuery: String = ""
     private let apiCaller = APICaller()
+    
     @FocusState private var keyboardFocus: Bool
-    
-    @State private var selectedMovies = [Movie]()
-    var addedMovies: ([Movie]) -> Void
-    
-    //    init(watchlist: Watchlist) {
-    //        self.watchlist = watchlist
-    //    }
     
     var body: some View {
         VStack {
@@ -102,7 +94,6 @@ struct SearchToAddToWatchListView: View {
                                     .ralewayFont(.body, size: 20, weight: .medium)
                                     .foregroundColor(watchlist.movies.contains(movie) ? .green : .accentColor)
                             }
-//                            .padding(.horizontal, 10)
                         }
                     }
                 }

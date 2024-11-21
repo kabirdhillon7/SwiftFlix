@@ -26,7 +26,7 @@ struct ExpandedMovieGridView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .ralewayFont(.subheadline)
+                            .ralewayFont(.caption)
                             .foregroundStyle(.white)
                             .padding(8)
                             .background {

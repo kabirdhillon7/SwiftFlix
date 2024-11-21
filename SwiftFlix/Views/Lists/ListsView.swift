@@ -20,7 +20,6 @@ struct ListsView: View {
     @State private var selectedListTab = ListPickerItem.saved
     @State private var presentNewWatchListAlert: Bool = false
     @State private var newWatchListName: String = ""
-    @State private var selectedWatchlist: Watchlist?
     @State private var createNewWatchlistButtonTapped: Bool = false
     
     private enum ListPickerItem: String, CaseIterable, Identifiable {
