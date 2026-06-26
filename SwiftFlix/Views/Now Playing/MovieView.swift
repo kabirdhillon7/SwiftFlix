@@ -10,6 +10,8 @@ import SwiftUI
 
 struct MovieView: View {
     @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Movie.title) private var persistedMovies: [Movie]
+
     @State private var viewModel = MovieViewModel()
     @State private var expandedCategory: MovieCategory?
 
@@ -18,31 +20,19 @@ struct MovieView: View {
             Group {
                 switch viewModel.phase {
                 case .idle:
-                    ProgressView("Loading movies")
-                        .ralewayFont(.body)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    HomeSkeletonView()
                 case .loading where viewModel.sections.isEmpty:
-                    ProgressView("Loading movies")
-                        .ralewayFont(.body)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    HomeSkeletonView()
                 case .empty:
-                    ContentUnavailableView(
-                        "No Movies",
-                        systemImage: "film.stack",
-                        description: Text("Check your TMDB configuration and try again.")
-                    )
+                    emptyState
                 case .failed(let message):
-                    ContentUnavailableView(
-                        "Could Not Load Movies",
-                        systemImage: "wifi.exclamationmark",
-                        description: Text(message)
-                    )
+                    errorState(message)
                 default:
                     movieSections
                 }
             }
             .navigationTitle("Movies")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(item: $expandedCategory) { category in
                 ExpandedMovieGridView(
                     title: category.title,
@@ -62,6 +52,15 @@ struct MovieView: View {
     private var movieSections: some View {
         ScrollView {
             LazyVStack(spacing: 28) {
+                let recentMovies = Array(persistedMovies.recentlyViewed.prefix(10))
+                if !recentMovies.isEmpty {
+                    MovieShelfView(
+                        title: "Recently Viewed",
+                        movies: recentMovies,
+                        seeAllAction: nil
+                    )
+                }
+
                 ForEach(MovieCategory.allCases) { category in
                     let movies = viewModel.movies(for: category)
                     if !movies.isEmpty {
@@ -80,12 +79,52 @@ struct MovieView: View {
         }
         .scrollIndicators(.hidden)
     }
+
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            ContentUnavailableView(
+                "No Movies",
+                systemImage: "film.stack",
+                description: Text("Check your TMDB configuration and try again.")
+            )
+
+            Button {
+                Task {
+                    await viewModel.loadHome(modelContext: modelContext)
+                }
+            } label: {
+                Label("Retry", systemImage: "arrow.clockwise")
+            }
+            .buttonStyle(TintedGlassButtonStyle(tint: .accentColor))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func errorState(_ message: String) -> some View {
+        VStack(spacing: 16) {
+            ContentUnavailableView(
+                "Could Not Load Movies",
+                systemImage: "wifi.exclamationmark",
+                description: Text(message)
+            )
+
+            Button {
+                Task {
+                    await viewModel.loadHome(modelContext: modelContext)
+                }
+            } label: {
+                Label("Try Again", systemImage: "arrow.clockwise")
+            }
+            .buttonStyle(TintedGlassButtonStyle(tint: .accentColor))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
 private struct MovieShelfView: View {
     let title: String
     let movies: [Movie]
-    let seeAllAction: () -> Void
+    let seeAllAction: (() -> Void)?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     private var cardWidth: CGFloat {
@@ -98,13 +137,15 @@ private struct MovieShelfView: View {
                 Text(title)
                     .ralewayFont(.title)
                 Spacer()
-                Button(action: seeAllAction) {
-                    Label("See all", systemImage: "chevron.right")
-                        .labelStyle(.iconOnly)
-                        .ralewayFont(.footnote)
+                if let seeAllAction {
+                    Button(action: seeAllAction) {
+                        Label("See all", systemImage: "chevron.right")
+                            .labelStyle(.iconOnly)
+                            .ralewayFont(.footnote)
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
                 }
-                .buttonStyle(.borderless)
-                .foregroundStyle(.secondary)
             }
             .padding(.horizontal)
 
@@ -126,6 +167,38 @@ private struct MovieShelfView: View {
             .scrollTargetBehavior(.viewAligned)
             .scrollIndicators(.hidden)
         }
+    }
+}
+
+private struct HomeSkeletonView: View {
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 28) {
+                ForEach(0..<3, id: \.self) { index in
+                    VStack(alignment: .leading, spacing: 12) {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color(.secondarySystemFill))
+                            .frame(width: index == 0 ? 150 : 120, height: 24)
+                            .padding(.horizontal)
+
+                        ScrollView(.horizontal) {
+                            LazyHStack(spacing: 14) {
+                                ForEach(0..<3, id: \.self) { _ in
+                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                        .fill(Color(.secondarySystemFill))
+                                        .frame(width: 300)
+                                        .aspectRatio(16 / 9, contentMode: .fit)
+                                }
+                            }
+                        }
+                        .contentMargins(.horizontal, 16, for: .scrollContent)
+                        .scrollIndicators(.hidden)
+                    }
+                }
+            }
+            .padding(.top, 26)
+        }
+        .redacted(reason: .placeholder)
     }
 }
 

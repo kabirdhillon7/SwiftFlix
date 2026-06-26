@@ -52,6 +52,15 @@ final class MovieViewModelTests: XCTestCase {
         }
     }
 
+    func test_loadHome_ignoresCancellationAsError() async throws {
+        let context = try makeContext()
+        let viewModel = MovieViewModel(client: MockTMDBClient(error: CancellationError()))
+
+        await viewModel.loadHome(modelContext: context)
+
+        XCTAssertEqual(viewModel.phase, .idle)
+    }
+
     func test_detailViewModel_togglesBookmarkAndWatched() throws {
         let context = try makeContext()
         let movie = APICallerTests.sampleMovieDTO.makeMovie()
@@ -63,6 +72,31 @@ final class MovieViewModelTests: XCTestCase {
 
         XCTAssertTrue(movie.isBookmarked)
         XCTAssertTrue(movie.isWatched)
+    }
+
+    func test_detailViewModel_loadUpdatesRuntimeAndRecentlyViewed() async throws {
+        let context = try makeContext()
+        let movie = APICallerTests.sampleMovieDTO.makeMovie()
+        context.insert(movie)
+        let client = MockTMDBClient(
+            movieResult: MovieDTO(
+                id: movie.id,
+                title: movie.title,
+                overview: movie.overview,
+                posterPath: movie.posterPath,
+                backdropPath: movie.backdropPath,
+                voteAverage: movie.voteAverage,
+                releaseDate: movie.releaseDate,
+                runtime: 121
+            )
+        )
+        let viewModel = MovieDetailViewModel(client: client)
+
+        await viewModel.load(movie: movie, modelContext: context)
+
+        XCTAssertEqual(movie.runtime, 121)
+        XCTAssertNotNil(movie.recentlyViewedAt)
+        XCTAssertEqual(viewModel.phase, .loaded)
     }
 
     private func makeContext() throws -> ModelContext {

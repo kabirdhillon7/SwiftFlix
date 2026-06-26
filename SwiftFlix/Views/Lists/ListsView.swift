@@ -18,9 +18,13 @@ struct ListsView: View {
     @Query(sort: \Watchlist.title) var watchlists: [Watchlist]
 
     @State private var selectedListTab = ListPickerItem.saved
+    @State private var movieSortOption = MovieSortOption.title
+    @State private var watchlistSortOption = WatchlistSortOption.title
     @State private var presentNewWatchListAlert: Bool = false
     @State private var newWatchListName: String = ""
     @State private var createNewWatchlistButtonTapped: Bool = false
+    @State private var createFeedback = false
+    @State private var deleteFeedback = false
 
     private enum ListPickerItem: String, CaseIterable, Identifiable {
         var id: Self { self }
@@ -53,26 +57,28 @@ struct ListsView: View {
                 .liquidGlass(cornerRadius: 20)
                 .padding(.top, 6)
 
+                sortControls
+
                 switch selectedListTab {
                 case .saved:
                     if bookmarkedMovies.isEmpty {
-                        ContentUnavailableView(
-                            "No Saved Movies",
+                        emptyMoviesState(
+                            title: "No Saved Movies",
                             systemImage: "bookmark.slash",
-                            description: Text("When you add movies to your saved list, they'll appear here.")
+                            description: "Find a movie, then tap Saved to keep it here."
                         )
                     } else {
-                        MovieGridView(movies: bookmarkedMovies)
+                        MovieGridView(movies: bookmarkedMovies.sorted(by: movieSortOption))
                     }
                 case .watched:
                     if watchedMovies.isEmpty {
-                        ContentUnavailableView(
-                            "No Watched Movies",
+                        emptyMoviesState(
+                            title: "No Watched Movies",
                             systemImage: "tv.slash",
-                            description: Text("When you add movies you've watched, they'll appear here.")
+                            description: "Search for movies you've seen, then mark them watched."
                         )
                     } else {
-                        MovieGridView(movies: watchedMovies)
+                        MovieGridView(movies: watchedMovies.sorted(by: movieSortOption))
                     }
                 case .watchlists:
                     watchlistsContent
@@ -80,6 +86,8 @@ struct ListsView: View {
             }
             .navigationTitle("Lists")
             .padding(.horizontal)
+            .sensoryFeedback(.success, trigger: createFeedback)
+            .sensoryFeedback(.warning, trigger: deleteFeedback)
             .alert("New Watch List", isPresented: $presentNewWatchListAlert, actions: {
                 TextField("", text: $newWatchListName, prompt: Text("Watch List Title"))
                 Button("Cancel", role: .cancel) {
@@ -93,6 +101,59 @@ struct ListsView: View {
         }
     }
 
+    @ViewBuilder
+    private var sortControls: some View {
+        HStack {
+            Text("Sort")
+                .ralewayFont(.caption, weight: .semibold)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            if selectedListTab == .watchlists {
+                Picker("Sort Watchlists", selection: $watchlistSortOption) {
+                    ForEach(WatchlistSortOption.allCases) { option in
+                        Text(option.title).tag(option)
+                    }
+                }
+                .pickerStyle(.menu)
+            } else {
+                Picker("Sort Movies", selection: $movieSortOption) {
+                    ForEach(MovieSortOption.allCases) { option in
+                        Text(option.title).tag(option)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+        }
+        .padding(.horizontal, 4)
+    }
+
+    private func emptyMoviesState(
+        title: String,
+        systemImage: String,
+        description: String
+    ) -> some View {
+        VStack(spacing: 16) {
+            ContentUnavailableView(
+                title,
+                systemImage: systemImage,
+                description: Text(description)
+            )
+
+            NavigationLink {
+                SearchView()
+            } label: {
+                Label("Find Movies", systemImage: "magnifyingglass")
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            .buttonStyle(TintedGlassButtonStyle(tint: .accentColor))
+            .padding(.horizontal, 44)
+            .padding(.bottom, 10)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     var createWatchListButton: some View {
         Button {
             withAnimation {
@@ -100,17 +161,15 @@ struct ListsView: View {
             }
             presentNewWatchListAlert.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    createNewWatchlistButtonTapped = false
-                }
+                createNewWatchlistButtonTapped = false
+            }
         } label: {
             Label("Create New Watch List", systemImage: "plus")
-                .ralewayFont(.headline)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.vertical, 12)
         }
-        .buttonStyle(.plain)
-        .liquidGlass(cornerRadius: 24)
+        .buttonStyle(TintedGlassButtonStyle(tint: .accentColor))
         .padding(.bottom, 10)
+        .padding(.horizontal, 44)
         .scaleEffect(createNewWatchlistButtonTapped ? 1.04 : 1)
         .animation(.easeInOut, value: createNewWatchlistButtonTapped)
     }
@@ -128,7 +187,7 @@ struct ListsView: View {
             }
         } else {
             List {
-                ForEach(watchlists) { watchlist in
+                ForEach(watchlists.sorted(by: watchlistSortOption)) { watchlist in
                     NavigationLink {
                         WatchlistDetailView(watchlist: watchlist)
                     } label: {
@@ -156,8 +215,10 @@ struct ListsView: View {
             let watchlist = watchlists[i]
             modelContext.delete(watchlist)
             try? modelContext.save()
+            deleteFeedback.toggle()
         }
     }
+
     private func createNewWatchList() {
         let newWatchList = Watchlist(
             name: newWatchListName,
@@ -167,6 +228,7 @@ struct ListsView: View {
         modelContext.insert(newWatchList)
         try? modelContext.save()
         newWatchListName = ""
+        createFeedback.toggle()
     }
 }
 

@@ -14,6 +14,7 @@ struct SearchToAddToWatchListView: View {
 
     @Bindable var watchlist: Watchlist
     @State private var viewModel = SearchToAddToWatchListViewModel()
+    @State private var toggleFeedback = false
 
     var body: some View {
         NavigationStack {
@@ -39,6 +40,7 @@ struct SearchToAddToWatchListView: View {
             .onChange(of: viewModel.searchQuery) {
                 viewModel.searchDebounced(modelContext: modelContext)
             }
+            .sensoryFeedback(.selection, trigger: toggleFeedback)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Done") {
@@ -88,5 +90,6 @@ struct SearchToAddToWatchListView: View {
     private func toggle(_ movie: Movie) {
         watchlist.toggle(movie)
         try? modelContext.save()
+        toggleFeedback.toggle()
     }
 }

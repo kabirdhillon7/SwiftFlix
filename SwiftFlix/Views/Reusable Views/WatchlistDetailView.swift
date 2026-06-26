@@ -16,6 +16,8 @@ struct WatchlistDetailView: View {
     @Bindable var watchlist: Watchlist
     @State private var isNameEmptyAlertPresented = false
     @State private var presentAddMoviesSheet = false
+    @State private var addFeedback = false
+    @State private var deleteFeedback = false
 
     var body: some View {
         List {
@@ -53,6 +55,8 @@ struct WatchlistDetailView: View {
         .sheet(isPresented: $presentAddMoviesSheet) {
             SearchToAddToWatchListView(watchlist: watchlist)
         }
+        .sensoryFeedback(.selection, trigger: addFeedback)
+        .sensoryFeedback(.warning, trigger: deleteFeedback)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -110,6 +114,7 @@ struct WatchlistDetailView: View {
 
     private var addMovieButton: some View {
         Button {
+            addFeedback.toggle()
             presentAddMoviesSheet = true
         } label: {
             Label("Add Movie", systemImage: "plus")
@@ -124,11 +129,13 @@ struct WatchlistDetailView: View {
     private func deleteMovie(_ indexSet: IndexSet) {
         watchlist.movies.remove(atOffsets: indexSet)
         try? modelContext.save()
+        deleteFeedback.toggle()
     }
 
     private func deleteWatchlist() {
         modelContext.delete(watchlist)
         try? modelContext.save()
+        deleteFeedback.toggle()
         dismiss()
     }
 }

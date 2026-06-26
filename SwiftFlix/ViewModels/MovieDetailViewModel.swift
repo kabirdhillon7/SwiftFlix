@@ -29,19 +29,22 @@ final class MovieDetailViewModel {
 
         phase = .loading
         do {
+            async let details = client.movie(id: movie.id)
             async let trailer = client.trailerKey(movieID: movie.id)
             async let recommendations = client.recommendations(movieID: movie.id)
             async let providers = client.watchProviderLink(movieID: movie.id, countryCode: "US")
             async let credits = client.credits(movieID: movie.id)
 
+            movie.update(with: try await details)
+            modelContext.markRecentlyViewed(movie)
             trailerKey = try await trailer
             watchProviderLink = try await providers
             recommendedMovies = modelContext.movies(matching: try await recommendations)
             self.credits = try await credits
 
-            try? modelContext.save()
             phase = .loaded
         } catch {
+            modelContext.markRecentlyViewed(movie)
             phase = .failed(error.localizedDescription)
         }
     }

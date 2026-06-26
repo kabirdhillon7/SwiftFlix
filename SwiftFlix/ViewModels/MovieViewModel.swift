@@ -7,6 +7,7 @@
 
 import Observation
 import SwiftData
+import Foundation
 
 enum LoadingPhase: Equatable {
     case idle
@@ -39,6 +40,7 @@ final class MovieViewModel {
     func loadHome(modelContext: ModelContext) async {
         guard !phase.isLoading else { return }
 
+        let hadLoadedContent = !sections.values.joined().isEmpty
         phase = .loading
         do {
             async let nowPlayingDTOs = client.movies(in: .nowPlaying)
@@ -56,6 +58,10 @@ final class MovieViewModel {
 
             try? modelContext.save()
             phase = sections.values.joined().isEmpty ? .empty : .loaded
+        } catch is CancellationError {
+            phase = hadLoadedContent ? .loaded : .idle
+        } catch let error as URLError where error.code == .cancelled {
+            phase = hadLoadedContent ? .loaded : .idle
         } catch {
             phase = .failed(error.localizedDescription)
         }

@@ -8,11 +8,13 @@
 import CachedAsyncImage
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct MovieDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @Environment(\.colorScheme) private var colorScheme
 
     @Bindable var movie: Movie
     @State private var viewModel = MovieDetailViewModel()
@@ -20,6 +22,8 @@ struct MovieDetailView: View {
     @State private var presentRecommendedList = false
     @State private var savedFeedback = false
     @State private var watchedFeedback = false
+    @State private var listFeedback = false
+    @State private var toastMessage: ToastMessage?
 
     var body: some View {
         GeometryReader { proxy in
@@ -29,6 +33,7 @@ struct MovieDetailView: View {
                     summary
                     actionCluster
                     overview
+                    detailLoadingSkeleton
                     trailerSection
                     watchSection
                     creditsSection
@@ -42,6 +47,15 @@ struct MovieDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.load(movie: movie, modelContext: modelContext)
+        }
+        .toastOverlay(isPresented: toastMessage != nil) {
+            if let toastMessage {
+                SwiftFlixToast(
+                    message: toastMessage.message,
+                    systemImage: toastMessage.systemImage,
+                    tint: toastMessage.tint
+                )
+            }
         }
         .navigationDestination(isPresented: $presentRecommendedList) {
             ExpandedMovieGridView(title: "Recommended", movies: viewModel.recommendedMovies)
@@ -112,8 +126,12 @@ struct MovieDetailView: View {
                 HStack(spacing: 10) {
                     Label(String(format: "%.1f", movie.voteAverage), systemImage: "star.fill")
                         .foregroundStyle(.orange)
-                    if let releaseDate = movie.releaseDate, !releaseDate.isEmpty {
-                        Text(releaseDate.prefix(4))
+                    if let releaseYear = movie.releaseYearText {
+                        Text(releaseYear)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let runtime = movie.runtimeText {
+                        Text(runtime)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -134,6 +152,11 @@ struct MovieDetailView: View {
             ) {
                 viewModel.toggleBookmark(movie: movie, modelContext: modelContext)
                 savedFeedback.toggle()
+                showToast(
+                    movie.isBookmarked ? "Saved to your list" : "Removed from saved",
+                    systemImage: movie.isBookmarked ? "bookmark.fill" : "bookmark.slash.fill",
+                    tint: movie.isBookmarked ? .green : .secondary
+                )
             }
             .sensoryFeedback(.success, trigger: savedFeedback)
 
@@ -144,15 +167,30 @@ struct MovieDetailView: View {
             ) {
                 viewModel.toggleWatched(movie: movie, modelContext: modelContext)
                 watchedFeedback.toggle()
+                showToast(
+                    movie.isWatched ? "Marked as watched" : "Marked as unwatched",
+                    systemImage: movie.isWatched ? "checkmark.circle.fill" : "circle",
+                    tint: movie.isWatched ? .green : .secondary
+                )
             }
             .sensoryFeedback(.success, trigger: watchedFeedback)
 
             detailAction(title: "List", systemImage: "plus", isActive: false) {
+                listFeedback.toggle()
                 presentAddToWatchListSheet = true
             }
+            .sensoryFeedback(.selection, trigger: listFeedback)
         }
         .padding(10)
+        .background {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(colorScheme == .dark ? Color.white.opacity(0.18) : Color.white.opacity(0.34))
+        }
         .liquidGlass(cornerRadius: 28)
+        .overlay {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .strokeBorder(Color.white.opacity(colorScheme == .dark ? 0.22 : 0.34), lineWidth: 1)
+        }
         .padding(.horizontal)
         .frame(maxWidth: .infinity)
     }
@@ -173,9 +211,13 @@ struct MovieDetailView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
-            .foregroundStyle(isActive ? .green : .primary)
+            .foregroundStyle(isActive ? .green : actionForeground)
         }
         .buttonStyle(.plain)
+    }
+
+    private var actionForeground: Color {
+        colorScheme == .dark ? .white.opacity(0.92) : .primary
     }
 
     private var overview: some View {
@@ -192,10 +234,51 @@ struct MovieDetailView: View {
     }
 
     @ViewBuilder
+    private var detailLoadingSkeleton: some View {
+        if viewModel.phase.isLoading {
+            VStack(alignment: .leading, spacing: 18) {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(.secondarySystemFill))
+                    .frame(width: 110, height: 22)
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(Color(.secondarySystemFill))
+                    .aspectRatio(16 / 9, contentMode: .fit)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(.secondarySystemFill))
+                    .frame(width: 150, height: 22)
+            }
+            .padding(.horizontal)
+            .redacted(reason: .placeholder)
+        }
+    }
+
+    @ViewBuilder
     private var trailerSection: some View {
         if let trailerKey = viewModel.trailerKey {
             detailSection(title: "Trailer") {
-                TrailerLinkCard(videoID: trailerKey)
+                VStack(spacing: 12) {
+                    TrailerLinkCard(videoID: trailerKey)
+
+                    HStack(spacing: 12) {
+                        Button {
+                            openURL(youtubeURL(videoID: trailerKey))
+                        } label: {
+                            Label("Open", systemImage: "arrow.up.forward.app")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button {
+                            UIPasteboard.general.url = youtubeURL(videoID: trailerKey)
+                            showToast("Trailer link copied", systemImage: "doc.on.doc.fill")
+                        } label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .controlSize(.regular)
+                }
             }
         }
     }
@@ -300,6 +383,26 @@ struct MovieDetailView: View {
         .padding(.horizontal)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    private func youtubeURL(videoID: String) -> URL {
+        URL(string: "https://www.youtube.com/watch?v=\(videoID)")!
+    }
+
+    private func showToast(
+        _ message: String,
+        systemImage: String,
+        tint: Color = .green
+    ) {
+        let toast = ToastMessage(message: message, systemImage: systemImage, tint: tint)
+        toastMessage = toast
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.6))
+            if toastMessage == toast {
+                toastMessage = nil
+            }
+        }
+    }
 }
 
 private struct TrailerLinkCard: View {
@@ -367,6 +470,17 @@ private struct TrailerLinkCard: View {
                 .font(.system(size: 52))
                 .foregroundStyle(.secondary)
         }
+    }
+}
+
+private struct ToastMessage: Equatable {
+    let id = UUID()
+    let message: String
+    let systemImage: String
+    let tint: Color
+
+    static func == (lhs: ToastMessage, rhs: ToastMessage) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

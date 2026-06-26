@@ -16,6 +16,8 @@ struct AddToWatchListView: View {
     @Query(sort: \Watchlist.title) var watchlists: [Watchlist]
     @State private var newWatchListName: String = ""
     @State private var presentNewWatchListAlert: Bool = false
+    @State private var addFeedback = false
+    @State private var createFeedback = false
 
     var body: some View {
         List {
@@ -36,6 +38,8 @@ struct AddToWatchListView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Add to a Watch List")
         .navigationBarTitleDisplayMode(.inline)
+        .sensoryFeedback(.success, trigger: addFeedback)
+        .sensoryFeedback(.success, trigger: createFeedback)
         .alert("New Watch List", isPresented: $presentNewWatchListAlert, actions: {
             TextField("", text: $newWatchListName, prompt: Text("Watch List Title"))
             Button("Cancel", role: .cancel) {
@@ -78,6 +82,7 @@ struct AddToWatchListView: View {
         modelContext.insert(newWatchList)
         try? modelContext.save()
         newWatchListName = ""
+        createFeedback.toggle()
 
         dismiss()
     }
@@ -87,6 +92,7 @@ struct AddToWatchListView: View {
             watchList.movies.append(movie)
         }
         try? modelContext.save()
+        addFeedback.toggle()
         dismiss()
     }
 
