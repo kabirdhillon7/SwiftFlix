@@ -12,7 +12,7 @@ import SwiftUI
 struct ListsView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) var colorScheme
-    
+
     @Query(filter: #Predicate<Movie> { $0.isBookmarked == true }) private var bookmarkedMovies: [Movie]
     @Query(filter: #Predicate<Movie> { $0.isWatched == true }) private var watchedMovies: [Movie]
     @Query(sort: \Watchlist.title) var watchlists: [Watchlist]
@@ -21,20 +21,37 @@ struct ListsView: View {
     @State private var presentNewWatchListAlert: Bool = false
     @State private var newWatchListName: String = ""
     @State private var createNewWatchlistButtonTapped: Bool = false
-    
+
     private enum ListPickerItem: String, CaseIterable, Identifiable {
         var id: Self { self }
         case saved, watched, watchlists
+
+        var title: String {
+            switch self {
+            case .saved:
+                return "Saved"
+            case .watched:
+                return "Watched"
+            case .watchlists:
+                return "Watchlists"
+            }
+        }
     }
 
     var body: some View {
         NavigationStack {
             VStack {
-                CustomPicker(selection: $selectedListTab, items: ListPickerItem.allCases) { item in
-                    Text(item.rawValue.capitalized)
-                        .ralewayFont(.body, size: 15, weight: .semibold)
-                        .frame(maxWidth: .infinity)
+                Picker("List type", selection: $selectedListTab) {
+                    ForEach(ListPickerItem.allCases) { item in
+                        Text(item.title)
+                            .tag(item)
+                    }
                 }
+                .pickerStyle(.segmented)
+                .tint(.accentColor)
+                .padding(6)
+                .liquidGlass(cornerRadius: 20)
+                .padding(.top, 6)
 
                 switch selectedListTab {
                 case .saved:
@@ -58,34 +75,7 @@ struct ListsView: View {
                         MovieGridView(movies: watchedMovies)
                     }
                 case .watchlists:
-                    VStack {
-                        if watchlists.isEmpty {
-                            ContentUnavailableView(
-                                "No Watchlists",
-                                systemImage: "square.3.layers.3d.slash",
-                                description: Text("When you add watchlists, they'll appear here.")
-                            )
-                        } else {
-                            List {
-//                                createWatchListButton
-                                ForEach(watchlists) { watchlist in
-                                    NavigationLink {
-                                        WatchlistDetailView(watchlist: watchlist)
-                                    } label: {
-                                        Text(watchlist.title)
-                                            .ralewayFont(.title)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                }
-                                .onDelete(perform: deleteWatchlist)
-                            }
-                            .listStyle(.plain)
-                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        }
-                    }
-                    .overlay(alignment: .bottom) {
-                        createWatchListButton
-                    }
+                    watchlistsContent
                 }
             }
             .navigationTitle("Lists")
@@ -102,7 +92,7 @@ struct ListsView: View {
             })
         }
     }
-    
+
     var createWatchListButton: some View {
         Button {
             withAnimation {
@@ -116,13 +106,51 @@ struct ListsView: View {
             Label("Create New Watch List", systemImage: "plus")
                 .ralewayFont(.headline)
                 .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 12)
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(.plain)
+        .liquidGlass(cornerRadius: 24)
         .padding(.bottom, 10)
-        .scaleEffect(createNewWatchlistButtonTapped ? 1.5 : 1)
+        .scaleEffect(createNewWatchlistButtonTapped ? 1.04 : 1)
         .animation(.easeInOut, value: createNewWatchlistButtonTapped)
     }
-    
+
+    @ViewBuilder
+    private var watchlistsContent: some View {
+        if watchlists.isEmpty {
+            ContentUnavailableView(
+                "No Watchlists",
+                systemImage: "square.3.layers.3d.slash",
+                description: Text("When you add watchlists, they'll appear here.")
+            )
+            .safeAreaInset(edge: .bottom) {
+                createWatchListButton
+            }
+        } else {
+            List {
+                ForEach(watchlists) { watchlist in
+                    NavigationLink {
+                        WatchlistDetailView(watchlist: watchlist)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(watchlist.title)
+                                .ralewayFont(.headline)
+                            Text("\(watchlist.movies.count) movies")
+                                .ralewayFont(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 6)
+                    }
+                }
+                .onDelete(perform: deleteWatchlist)
+            }
+            .listStyle(.plain)
+            .safeAreaInset(edge: .bottom) {
+                createWatchListButton
+            }
+        }
+    }
+
     private func deleteWatchlist(_ indexSet: IndexSet) {
         for i in indexSet {
             let watchlist = watchlists[i]

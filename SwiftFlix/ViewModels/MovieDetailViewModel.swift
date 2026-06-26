@@ -5,71 +5,54 @@
 //  Created by Kabir Dhillon on 2/17/24.
 //
 
+import Foundation
+import Observation
 import SwiftData
 
-/// A view model responsible for movie information and data
-extension MovieDetailView {
-    @Observable
-    final class ViewModel {
-        var modelContext: ModelContext
-        
-        var movie: Movie
-        var trailerKey: String?
-        var watchProviderLinkString: String?
-        
-        var recommendedMovies = [Movie]()
-        var movieCredits: Credits?
-        
-        private let apiCaller: APICaller
-        
-        init(movie: Movie, modelContext: ModelContext, apiCaller: APICaller) {
-            self.movie = movie
-            self.modelContext = modelContext
-            self.apiCaller = apiCaller
+@MainActor
+@Observable
+final class MovieDetailViewModel {
+    private(set) var phase = LoadingPhase.idle
+    private(set) var trailerKey: String?
+    private(set) var watchProviderLink: URL?
+    private(set) var recommendedMovies = [Movie]()
+    private(set) var credits: Credits?
+
+    @ObservationIgnored private let client: any TMDBClientProtocol
+
+    init(client: any TMDBClientProtocol = TMDBClient()) {
+        self.client = client
+    }
+
+    func load(movie: Movie, modelContext: ModelContext) async {
+        guard !phase.isLoading else { return }
+
+        phase = .loading
+        do {
+            async let trailer = client.trailerKey(movieID: movie.id)
+            async let recommendations = client.recommendations(movieID: movie.id)
+            async let providers = client.watchProviderLink(movieID: movie.id, countryCode: "US")
+            async let credits = client.credits(movieID: movie.id)
+
+            trailerKey = try await trailer
+            watchProviderLink = try await providers
+            recommendedMovies = modelContext.movies(matching: try await recommendations)
+            self.credits = try await credits
+
+            try? modelContext.save()
+            phase = .loaded
+        } catch {
+            phase = .failed(error.localizedDescription)
         }
-        
-        /// Fetches a the movie trailer for a particular movie
-        @MainActor
-        func fetchMovieTrailer() async {
-            do {
-                trailerKey = try await apiCaller.getMovieTrailer(movieId: movie.id)
-            } catch {
-                print("Error getting movie trailer: \(error)")
-            }
-        }
-        
-        /// Fetches a list of recommended movies for a particular movie
-        @MainActor
-        func fetchMovieRecommendations() async {
-            let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/recommendations?api_key=\(APIInformation.key.rawValue)"
-            
-            do {
-                recommendedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-            } catch {
-                print("Error getting recommended movies: \(error)")
-            }
-        }
-        
-        /// Fetches a watch provider link for a particular movie
-        @MainActor
-        func fetchWatchProviderLink() async {
-            do {
-                watchProviderLinkString = try await apiCaller.getWatchProviders(movieID: movie.id)
-            } catch {
-                print("Error getting watch provider link: \(error)")
-            }
-        }
-        
-        /// Fetches the credits for a particular movie
-        @MainActor
-        func fetchCredits() async {
-            let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/credits?api_key=\(APIInformation.key.rawValue)"
-            
-            do {
-                movieCredits = try await apiCaller.getData(urlString: urlString, decoderType: Credits.self)
-            } catch {
-                print("Error getting credits: \(error)")
-            }
-        }
+    }
+
+    func toggleBookmark(movie: Movie, modelContext: ModelContext) {
+        movie.isBookmarked.toggle()
+        try? modelContext.save()
+    }
+
+    func toggleWatched(movie: Movie, modelContext: ModelContext) {
+        movie.isWatched.toggle()
+        try? modelContext.save()
     }
 }

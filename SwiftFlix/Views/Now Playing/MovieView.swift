@@ -8,234 +8,123 @@
 import SwiftData
 import SwiftUI
 
-/// A view responsible for displaying recently playing movies
 struct MovieView: View {
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.verticalSizeClass) var verticalSizeClass
-    
-//    @State var viewModel: ViewModel
-    private let apiCaller = APICaller()
-    
-    @State private var nowPlayingMovies = [Movie]()
-    @State private var popularMovies = [Movie]()
-    @State private var upcomingMovies = [Movie]()
-    
-    @State private var presentNowPlayingList: Bool = false
-    @State private var presentPopularList: Bool = false
-    @State private var presentUpcomingList: Bool = false
-    
-//    init(modelContext: ModelContext) {
-//        _viewModel = State(
-//            initialValue: ViewModel(
-//                modelContext: modelContext,
-//                apiCaller: APICaller()
-//            )
-//        )
-//    }
-        
+    @Environment(\.modelContext) private var modelContext
+    @State private var viewModel = MovieViewModel()
+    @State private var expandedCategory: MovieCategory?
+
     var body: some View {
         NavigationStack {
-            ScrollView(.vertical) {
-                VStack {
-                    nowPlayingHeader
-                    
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            ForEach(nowPlayingMovies) { movie in
-                                NavigationLink {
-                                    MovieDetailView(movie: movie)
-                                        .modelContext(modelContext)
-                                } label: {
-                                    MovieCardView(movie: movie)
-                                }
-                            }
-                            
-                        }
-                        .scrollTargetLayout()
-                    }
-                    .onAppear(perform: {
-                        Task {
-                            await fetchNowPlayingMovies()
-                        }
-                    })
-                    .scrollTargetBehavior(.viewAligned)
-                    .safeAreaPadding(.horizontal)
-                    .scrollIndicators(.hidden)
-                    .padding(.bottom, 10)
-                    
-                    popularHeader
-                    
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            ForEach(popularMovies) { movie in
-                                NavigationLink {
-                                    MovieDetailView(movie: movie)
-                                        .modelContext(modelContext)
-                                } label: {
-                                    MovieCardView(movie: movie)
-                                }
-                            }
-                            
-                        }
-                        .scrollTargetLayout()
-                    }
-                    .onAppear(perform: {
-                        Task {
-                            await fetchPopularMovies()
-                        }
-                    })
-                    .scrollTargetBehavior(.viewAligned)
-                    .safeAreaPadding(.horizontal)
-                    .scrollIndicators(.hidden)
-                    .padding(.bottom, 10)
-                    
-                    upcomingHeader
-                    
-                    ScrollView(.horizontal) {
-                        LazyHStack {
-                            ForEach(upcomingMovies) { movie in
-                                NavigationLink {
-                                    MovieDetailView(movie: movie)
-                                        .modelContext(modelContext)
-                                } label: {
-                                    MovieCardView(movie: movie)
-                                }
-                            }
-                            
-                        }
-                        .scrollTargetLayout()
-                    }
-                    .onAppear(perform: {
-                        Task {
-                            await fetchUpcomingMovies()
-                        }
-                    })
-                    .scrollTargetBehavior(.viewAligned)
-                    .safeAreaPadding(.horizontal)
-                    .scrollIndicators(.hidden)
+            Group {
+                switch viewModel.phase {
+                case .idle:
+                    ProgressView("Loading movies")
+                        .ralewayFont(.body)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .loading where viewModel.sections.isEmpty:
+                    ProgressView("Loading movies")
+                        .ralewayFont(.body)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .empty:
+                    ContentUnavailableView(
+                        "No Movies",
+                        systemImage: "film.stack",
+                        description: Text("Check your TMDB configuration and try again.")
+                    )
+                case .failed(let message):
+                    ContentUnavailableView(
+                        "Could Not Load Movies",
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(message)
+                    )
+                default:
+                    movieSections
                 }
-                .navigationTitle("Movies")
-                .navigationBarTitleDisplayMode(.large)
-                .navigationDestination(isPresented: $presentNowPlayingList, destination: {
-                    ExpandedMovieGridView(movies: nowPlayingMovies)
-                        .padding(.horizontal)
-                })
-                .navigationDestination(isPresented: $presentPopularList, destination: {
-                    ExpandedMovieGridView(movies: popularMovies)
-                        .padding(.horizontal)
-                })
-                .navigationDestination(isPresented: $presentUpcomingList, destination: {
-                    ExpandedMovieGridView(movies: upcomingMovies)
-                        .padding(.horizontal)
-                })
             }
-        }
-    }
-    
-    var nowPlayingHeader: some View {
-        HStack {
-            Text("Now Playing")
-                .ralewayFont(.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            .navigationTitle("Movies")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(item: $expandedCategory) { category in
+                ExpandedMovieGridView(
+                    title: category.title,
+                    movies: viewModel.movies(for: category)
+                )
                 .padding(.horizontal)
-            Spacer()
-            Button {
-                presentNowPlayingList.toggle()
-            } label: {
-                Text("See all")
-                    .foregroundStyle(.gray)
-                    .ralewayFont(.footnote)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.horizontal)
+            }
+            .refreshable {
+                await viewModel.loadHome(modelContext: modelContext)
+            }
+            .task {
+                await viewModel.loadHome(modelContext: modelContext)
             }
         }
     }
-    
-    var popularHeader: some View {
-        HStack {
-            Text("Popular")
-                .ralewayFont(.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            Spacer()
-            Button {
-                presentPopularList.toggle()
-            } label: {
-                Text("See all")
-                    .foregroundStyle(.gray)
-                    .ralewayFont(.footnote)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.horizontal)
+
+    private var movieSections: some View {
+        ScrollView {
+            LazyVStack(spacing: 28) {
+                ForEach(MovieCategory.allCases) { category in
+                    let movies = viewModel.movies(for: category)
+                    if !movies.isEmpty {
+                        MovieShelfView(
+                            title: category.title,
+                            movies: movies,
+                            seeAllAction: {
+                                expandedCategory = category
+                            }
+                        )
+                    }
+                }
             }
+            .padding(.top, 26)
+            .padding(.bottom, 16)
         }
+        .scrollIndicators(.hidden)
     }
-    
-    var upcomingHeader: some View {
-        HStack {
-            Text("Upcoming")
-                .ralewayFont(.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            Spacer()
-            Button {
-                presentUpcomingList.toggle()
-            } label: {
-                Text("See all")
-                    .foregroundStyle(.gray)
-                    .ralewayFont(.footnote)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.horizontal)
-            }
-        }
+}
+
+private struct MovieShelfView: View {
+    let title: String
+    let movies: [Movie]
+    let seeAllAction: () -> Void
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var cardWidth: CGFloat {
+        horizontalSizeClass == .compact ? 300 : 340
     }
-    
-    @MainActor
-    func fetchNowPlayingMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(APIInformation.key.rawValue)"
-        do {
-            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-            for movie in fetchedMovies where !nowPlayingMovies.contains(where: { $0.id == movie.id }) {
-                modelContext.insert(movie)
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(title)
+                    .ralewayFont(.title)
+                Spacer()
+                Button(action: seeAllAction) {
+                    Label("See all", systemImage: "chevron.right")
+                        .labelStyle(.iconOnly)
+                        .ralewayFont(.footnote)
+                }
+                .buttonStyle(.borderless)
+                .foregroundStyle(.secondary)
             }
-            nowPlayingMovies = fetchedMovies
-        } catch {
-            print("Error getting now playing movies: \(error)")
-        }
-    }
-    
-    /// Fetches a list of movies now playing in theaters
-    @MainActor
-    func fetchPopularMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=\(APIInformation.key.rawValue)"
-        do {
-            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-            for movie in fetchedMovies where !popularMovies.contains(where: { $0.id == movie.id }) {
-                modelContext.insert(movie)
+            .padding(.horizontal)
+
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 14) {
+                    ForEach(movies) { movie in
+                        NavigationLink {
+                            MovieDetailView(movie: movie)
+                        } label: {
+                            MovieCardView(movie: movie)
+                                .frame(width: cardWidth)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .scrollTargetLayout()
             }
-            popularMovies = fetchedMovies.filter {
-                !nowPlayingMovies.contains($0) &&
-                !upcomingMovies.contains($0)
-            }
-        } catch {
-            print("Error getting now playing movies: \(error)")
-        }
-    }
-    
-    /// Fetches a list of movies upcoming in theaters
-    @MainActor
-    func fetchUpcomingMovies() async {
-        let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=\(APIInformation.key.rawValue)"
-        do {
-            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-            for movie in fetchedMovies where !upcomingMovies.contains(where: { $0.id == movie.id }) {
-                modelContext.insert(movie)
-            }
-            upcomingMovies = fetchedMovies.filter {
-                !nowPlayingMovies.contains($0) &&
-                !popularMovies.contains($0)
-            }
-        } catch {
-            print("Error getting now playing movies: \(error)")
+            .contentMargins(.horizontal, 16, for: .scrollContent)
+            .scrollTargetBehavior(.viewAligned)
+            .scrollIndicators(.hidden)
         }
     }
 }

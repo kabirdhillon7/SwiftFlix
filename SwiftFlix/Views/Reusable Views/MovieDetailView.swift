@@ -9,439 +9,454 @@ import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
-/// A view responsible for displaying movie information
 struct MovieDetailView: View {
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(\.dismiss) var dismiss
-    
-    //    @State private var viewModel: ViewModel
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
+
     @Bindable var movie: Movie
-    
-    @State private(set) var trailerKey: String?
-    @State private(set) var watchProviderLinkString: String?
-    @State private(set) var recommendedMovies = [Movie]()
-    @State private(set) var movieCredits: Credits?
-    
-    private let apiCaller = APICaller()
-    
-    @State private var savedButtonTapped = false
-    @State private var watchedButtonTapped = false
-    @State private var presentRecommendedList = false
+    @State private var viewModel = MovieDetailViewModel()
     @State private var presentAddToWatchListSheet = false
-    @State private var presentWatchListViewSheet = false
-    
-    //    init(movie: Movie, modelContext: ModelContext) {
-    //        _viewModel = State(
-    //            wrappedValue: ViewModel(
-    //                movie: movie,
-    //                modelContext: modelContext,
-    //                apiCaller: APICaller()
-    //            )
-    //        )
-    //    }
-    
+    @State private var presentRecommendedList = false
+    @State private var savedFeedback = false
+    @State private var watchedFeedback = false
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                backdropImage
-                
-                HStack {
-                    posterImage
-                    VStack(spacing: 5) {
-                        Text(movie.title)
-                            .ralewayFont(.title)
-                            .multilineTextAlignment(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 2)
-                        Text("\(Image(systemName: "star.fill")) \(String(format: "%.1f", movie.voteAverage)) / 10")
-                            .ralewayFont(.body)
-                            .foregroundColor(.orange)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 5)
-                        buttonView
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        GeometryReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    hero
+                    summary
+                    actionCluster
+                    overview
+                    trailerSection
+                    watchSection
+                    creditsSection
+                    recommendedSection
                 }
-                .padding(.horizontal)
-                
-                Text(movie.overview)
-                    .ralewayFont(.body)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                trailerView
-                watchView
-                creditView
-                recommendedView
+                .frame(width: proxy.size.width, alignment: .leading)
+                .padding(.bottom, 32)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .ralewayFont(.caption)
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background {
-                                Circle()
-                                    .foregroundStyle(.black.opacity(0.2))
-                            }
+        }
+        .ignoresSafeArea(edges: .top)
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.load(movie: movie, modelContext: modelContext)
+        }
+        .navigationDestination(isPresented: $presentRecommendedList) {
+            ExpandedMovieGridView(title: "Recommended", movies: viewModel.recommendedMovies)
+        }
+        .sheet(isPresented: $presentAddToWatchListSheet) {
+            NavigationStack {
+                AddToWatchListView(movie: movie)
+            }
+        }
+    }
+
+    private var hero: some View {
+        ZStack(alignment: .bottomLeading) {
+            if let backdropPath = movie.backdropPath, !backdropPath.isEmpty {
+                CachedAsyncImage(url: TMDBImage.backdrop(path: backdropPath, width: .w1280)) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure:
+                        heroPlaceholder
+                    default:
+                        ZStack {
+                            heroPlaceholder
+                            ProgressView()
+                        }
                     }
                 }
-            })
-            .frame(width: UIScreen.main.bounds.width)
-            .onAppear {
-                Task {
-                    await fetchMovieTrailer()
-                    await fetchMovieRecommendations()
-                    await fetchWatchProviderLink()
-                    await fetchCredits()
-                }
-            }
-            .navigationDestination(isPresented: $presentRecommendedList) {
-                ExpandedMovieGridView(movies: recommendedMovies)
-            }
-            .sheet(isPresented: $presentAddToWatchListSheet) {
-                NavigationStack {
-                    AddToWatchListView(movie: movie)
-                }
-            }
-        }
-        .edgesIgnoringSafeArea(.top)
-    }
-    
-    var backdropImage: some View {
-        VStack {
-            if let backdropPath = movie.backdropPath {
-                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200, alignment: .center)
-                        .mask(
-                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]), startPoint: .center, endPoint: .bottom)
-                        )
-                } placeholder: {
-                    Rectangle()
-                        .frame(height: 200, alignment: .center)
-                        .foregroundStyle(.clear)
-                }
             } else {
-                Rectangle()
-                    .frame(height: 200, alignment: .center)
-                    .foregroundStyle(.clear)
+                heroPlaceholder
             }
         }
+        .frame(height: 310)
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .overlay(
+            LinearGradient(
+                colors: [.clear, Color(.systemBackground).opacity(0.25), Color(.systemBackground)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .clipped()
     }
-    
-    var posterImage: some View {
-        VStack {
-            if let posterPath = movie.posterPath {
-                CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 185, height: 277.5)
-                        .cornerRadius(10)
-                } placeholder: {
-                    ProgressView()
-                        .frame(width: 185, height: 277.5)
-                }
-            } else {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white.opacity(0.5))
-                        .frame(width: 185, height: 277.5)
-                    Image(systemName: "film")
-                        .font(.system(size: 50))
-                        .foregroundColor(Color(UIColor.lightGray))
-                }
-            }
+
+    private var heroPlaceholder: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color(.secondarySystemBackground))
+            Image(systemName: "film")
+                .font(.system(size: 56))
+                .foregroundStyle(.secondary)
         }
     }
-    
-    var buttonView: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 1) {
-            Button(role: .none) {
-                movie.isBookmarked.toggle()
-                savedButtonTapped.toggle()
-            } label: {
-                Image(systemName: movie.isBookmarked ? "bookmark.fill" : "bookmark")
-                    .ralewayFont(.body)
-                    .foregroundStyle(movie.isBookmarked ? .green : .accentColor)
-                    .font(.body)
+
+    private var summary: some View {
+        HStack(alignment: .top, spacing: 16) {
+            PosterImage(path: movie.posterPath, width: 124)
+                .padding(.top, -76)
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text(movie.title)
+                    .ralewayFont(.largeTitle, size: 28)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 10) {
+                    Label(String(format: "%.1f", movie.voteAverage), systemImage: "star.fill")
+                        .foregroundStyle(.orange)
+                    if let releaseDate = movie.releaseDate, !releaseDate.isEmpty {
+                        Text(releaseDate.prefix(4))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .ralewayFont(.body, weight: .medium)
             }
-            .contentTransition(.symbolEffect(.replace))
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.circle)
-            .sensoryFeedback(.success, trigger: savedButtonTapped)
-            
-            Button(role: .none) {
-                movie.isWatched.toggle()
-                watchedButtonTapped.toggle()
-            } label: {
-                Image(systemName: movie.isWatched ? "checkmark.square.fill" : "xmark.square")
-                    .ralewayFont(.body)
-                    .foregroundStyle(movie.isWatched ? .green : .accentColor)
-                    .font(.body)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var actionCluster: some View {
+        HStack(spacing: 14) {
+            detailAction(
+                title: "Saved",
+                systemImage: movie.isBookmarked ? "bookmark.fill" : "bookmark",
+                isActive: movie.isBookmarked
+            ) {
+                viewModel.toggleBookmark(movie: movie, modelContext: modelContext)
+                savedFeedback.toggle()
             }
-            .contentTransition(.symbolEffect(.replace))
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.circle)
-            .sensoryFeedback(.success, trigger: watchedButtonTapped)
-            
-            Button(role: .none) {
+            .sensoryFeedback(.success, trigger: savedFeedback)
+
+            detailAction(
+                title: "Watched",
+                systemImage: movie.isWatched ? "checkmark.circle.fill" : "checkmark.circle",
+                isActive: movie.isWatched
+            ) {
+                viewModel.toggleWatched(movie: movie, modelContext: modelContext)
+                watchedFeedback.toggle()
+            }
+            .sensoryFeedback(.success, trigger: watchedFeedback)
+
+            detailAction(title: "List", systemImage: "plus", isActive: false) {
                 presentAddToWatchListSheet = true
-            } label: {
-                Image(systemName: "plus")
-                    .ralewayFont(.body)
-                    .symbolEffect(.bounce, value: presentAddToWatchListSheet)
-            }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.circle)
-            .sensoryFeedback(.success, trigger: presentAddToWatchListSheet)
-            
-            Spacer()
-        }
-    }
-    
-    var trailerView: some View {
-        VStack {
-            if let videoID = trailerKey {
-                Text("Trailer")
-                    .ralewayFont(.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                YouTubePlayerView(videoID: videoID)
-                    .frame(height: 250)
-                    .padding(.horizontal)
             }
         }
+        .padding(10)
+        .liquidGlass(cornerRadius: 28)
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity)
     }
-    
-    var watchView: some View {
-        VStack {
-            if let watchProviderLinkString = watchProviderLinkString, !watchProviderLinkString.isEmpty, let watchProviderLinkUrl = URL(string: watchProviderLinkString)  {
-                Text("Watch")
-                    .ralewayFont(.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                Text("Seaming information provided by JustWatch.")
-                    .ralewayFont(.caption)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                Link(destination: watchProviderLinkUrl, label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(.accentColor)
-                            .padding(.horizontal)
-                        Text("View Watch Providers")
-                            .ralewayFont(.body)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 10)
+
+    private func detailAction(
+        title: String,
+        systemImage: String,
+        isActive: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
+                Image(systemName: systemImage)
+                    .font(.title3)
+                    .contentTransition(.symbolEffect(.replace))
+                Text(title)
+                    .ralewayFont(.caption, weight: .medium)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .foregroundStyle(isActive ? .green : .primary)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var overview: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Overview")
+                .ralewayFont(.title)
+            Text(movie.overview.isEmpty ? "No overview available." : movie.overview)
+                .ralewayFont(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var trailerSection: some View {
+        if let trailerKey = viewModel.trailerKey {
+            detailSection(title: "Trailer") {
+                TrailerLinkCard(videoID: trailerKey)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var watchSection: some View {
+        if let watchProviderLink = viewModel.watchProviderLink {
+            detailSection(title: "Watch") {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Streaming information provided by JustWatch.")
+                        .ralewayFont(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Button {
+                        openURL(watchProviderLink)
+                    } label: {
+                        Label("View Watch Providers", systemImage: "play.tv")
+                            .ralewayFont(.headline)
+                            .frame(maxWidth: .infinity)
                     }
-                })
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                }
             }
         }
     }
-    
-    var creditView: some View {
-        VStack {
-            if let credits = movieCredits {
+
+    @ViewBuilder
+    private var creditsSection: some View {
+        if let credits = viewModel.credits, !credits.cast.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("Cast & Crew")
                     .ralewayFont(.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
-                
+
                 ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(credits.cast, id: \.id) { cast in
-                            VStack {
-                                if let profilePath = cast.profilePath {
-                                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + profilePath)) { phase in
-                                        switch phase {
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                                .frame(width: 120, height: 120)
-                                                .clipShape(Circle())
-                                        case .failure(_):
-                                            ZStack {
-                                                Circle()
-                                                    .foregroundColor(.white.opacity(0.5))
-                                                    .frame(width: 120, height: 120)
-                                                Image(systemName: "person.fill")
-                                                    .font(.system(size: 50))
-                                                    .foregroundColor(Color(UIColor.lightGray))
-                                            }
-                                        default:
-                                            ProgressView()
-                                                .frame(width: 120, height: 120)
-                                        }
-                                    }
-                                    .containerRelativeFrame(.horizontal,
-                                                            count: verticalSizeClass == .regular ? 3 : 5,
-                                                            spacing: 10)
-                                    .scrollTransition { content, phase in
-                                        content
-                                            .opacity(phase.isIdentity ? 1.0 : 0.75)
-                                            .scaleEffect(phase.isIdentity ? 1 : 0.75)
-                                    }
-                                } else {
-                                    ZStack {
-                                        Circle()
-                                            .foregroundColor(.white.opacity(0.5))
-                                            .frame(width: 120, height: 120)
-                                        Image(systemName: "person.fill")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(Color(UIColor.lightGray))
-                                            .padding()
-                                    }
-                                }
-                                Text(cast.name)
-                                    .ralewayFont(.body)
-                                    .frame(width: 120)
-                                    .frame(alignment: .center)
-                                    .lineLimit(1)
-                                Text(cast.character)
-                                    .ralewayFont(.caption)
-                                    .frame(width: 120)
-                                    .frame(alignment: .center)
-                                    .lineLimit(1)
-                            }
-                        }
-                        
-                    }
-                    .scenePadding(.leading)
-                }
-                .scrollIndicators(.hidden)
-            }
-        }
-    }
-    
-    var recommendedView: some View {
-        VStack {
-            if !recommendedMovies.isEmpty {
-                HStack {
-                    Text("Recommended")
-                        .ralewayFont(.title)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                    Spacer()
-                    Button {
-                        presentRecommendedList.toggle()
-                    } label: {
-                        Text("See all")
-                            .foregroundStyle(.gray)
-                            .ralewayFont(.footnote)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(.horizontal)
-                    }
-                }
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(recommendedMovies) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                if let posterPath = movie.posterPath {
-                                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { phase in
-                                        switch phase {
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 185, height: 277.5)
-                                                .cornerRadius(10)
-                                        case .failure(_):
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .foregroundColor(.white.opacity(0.5))
-                                                    .frame(width: 185, height: 277.5)
-                                                Image(systemName: "film")
-                                                    .resizable()
-                                                    .font(.system(size: 50))
-                                                    .foregroundColor(Color(UIColor.lightGray))
-                                            }
-                                        default:
-                                            ProgressView()
-                                                .frame(width: 185, height: 277.5)
-                                        }
-                                    }
-                                    .containerRelativeFrame(.horizontal,
-                                                            count: verticalSizeClass == .regular ? 2 : 4,
-                                                            spacing: 10)
-                                    .scrollTransition { content, phase in
-                                        content
-                                            .opacity(phase.isIdentity ? 1.0 : 0.75)
-                                            .scaleEffect(phase.isIdentity ? 1 : 0.75)
-                                    }
-                                }
-                            }
+                    LazyHStack(spacing: 16) {
+                        ForEach(credits.cast.prefix(12)) { cast in
+                            CastCard(cast: cast)
                         }
                     }
                     .scrollTargetLayout()
-                    .scenePadding(.leading)
+                }
+                .contentMargins(.horizontal, 16, for: .scrollContent)
+                .scrollIndicators(.hidden)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private var recommendedSection: some View {
+        if !viewModel.recommendedMovies.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Recommended")
+                        .ralewayFont(.title)
+                    Spacer()
+                    Button {
+                        presentRecommendedList = true
+                    } label: {
+                        Label("See all", systemImage: "chevron.right")
+                            .ralewayFont(.footnote)
+                            .labelStyle(.iconOnly)
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal)
+
+                ScrollView(.horizontal) {
+                    LazyHStack(spacing: 14) {
+                        ForEach(viewModel.recommendedMovies) { movie in
+                            NavigationLink {
+                                MovieDetailView(movie: movie)
+                            } label: {
+                                PosterImage(path: movie.posterPath, width: 132)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .contentMargins(.horizontal, 16, for: .scrollContent)
+                .scrollTargetBehavior(.viewAligned)
+                .scrollIndicators(.hidden)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func detailSection<Content: View>(
+        title: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .ralewayFont(.title)
+            content()
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+private struct TrailerLinkCard: View {
+    let videoID: String
+
+    private var youtubeURL: URL {
+        URL(string: "https://www.youtube.com/watch?v=\(videoID)")!
+    }
+
+    private var thumbnailURL: URL? {
+        URL(string: "https://img.youtube.com/vi/\(videoID)/hqdefault.jpg")
+    }
+
+    var body: some View {
+        Link(destination: youtubeURL) {
+            ZStack {
+                CachedAsyncImage(url: thumbnailURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    default:
+                        trailerPlaceholder
+                    }
+                }
+
+                LinearGradient(
+                    colors: [.black.opacity(0.55), .black.opacity(0.08)],
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
+
+                VStack(spacing: 10) {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 58, height: 58)
+                        .background(.black.opacity(0.38), in: Circle())
+                        .liquidGlassCircle()
+
+                    Text("Watch Trailer")
+                        .ralewayFont(.headline)
+                        .foregroundStyle(.white)
                 }
             }
-        }
-    }
-    
-    /// Fetches a the movie trailer for a particular movie
-    @MainActor
-    func fetchMovieTrailer() async {
-        do {
-            trailerKey = try await apiCaller.getMovieTrailer(movieId: movie.id)
-        } catch {
-            print("Error getting movie trailer: \(error)")
-        }
-    }
-    
-    /// Fetches a list of recommended movies for a particular movie
-    @MainActor
-    func fetchMovieRecommendations() async {
-        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/recommendations?api_key=\(APIInformation.key.rawValue)"
-        
-        do {
-            let fetchedMovies = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-            for movie in fetchedMovies where !recommendedMovies.contains(movie) {
-                modelContext.insert(movie)
+            .aspectRatio(16 / 9, contentMode: .fit)
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.12), lineWidth: 1)
             }
-            recommendedMovies = fetchedMovies
-        } catch {
-            print("Error getting recommended movies: \(error)")
+            .shadow(color: .black.opacity(0.16), radius: 14, y: 8)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Watch trailer on YouTube")
+    }
+
+    private var trailerPlaceholder: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+
+            Image(systemName: "play.rectangle.fill")
+                .font(.system(size: 52))
+                .foregroundStyle(.secondary)
         }
     }
-    
-    /// Fetches a watch provider link for a particular movie
-    @MainActor
-    func fetchWatchProviderLink() async {
-        do {
-            watchProviderLinkString = try await apiCaller.getWatchProviders(movieID: movie.id)
-        } catch {
-            print("Error getting watch provider link: \(error)")
+}
+
+private struct CastCard: View {
+    let cast: Cast
+    private let cardWidth: CGFloat = 136
+    private var portraitHeight: CGFloat { cardWidth * 1.18 }
+
+    var body: some View {
+        VStack(spacing: 4) {
+            portrait
+
+            Text(cast.name)
+                .ralewayFont(.caption, weight: .semibold)
+                .foregroundStyle(.primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .frame(maxWidth: .infinity)
+                .frame(height: 34, alignment: .top)
+
+            Text(cast.character)
+                .ralewayFont(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .frame(maxWidth: .infinity)
+                .frame(height: 34, alignment: .top)
+        }
+        .frame(width: cardWidth, alignment: .top)
+    }
+
+    @ViewBuilder
+    private var portrait: some View {
+        if let profilePath = cast.profilePath, !profilePath.isEmpty {
+            CachedAsyncImage(url: TMDBImage.poster(path: profilePath, width: .w185)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                default:
+                    personPlaceholder
+                }
+            }
+            .frame(width: cardWidth, height: portraitHeight)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        } else {
+            personPlaceholder
         }
     }
-    
-    /// Fetches the credits for a particular movie
-    @MainActor
-    func fetchCredits() async {
-        let urlString = "https://api.themoviedb.org/3/movie/\(movie.id)/credits?api_key=\(APIInformation.key.rawValue)"
-        
-        do {
-            movieCredits = try await apiCaller.getData(urlString: urlString, decoderType: Credits.self)
-        } catch {
-            print("Error getting credits: \(error)")
+
+    private var personPlaceholder: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(.tertiarySystemFill),
+                            Color(.secondarySystemBackground)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            if let initials {
+                Text(initials)
+                    .ralewayFont(.title, size: 28, weight: .bold)
+                    .foregroundStyle(.secondary)
+            } else {
+                Image(systemName: "person.crop.rectangle.fill")
+                    .font(.system(size: 34, weight: .semibold))
+                    .foregroundStyle(.secondary)
+            }
         }
+        .frame(width: cardWidth, height: portraitHeight)
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Color.primary.opacity(0.06), lineWidth: 1)
+        }
+    }
+
+    private var initials: String? {
+        let parts = cast.name
+            .split(separator: " ")
+            .prefix(2)
+            .compactMap(\.first)
+
+        guard !parts.isEmpty else { return nil }
+        return String(parts).uppercased()
     }
 }
 
@@ -453,14 +468,14 @@ struct MovieDetailView: View {
             let sampleMovie = Movie(
                 id: 502356,
                 title: "The Super Mario Bros. Movie",
-                overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+                overview: "While working underground to fix a water main, Brooklyn plumbers Mario and Luigi are transported down a mysterious pipe and wander into a magical new world.",
                 posterPath: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
                 backdropPath: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
                 voteAverage: 7.7,
                 isWatched: false,
                 isBookmarked: false
             )
-            
+
             return MovieDetailView(movie: sampleMovie)
                 .modelContainer(container)
         } catch {
@@ -468,4 +483,3 @@ struct MovieDetailView: View {
         }
     }
 }
-

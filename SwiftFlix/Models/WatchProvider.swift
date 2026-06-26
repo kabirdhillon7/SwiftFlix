@@ -5,17 +5,10 @@
 //  Created by Kabir Dhillon on 3/13/24.
 //
 
-/// Watch Provider Results from The Movie Database
-struct WatchProviderResults: Codable {
-    let results: [String:CountryResult]
+struct WatchProviderResults: Decodable, Equatable {
+    let results: [String: CountryResult]
 }
 
-/// Watch Provider
-struct WatchProvider: Codable {
-    let results: WatchProviderResults
-}
-
-/// Country Result
-struct CountryResult: Codable {
+struct CountryResult: Decodable, Equatable {
     let link: String
 }

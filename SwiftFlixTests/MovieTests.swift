@@ -9,65 +9,61 @@ import XCTest
 @testable import SwiftFlix
 
 final class MovieTests: XCTestCase {
-    
-    private var movie: Movie!
-    
-    override func setUp() {
-        super.setUp()
+    func test_movieDTO_decodesFromTMDBPayload() throws {
+        let data = """
+        {
+          "id": 502356,
+          "title": "The Super Mario Bros. Movie",
+          "overview": "A colorful adventure.",
+          "poster_path": "/poster.jpg",
+          "backdrop_path": "/backdrop.jpg",
+          "vote_average": 7.7,
+          "release_date": "2023-04-05"
+        }
+        """.data(using: .utf8)!
+
+        let movie = try JSONDecoder().decode(MovieDTO.self, from: data)
+
+        XCTAssertEqual(movie.id, 502356)
+        XCTAssertEqual(movie.posterPath, "/poster.jpg")
+        XCTAssertEqual(movie.backdropPath, "/backdrop.jpg")
+        XCTAssertEqual(movie.voteAverage, 7.7)
+        XCTAssertEqual(movie.releaseDate, "2023-04-05")
     }
-    
-    override func tearDown() {
-        movie = nil
-        super.tearDown()
-    }
-    
-    func test_movieInit_shouldBeEqual() {
-        movie = Movie(id: 502356,
-                      title: "The Super Mario Bros. Movie",
-                      overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-                      poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                      backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-                      vote_average: 7.7
-        )
-        
+
+    func test_movieDTO_makesPersistedMovieDefaults() {
+        let movie = APICallerTests.sampleMovieDTO.makeMovie()
+
         XCTAssertEqual(movie.id, 502356)
         XCTAssertEqual(movie.title, "The Super Mario Bros. Movie")
-        XCTAssertEqual(movie.overview, "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.")
-        XCTAssertEqual(movie.poster_path, "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg")
-        XCTAssertEqual(movie.backdropPath, "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg")
-        XCTAssertEqual(movie.voteAverage, 7.7)
+        XCTAssertFalse(movie.isWatched)
+        XCTAssertFalse(movie.isBookmarked)
     }
-    
-    func test_movie_shouldNotBeNil() {
-        movie = Movie(id: 502356,
-                      title: "The Super Mario Bros. Movie",
-                      overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-                      poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                      backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-                      vote_average: 7.7
+
+    func test_movie_equalityUsesID() {
+        let first = APICallerTests.sampleMovieDTO.makeMovie()
+        let second = Movie(
+            id: first.id,
+            title: "Different title",
+            overview: "",
+            posterPath: nil,
+            backdropPath: nil,
+            voteAverage: 0,
+            isWatched: true,
+            isBookmarked: true
         )
-        
-        XCTAssertNotNil(movie)
+
+        XCTAssertEqual(first, second)
     }
-    
-    func movie_encodeDecode_shouldBeTrue() throws {
-        movie = Movie(id: 502356,
-                      title: "The Super Mario Bros. Movie",
-                      overview: "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
-                      poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-                      backdrop_path: "/nLBRD7UPR6GjmWQp6ASAfCTaWKX.jpg",
-                      vote_average: 7.7
-        )
-        
-        // Encode the movie struct to JSON data.
-        let encoder = JSONEncoder()
-        let jsonData = try encoder.encode(movie)
-        
-        // Decode the JSON data back to a movie struct.
-        let decoder = JSONDecoder()
-        let decodedMovie = try decoder.decode(Movie.self, from: jsonData)
-        
-        // Assert that the decoded movie struct is equal to the original movie struct.
-        XCTAssertEqual(decodedMovie, movie)
+
+    func test_watchlist_toggleAddsAndRemovesMovie() {
+        let movie = APICallerTests.sampleMovieDTO.makeMovie()
+        let watchlist = Watchlist(name: "Weekend", details: "", movies: [])
+
+        watchlist.toggle(movie)
+        XCTAssertTrue(watchlist.contains(movie))
+
+        watchlist.toggle(movie)
+        XCTAssertFalse(watchlist.contains(movie))
     }
 }

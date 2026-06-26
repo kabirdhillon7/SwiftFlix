@@ -7,115 +7,72 @@
 
 import SwiftData
 import SwiftUI
-import CachedAsyncImage
 
-/// A view that displays search results for movies
 struct SearchView: View {
-    @Environment(\.modelContext) var modelContext
-//    @State var viewModel = SearchViewModel()
-    @State private var searchResults = [Movie]()
-    @State private var searchQuery: String = ""
-    private let apiCaller = APICaller()
-    @FocusState private var keyboardFocus: Bool
-    
+    @Environment(\.modelContext) private var modelContext
+    @State private var viewModel = SearchViewModel()
+
     var body: some View {
         NavigationStack {
-            VStack {
-                TextField("", text: $searchQuery, prompt: Text("Search movies"))
-                    .textFieldStyle(RoundedTextField())
-                    .focused($keyboardFocus)
-                    .padding(.horizontal)
-                    .onAppear {
-                        UITextField.appearance().clearButtonMode = .whileEditing
-                    }
-                    .onSubmit {
-                        if !searchQuery.isEmpty {
-                            Task {
-                                await searchMovies()
-                            }
-                        }
-                    }
-                    .onChange(of: searchQuery) {
-                        if searchQuery.isEmpty {
-                            searchResults.removeAll()
-                        } else {
-                            Task {
-                                await searchMovies()
-                            }
-                        }
-                    }
-                    .toolbar {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            Spacer()
-                            
-                            Button {
-                                keyboardFocus = false
-                            } label: {
-                                Text("Done")
-                            }
-                        }
-                    }
-                        
-                if searchResults.isEmpty && !searchQuery.isEmpty {
-                    ContentUnavailableView.search
+            Group {
+                if viewModel.searchQuery.isEmpty {
+                    ContentUnavailableView(
+                        "Search Movies",
+                        systemImage: "magnifyingglass",
+                        description: Text("Find a movie, then save it, mark it watched, or add it to a watchlist.")
+                    )
                 } else {
-                    List {
-                        ForEach(searchResults) { movie in
-                            NavigationLink(destination: MovieDetailView(movie: movie)) {
-                                HStack(spacing: 10) {
-                                    if let posterPath = movie.posterPath {
-                                        CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                                            image
-                                                .resizable()
-                                                .frame(width: 92.5, height: 138.75)
-                                                .aspectRatio(contentMode: .fit)
-                                                .cornerRadius(10)
-                                        } placeholder: {
-                                            ProgressView()
-                                                .frame(width: 92.5)
-                                        }
-                                    } else {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .foregroundColor(.white.opacity(0.5))
-                                                .frame(width: 92.5, height: 138.75)
-                                            Image(systemName: "film")
-                                                .font(.system(size: 50))
-                                                .foregroundColor(Color(UIColor.lightGray))
-                                        }
-                                    }
-                                    
-                                    VStack(spacing: 5) {
-                                        Text(movie.title)
-                                            .ralewayFont(.title)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .lineLimit(2)
-                                        Text(movie.overview)
-                                            .ralewayFont(.body)
-                                            .frame(maxWidth: .infinity,alignment: .leading)
-                                            .lineLimit(4)
-                                        Spacer()
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    resultsContent
+                }
+            }
+            .navigationTitle("Search")
+            .searchable(text: $viewModel.searchQuery, placement: .automatic, prompt: "Search movies")
+            .onSubmit(of: .search) {
+                Task {
+                    await viewModel.searchImmediately(modelContext: modelContext)
+                }
+            }
+            .onChange(of: viewModel.searchQuery) {
+                viewModel.searchDebounced(modelContext: modelContext)
+            }
+            .modifier(SearchToolbarCompatibility())
+        }
+    }
+
+    @ViewBuilder
+    private var resultsContent: some View {
+        switch viewModel.phase {
+        case .loading where viewModel.searchResults.isEmpty:
+            ProgressView("Searching")
+                .ralewayFont(.body)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        case .empty:
+            ContentUnavailableView.search(text: viewModel.searchQuery)
+        case .failed(let message):
+            ContentUnavailableView(
+                "Search Failed",
+                systemImage: "wifi.exclamationmark",
+                description: Text(message)
+            )
+        default:
+            List(viewModel.searchResults) { movie in
+                NavigationLink {
+                    MovieDetailView(movie: movie)
+                } label: {
+                    MovieListRow(movie: movie)
                 }
             }
             .listStyle(.plain)
-            .navigationTitle("Search")
         }
     }
-    
-    @MainActor
-    func searchMovies() async {
-        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://api.themoviedb.org/3/search/movie?api_key=\(APIInformation.key.rawValue)&query=\(encodedQuery)"
-        
-        do {
-            searchResults = try await apiCaller.getData(urlString: urlString, decoderType: MovieResults.self).results
-        } catch {
-            print("Search error: \(error.localizedDescription)")
+}
+
+private struct SearchToolbarCompatibility: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.searchToolbarBehavior(.automatic)
+        } else {
+            content
         }
     }
 }

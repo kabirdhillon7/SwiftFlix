@@ -9,77 +9,81 @@ import CachedAsyncImage
 import SwiftUI
 
 struct MovieCardView: View {
-    
+
     let movie: Movie
-    
+
     var body: some View {
-        if let backdropPath = movie.backdropPath, !backdropPath.isEmpty {
-            ZStack(alignment: .bottomLeading) {
-                Group {
-                    CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780" + backdropPath)) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 200, alignment: .center)
-                            .overlay(
-                                LinearGradient(
-                                    gradient: Gradient(stops: [
-                                        .init(color: .accentColor, location: 0),
-                                        .init(color: .clear, location: 0.35)
-                                    ]),
-                                    startPoint: .bottom,
-                                    endPoint: .top
-                                )
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    } placeholder: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(UIColor.systemGray6))
-                                .frame(height: 200)
-                                .frame(maxWidth: .infinity)
-                            ProgressView()
-                                .frame(width: 50, height: 50)
+        Group {
+            if let backdropPath = movie.backdropPath, !backdropPath.isEmpty {
+                ZStack(alignment: .bottomLeading) {
+                    Group {
+                        CachedAsyncImage(url: TMDBImage.backdrop(path: backdropPath, width: .w780)) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            case .failure:
+                                placeholder
+                            default:
+                                ZStack {
+                                    placeholder
+                                    ProgressView()
+                                }
+                            }
                         }
-                        .frame(height: 200)
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .overlay(cardGradient)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     }
+                    .overlay(alignment: .bottomLeading) {
+                        movieTitleText
+                    }
+                    .shadow(color: .black.opacity(0.18), radius: 18, y: 10)
                 }
-                .overlay(alignment: .bottomLeading) {
-                    movieTitleText
-                }
+            } else {
+                placeholder
+                    .frame(maxWidth: .infinity)
+                    .overlay(cardGradient)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(alignment: .bottomLeading) {
+                        movieTitleText
+                    }
+                    .shadow(color: .black.opacity(0.18), radius: 18, y: 10)
             }
-        } else {
-            RoundedRectangle(cornerRadius: 10)
-                .frame(height: 200)
-                .frame(maxWidth: .infinity)
-                .foregroundColor(Color(UIColor.systemGray6))
-                .overlay(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.accentColor, .clear]),
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                )
-                .overlay(alignment: .center) {
-                    Image(systemName: "film")
-                        .font(.system(size: 50))
-                        .foregroundColor(.white)
-                }
-                .overlay(alignment: .bottomLeading) {
-                    movieTitleText
-                }
         }
+        .aspectRatio(16 / 9, contentMode: .fit)
     }
-    
+
     var movieTitleText: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 6) {
             Text(movie.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundStyle(.white)
                 .ralewayFont(.headline)
-                .lineLimit(1)
-                .padding()
+                .lineLimit(2)
+            Label(String(format: "%.1f", movie.voteAverage), systemImage: "star.fill")
+                .ralewayFont(.caption, weight: .medium)
+                .foregroundStyle(.orange)
+        }
+        .padding()
+    }
+
+    private var cardGradient: some View {
+        LinearGradient(
+            colors: [.black.opacity(0.68), .black.opacity(0.08), .clear],
+            startPoint: .bottom,
+            endPoint: .top
+        )
+    }
+
+    private var placeholder: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+            Image(systemName: "film")
+                .font(.largeTitle)
+                .foregroundStyle(.secondary)
         }
     }
 }

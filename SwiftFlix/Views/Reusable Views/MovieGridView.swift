@@ -5,47 +5,31 @@
 //  Created by Kabir Dhillon on 11/20/24.
 //
 
-import CachedAsyncImage
 import SwiftData
 import SwiftUI
 
 struct MovieGridView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    
+
     let movies: [Movie]
-    
+
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0),
-                                     count: 3),
-                      spacing: 0) {
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3),
+                spacing: 16
+            ) {
                 ForEach(movies) { movie in
                     NavigationLink {
                         MovieDetailView(movie: movie)
                     } label: {
-                        if let posterPath = movie.posterPath, !posterPath.isEmpty {
-                            CachedAsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185" + posterPath)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .aspectRatio(0.67, contentMode: .fill)
-                            } placeholder: {
-                                ProgressView()
-                                    .frame(width: 185, height: 277.5)
-                            }
-                        } else {
-                            ZStack {
-                                Rectangle()
-                                    .foregroundColor(.white.opacity(0.5))
-                                Image(systemName: "film")
-                                    .font(.system(size: 50))
-                                    .foregroundColor(Color(UIColor.lightGray))
-                            }
-                        }
+                        PosterImage(path: movie.posterPath, width: 110)
                     }
+                    .buttonStyle(.plain)
                 }
             }
+            .padding(.vertical)
         }
     }
 }

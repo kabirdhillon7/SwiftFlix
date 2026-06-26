@@ -1,0 +1,4 @@
+// Shared build settings that are safe to commit.
+// Local secrets are loaded when Config/Secrets.xcconfig exists.
+TMDB_API_KEY =
+#include? "Secrets.xcconfig"

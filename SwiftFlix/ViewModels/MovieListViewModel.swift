@@ -5,12 +5,14 @@
 //  Created by Kabir Dhillon on 2/19/24.
 //
 
-import Foundation
+import Observation
 
 /// A view model class for managing the list of movies.
-final class MovieListViewModel: ObservableObject {
-    @Published var movieList = Set<Movie>()
-    
+@MainActor
+@Observable
+final class MovieListViewModel {
+    var movieList = Set<Movie>()
+
     init(movieList: Set<Movie>) {
         self.movieList = movieList
     }

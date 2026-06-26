@@ -5,32 +5,65 @@
 //  Created by Kabir Dhillon on 2/19/24.
 //
 
-import Foundation
-import Combine
+import Observation
+import SwiftData
 
-final class SearchToAddToWatchListViewModel: ObservableObject {
-    @Published var searchQuery: String = ""
-    @Published var searchResults = [Movie]()
-    
-    @Published var selectedMovies = Set<Movie>()
-    
-    private let apiCaller: APICaller = APICaller()
-    private var cancellables = Set<AnyCancellable>()
-    
-    /// Fetches search results from API
-    func searchMovies() {
-        apiCaller.getSearchMovieResults(searchQuery: searchQuery)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print("Search error: \(error.localizedDescription)")
-                }
-            } receiveValue: { movies in
-                self.searchResults = movies
-            }
-            .store(in: &cancellables)
+@MainActor
+@Observable
+final class SearchToAddToWatchListViewModel {
+    var searchQuery = ""
+    private(set) var phase = LoadingPhase.idle
+    private(set) var searchResults = [Movie]()
+
+    @ObservationIgnored private let client: any TMDBClientProtocol
+    @ObservationIgnored private var searchTask: Task<Void, Never>?
+
+    init(client: any TMDBClientProtocol = TMDBClient()) {
+        self.client = client
+    }
+
+    deinit {
+        searchTask?.cancel()
+    }
+
+    func searchDebounced(modelContext: ModelContext) {
+        searchTask?.cancel()
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !query.isEmpty else {
+            searchResults = []
+            phase = .idle
+            return
+        }
+
+        searchTask = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: .milliseconds(350))
+                await self?.search(query: query, modelContext: modelContext)
+            } catch { }
+        }
+    }
+
+    func searchImmediately(modelContext: ModelContext) async {
+        searchTask?.cancel()
+        await search(query: searchQuery, modelContext: modelContext)
+    }
+
+    private func search(query: String, modelContext: ModelContext) async {
+        let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedQuery.isEmpty else { return }
+
+        phase = .loading
+        do {
+            let dtos = try await client.searchMovies(query: trimmedQuery)
+            searchResults = modelContext.movies(matching: dtos)
+            try? modelContext.save()
+            phase = searchResults.isEmpty ? .empty : .loaded
+        } catch is CancellationError {
+            phase = .idle
+        } catch {
+            searchResults = []
+            phase = .failed(error.localizedDescription)
+        }
     }
 }

@@ -13,11 +13,13 @@ struct ExpandedMovieGridView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.dismiss) var dismiss
-    
+
+    let title: String
     let movies: [Movie]
-        
+
     var body: some View {
         MovieGridView(movies: movies)
+            .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -27,12 +29,8 @@ struct ExpandedMovieGridView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .ralewayFont(.caption)
-                            .foregroundStyle(.white)
                             .padding(8)
-                            .background {
-                                Circle()
-                                    .foregroundStyle(.black.opacity(0.2))
-                            }
+                            .liquidGlassCapsule()
                     }
                 }
             }
@@ -51,6 +49,6 @@ struct ExpandedMovieGridView: View {
         isBookmarked: false
     )
     NavigationStack {
-        ExpandedMovieGridView(movies: [sampleMovie, sampleMovie, sampleMovie])
+        ExpandedMovieGridView(title: "Movies", movies: [sampleMovie, sampleMovie, sampleMovie])
     }
 }

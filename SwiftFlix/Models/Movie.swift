@@ -5,59 +5,120 @@
 //  Created by Kabir Dhillon on 5/18/23.
 //
 
+import Foundation
 import SwiftData
 
-/// Movie Results from The Movie Database
-struct MovieResults: Decodable {
-    let results: [Movie]
+struct MovieResults: Decodable, Equatable {
+    let results: [MovieDTO]
 }
 
-/// Movie
-@Model
-final class Movie: Decodable, Identifiable, Hashable, Equatable, Sendable {
-    
+struct MovieDTO: Decodable, Equatable, Identifiable {
     let id: Int
     let title: String
     let overview: String
     let posterPath: String?
     let backdropPath: String?
     let voteAverage: Double
-    var isWatched: Bool
-    var isBookmarked: Bool
-    
-    static func == (lhs: Movie, rhs: Movie) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
+    let releaseDate: String?
+
     private enum CodingKeys: String, CodingKey {
         case id, title, overview
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
         case voteAverage = "vote_average"
+        case releaseDate = "release_date"
     }
-    
-    init(id: Int, title: String, overview: String, posterPath: String?, backdropPath: String?, voteAverage: Double, isWatched: Bool, isBookmarked: Bool) {
+
+    func makeMovie() -> Movie {
+        Movie(
+            id: id,
+            title: title,
+            overview: overview,
+            posterPath: posterPath,
+            backdropPath: backdropPath,
+            voteAverage: voteAverage,
+            releaseDate: releaseDate,
+            isWatched: false,
+            isBookmarked: false
+        )
+    }
+}
+
+@Model
+final class Movie: Identifiable, Hashable {
+    @Attribute(.unique) var id: Int
+    var title: String
+    var overview: String
+    var posterPath: String?
+    var backdropPath: String?
+    var voteAverage: Double
+    var releaseDate: String?
+    var isWatched: Bool
+    var isBookmarked: Bool
+
+    init(
+        id: Int,
+        title: String,
+        overview: String,
+        posterPath: String?,
+        backdropPath: String?,
+        voteAverage: Double,
+        releaseDate: String? = nil,
+        isWatched: Bool,
+        isBookmarked: Bool
+    ) {
         self.id = id
         self.title = title
         self.overview = overview
         self.posterPath = posterPath
         self.backdropPath = backdropPath
         self.voteAverage = voteAverage
-        self.backdropPath = backdropPath
-        self.voteAverage = voteAverage
+        self.releaseDate = releaseDate
         self.isWatched = isWatched
         self.isBookmarked = isBookmarked
     }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.title = try container.decode(String.self, forKey: .title)
-        self.overview = try container.decode(String.self, forKey: .overview)
-        self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
-        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
-        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
-        self.isBookmarked = false
-        self.isWatched = false
+
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    func update(with dto: MovieDTO) {
+        title = dto.title
+        overview = dto.overview
+        posterPath = dto.posterPath
+        backdropPath = dto.backdropPath
+        voteAverage = dto.voteAverage
+        releaseDate = dto.releaseDate
+    }
+}
+
+extension ModelContext {
+    func movie(matching dto: MovieDTO) -> Movie {
+        if let existing = existingMovie(id: dto.id) {
+            existing.update(with: dto)
+            return existing
+        }
+
+        let movie = dto.makeMovie()
+        insert(movie)
+        return movie
+    }
+
+    func movies(matching dtos: [MovieDTO]) -> [Movie] {
+        dtos.map { movie(matching: $0) }
+    }
+
+    func existingMovie(id: Int) -> Movie? {
+        var descriptor = FetchDescriptor<Movie>(
+            predicate: #Predicate<Movie> { movie in
+                movie.id == id
+            }
+        )
+        descriptor.fetchLimit = 1
+        return try? fetch(descriptor).first
     }
 }

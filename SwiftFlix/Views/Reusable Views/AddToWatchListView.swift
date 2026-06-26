@@ -12,14 +12,14 @@ struct AddToWatchListView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     var movie: Movie
-    
+
     @Query(sort: \Watchlist.title) var watchlists: [Watchlist]
     @State private var newWatchListName: String = ""
     @State private var presentNewWatchListAlert: Bool = false
-    
+
     var body: some View {
-        VStack {
-            List {
+        List {
+            Section {
                 createWatchListButton
                 ForEach(watchlists) { watchlist in
                     Button {
@@ -31,12 +31,11 @@ struct AddToWatchListView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-            }
-            .listStyle(.plain)
         }
+        }
+        .listStyle(.insetGrouped)
         .navigationTitle("Add to a Watch List")
         .navigationBarTitleDisplayMode(.inline)
-        .padding(.horizontal)
         .alert("New Watch List", isPresented: $presentNewWatchListAlert, actions: {
             TextField("", text: $newWatchListName, prompt: Text("Watch List Title"))
             Button("Cancel", role: .cancel) {
@@ -49,28 +48,17 @@ struct AddToWatchListView: View {
         })
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button(role: .destructive) {
+                Button {
                     dismiss()
                 } label: {
                     Text("Cancel")
-                        .foregroundStyle(.red)
-                        .ralewayFont(.body, size: 16, weight: .semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(role: .destructive) {
-                    dismiss()
-                } label: {
-                    Text("Done")
-                        .foregroundStyle(.primary)
                         .ralewayFont(.body, size: 16, weight: .semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
     }
-    
+
     var createWatchListButton: some View {
         Button {
             presentNewWatchListAlert.toggle()
@@ -80,7 +68,7 @@ struct AddToWatchListView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private func createNewWatchList() {
         let newWatchList = Watchlist(
             name: newWatchListName,
@@ -90,13 +78,16 @@ struct AddToWatchListView: View {
         modelContext.insert(newWatchList)
         try? modelContext.save()
         newWatchListName = ""
-        
+
         dismiss()
     }
-    
+
     private func addMovieToWatchList(_ watchList: Watchlist) {
-        watchList.movies.append(movie)
+        if !watchList.contains(movie) {
+            watchList.movies.append(movie)
+        }
         try? modelContext.save()
+        dismiss()
     }
 
 }
